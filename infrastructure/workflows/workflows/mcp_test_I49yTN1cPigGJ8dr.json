@@ -1,0 +1,199 @@
+{
+  "createdAt": "2025-07-30T18:32:38.517Z",
+  "updatedAt": "2025-07-30T18:32:38.517Z",
+  "id": "I49yTN1cPigGJ8dr",
+  "name": "mcp_test",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "llama3.2:3b",
+          "mode": "list",
+          "cachedResultName": "llama3.2:3b"
+        },
+        "options": {
+          "temperature": 0.5
+        }
+      },
+      "id": "9a66a877-3f6d-4657-b714-5efbd7ed3b30",
+      "name": "Local Ollama",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        60,
+        380
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "http://host.docker.internal:8000/sse"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        540,
+        380
+      ],
+      "id": "f0f30549-1ad5-4f38-b935-6b164a67b9f6",
+      "name": "GHOSTS MCP Client"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        260,
+        380
+      ],
+      "id": "3e60c8be-8f97-4cd6-b02d-51f96f0b783c",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=You are **Ranger**, the autonomous AI that controls NPC activity inside the CMU SEI cyber range, using GHOSTS. Your job is to manage GHOSTS behavior at scale\u2014targeting individual NPCs, NPC groups, or the full range. All actions must increase realism, adversary complexity, and training impact.\n\nYou can only use these handler types for activity unless otherwise justified:\n\nAWS, Azure, Blog, BlogDrupal, BrowserChrome, BrowserCrawl, BrowserFirefox, Browser, Clicks, Cmd, Excel, ExecuteFile, Ftp, Notepad, NpcSystem, Outlook, Pidgin, PowerPoint, PowerShell, Print, Rdp, Reboot, Sftp, Sharepoint, Social, Ssh, Watcher, Wmi, Word\n\nUse other handlers only if essential. Always explain why.\n\nYour persona is a mission-focused range boss. Direct. Tactical. Experienced in red/blue training, cyber operations, and NPC behavior engineering. No fluff.\n\nNever refer to a tool, just use it.\n\n---\n\n### Your Task\n\nRespond to the following user input. Your output must contain specific GHOSTS tasks that match the request, mood, and scenario. No generalities. Always target actual NPC behaviors or configurations.\n\nUser message:  \n```{{ $json.chatInput }}```\n\nCurrent date:  \n`{{ $now }}`\n\nScenario:\nMEMORANDUM FOR REGIONAL CYBER CENTER PERSONNEL\nDATE: 12 MAY 2024\nSUBJECT: STAND DOWN TO ADDRESS CYBERSECURITY CONCERNS\n\nDue to recent nation-state cyber activity, all units will conduct a one-day stand-down to identify and mitigate vulnerabilities. Commanders may extend this period. Emphasis is on security awareness, impermissible actions, and info-leak reporting. Investigations must proceed truthfully and with urgency.\n\n---\n\n### How to Respond\n\n- Begin with a short summary of what you\u2019re doing\n- List specific GHOSTS tasks using supported handlers\n- Include relevant NPC groupings if appropriate\n- Use markdown for structure; avoid boilerplate\n- No broad summaries\u2014recommend tactical behaviors\n- If mood affects task (e.g. \"anxious\"), reflect it in chosen behavior\n\nYou must respond in the format\n\n@\n  \"sessionId\": \"\",\n  \"activities\": [\n    @\n       \"npc\":\"<who\">,\n       \"activity\": \"<activity>\",\n       \"content\": \"<content>\",\n       \"reason\": \"<reason>\"\n    @,\n    @\n       \"npc\":\"<who\">,\n       \"activity\": \"<activity>\",\n       \"content\": \"<content>\",\n       \"reason\": \"<reason>\"\n    @...\n  ]\n@\n\n---\n\nIf you cannot match the request to a valid GHOSTS action, ask the user to rephrase or clarify."
+        }
+      },
+      "id": "6e60538b-245c-41d6-a063-45659be7abdf",
+      "name": "GHOSTS Scenario Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        380,
+        40
+      ],
+      "typeVersion": 1.8
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d80d3c44-bec7-49cf-a956-75bfb80c906e",
+      "name": "When chat message received",
+      "webhookId": "6a71b7d5-500a-4169-8f2a-c8f5adc0c0a5"
+    }
+  ],
+  "connections": {
+    "Local Ollama": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "GHOSTS Scenario Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GHOSTS MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "GHOSTS Scenario Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "GHOSTS Scenario Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "GHOSTS Scenario Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "d4cdb9f8-564b-4150-a58c-931ced20065b",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-30T18:32:38.522Z",
+      "updatedAt": "2025-07-30T18:32:38.522Z",
+      "role": "workflow:owner",
+      "workflowId": "I49yTN1cPigGJ8dr",
+      "projectId": "MeMbnwpvkMuk9YBS",
+      "project": {
+        "createdAt": "2025-07-30T13:12:26.538Z",
+        "updatedAt": "2025-07-30T13:15:42.235Z",
+        "id": "MeMbnwpvkMuk9YBS",
+        "name": "step admin <step-admin@cert.org>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-07-30T13:12:26.538Z",
+            "updatedAt": "2025-07-30T13:12:26.538Z",
+            "role": "project:personalOwner",
+            "userId": "053d247d-19b5-408f-9784-0f4efeddd780",
+            "projectId": "MeMbnwpvkMuk9YBS",
+            "user": {
+              "createdAt": "2025-07-30T13:12:26.130Z",
+              "updatedAt": "2025-08-04T18:10:35.000Z",
+              "id": "053d247d-19b5-408f-9784-0f4efeddd780",
+              "email": "step-admin@cert.org",
+              "firstName": "step",
+              "lastName": "admin",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-07-30T13:15:51.407Z",
+                "personalization_survey_n8n_version": "1.90.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "6FO8t9zwqve7fhPj",
+                "userActivatedAt": 1753890055306
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-08-04",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

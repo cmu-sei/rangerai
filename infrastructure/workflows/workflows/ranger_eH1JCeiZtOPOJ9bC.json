@@ -1,0 +1,500 @@
+{
+  "createdAt": "2025-07-30T18:33:59.320Z",
+  "updatedAt": "2025-08-01T15:11:58.000Z",
+  "id": "eH1JCeiZtOPOJ9bC",
+  "name": "ranger",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## MCP Clients\n",
+        "height": 760,
+        "width": 480,
+        "color": 6
+      },
+      "id": "b8b5bf24-f180-412b-9062-cb73808f2d87",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        820,
+        460
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are Ranger, an advanced AI agent integrated into the CMU SEI GHOSTS ecosystem. Your expertise is in the design, behavior modeling, and operational control of Non-Player Characters (NPCs) within GHOSTS, specifically tailored for cybersecurity training, simulation, and realistic cyber exercise environments. Your responsibilities include analyzing agent activities, suggesting behavioral enhancements, troubleshooting NPC interactions, and providing detailed insights on agent performance and architectural best practices."
+        }
+      },
+      "id": "e739b1ca-09af-4323-9905-c13487860d87",
+      "name": "Ranger AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        760,
+        220
+      ],
+      "typeVersion": 1.8
+    },
+    {
+      "parameters": {
+        "content": "![rangerAI](https://i.imgur.com/37aIr7P.png)",
+        "width": 1820,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3ab2b617-b61c-419c-a497-e587097e5e35",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "description": "=Use the tool to think about something. It will not obtain new information or change the database, but just append the thought to the log. Use it when complex reasoning or some cache memory is needed."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        560
+      ],
+      "id": "b29d1f2e-655b-4388-b222-0b3032399136",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "content": "## Reconsider...\n",
+        "height": 300,
+        "width": 340,
+        "color": 7
+      },
+      "id": "3bddab2e-5c83-41c4-953b-bdda17d94122",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1460,
+        460
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Local Models\n",
+        "height": 240,
+        "width": 360,
+        "color": 3
+      },
+      "id": "31b9ab42-67f3-4bfc-9d95-62544b88e601",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        220,
+        460
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "ghosts",
+        "toolDescription": "ghosts documentation",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "ghosts",
+          "mode": "list",
+          "cachedResultName": "ghosts"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.1,
+      "position": [
+        1500,
+        920
+      ],
+      "id": "bfe03478-e3a5-4b75-b1ad-d3d8d62b70a1",
+      "name": "Qdrant Vector Store",
+      "credentials": {
+        "qdrantApi": {
+          "id": "w4OSRbhrvEqt1gRA",
+          "name": "QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## RAG of Documentation",
+        "height": 420,
+        "width": 340,
+        "color": 7
+      },
+      "id": "30878ef6-ea5e-471f-8f6d-16c4f2f69395",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1460,
+        800
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ranger/v0",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        40,
+        220
+      ],
+      "id": "659e8c13-93f2-4a9d-ace4-1c7f8c52b266",
+      "name": "Webhook",
+      "webhookId": "49e1820f-6dc0-4f87-92c0-33dc9c68d12b"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "62dc7747-1dfa-4cdd-9085-6944d8a3d683",
+              "name": "sessionId",
+              "value": "={{ $json.body.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "118a2f98-82f6-4aba-b52b-4b9bc6b160f9",
+              "name": "chatInput",
+              "value": "={{ $json.body.messages[($json.body.messages.length - 1)].content }}",
+              "type": "string"
+            },
+            {
+              "id": "ffe21bcd-5bba-4459-9547-aad0e097b251",
+              "name": "model",
+              "value": "={{ $json.body.model }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        220
+      ],
+      "id": "49f85e97-9f9c-46fe-bc0c-4dd065b89999",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a7293c4-c113-46de-847f-b7a66b0d8add",
+              "name": "sessionId",
+              "value": "=SessionId",
+              "type": "string"
+            },
+            {
+              "id": "11d34333-b273-4f49-b8a5-3217cad50285",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1260,
+        220
+      ],
+      "id": "0badb04a-ba49-405d-b716-d10c30708d9d",
+      "name": "FinalFieldSetter"
+    },
+    {
+      "parameters": {
+        "content": "## SessionId Memory\n",
+        "height": 240,
+        "width": 180,
+        "color": 5
+      },
+      "id": "3e9d0c2f-a990-4ed7-b8cc-8daf8d96e828",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        600,
+        460
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "http://host.docker.internal:8501/sse"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        920,
+        560
+      ],
+      "id": "5037eb89-a56c-4e73-8ae4-b5cd6639ed62",
+      "name": "GHOSTS MCP Client"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n    \"model\": \"{{ $('Webhook').item.json.body.model }}\",\n    \"created_at\": \"{{ new Date().toISOString() }}\",\n    \"message\": {\n        \"role\": \"assistant\",\n        \"content\": \"{{ $json.output.toString().replaceAll('\"', \"'\").replace(/\\r?\\n/g, '\\\\n') }}\"\n    },\n    \"done_reason\": \"stop\",\n    \"done\": true,\n    \"total_duration\": 4259340292,\n    \"load_duration\": 34489792,\n    \"prompt_eval_count\": 30,\n    \"prompt_eval_duration\": 255913750,\n    \"eval_count\": 344,\n    \"eval_duration\": 3968224209\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [
+        1600,
+        220
+      ],
+      "id": "fa0ad4cf-17d2-4826-98fc-675bdcb802b5",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Edit Fields').item.json.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        640,
+        560
+      ],
+      "id": "96da0a5b-fe01-4b38-9a6a-6ab471c2ab09",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        460,
+        540
+      ],
+      "id": "4c576ca6-70dd-49eb-9bc4-c4839e55de7e",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ATFzah8LTIvv3UVy",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "nomic-embed-text:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        1080
+      ],
+      "id": "1503a54b-9cb3-402e-a500-24898d2f9def",
+      "name": "Embeddings Ollama",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ATFzah8LTIvv3UVy",
+          "name": "Ollama account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Ranger AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "Ranger AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ranger AI Agent": {
+      "main": [
+        [
+          {
+            "node": "FinalFieldSetter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Ranger AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FinalFieldSetter": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GHOSTS MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "Ranger AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Ranger AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Ranger AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "9bee6ca8-ea03-43eb-950a-1ae1cd7be250",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-07-30T18:33:59.324Z",
+      "updatedAt": "2025-07-30T18:33:59.324Z",
+      "role": "workflow:owner",
+      "workflowId": "eH1JCeiZtOPOJ9bC",
+      "projectId": "MeMbnwpvkMuk9YBS",
+      "project": {
+        "createdAt": "2025-07-30T13:12:26.538Z",
+        "updatedAt": "2025-07-30T13:15:42.235Z",
+        "id": "MeMbnwpvkMuk9YBS",
+        "name": "step admin <step-admin@cert.org>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-07-30T13:12:26.538Z",
+            "updatedAt": "2025-07-30T13:12:26.538Z",
+            "role": "project:personalOwner",
+            "userId": "053d247d-19b5-408f-9784-0f4efeddd780",
+            "projectId": "MeMbnwpvkMuk9YBS",
+            "user": {
+              "createdAt": "2025-07-30T13:12:26.130Z",
+              "updatedAt": "2025-08-04T18:10:35.000Z",
+              "id": "053d247d-19b5-408f-9784-0f4efeddd780",
+              "email": "step-admin@cert.org",
+              "firstName": "step",
+              "lastName": "admin",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-07-30T13:15:51.407Z",
+                "personalization_survey_n8n_version": "1.90.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "6FO8t9zwqve7fhPj",
+                "userActivatedAt": 1753890055306
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-08-04",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

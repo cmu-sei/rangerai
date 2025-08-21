@@ -1,0 +1,1 @@
+﻿using System.Text.RegularExpressions;namespace RangerAi.Handlers;public class Hello : HandlerBase{    protected override Regex MatchPattern { get; } = new(        @"^(hello|hi)\b",        RegexOptions.IgnoreCase | RegexOptions.Compiled    );    protected override List<string> Responses { get; } =    [        "Greetings professor, shall we play a game?"    ];}

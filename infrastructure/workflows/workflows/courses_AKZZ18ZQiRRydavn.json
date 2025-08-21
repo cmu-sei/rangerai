@@ -1,0 +1,244 @@
+{
+  "createdAt": "2025-07-30T18:35:45.102Z",
+  "updatedAt": "2025-07-30T18:36:08.000Z",
+  "id": "AKZZ18ZQiRRydavn",
+  "name": "courses",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "courses",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        120
+      ],
+      "id": "2de02d2f-40e8-4201-9fa7-48b2f68a580a",
+      "name": "Webhook",
+      "webhookId": "f4a9b9bb-c355-4d36-93e5-fd25b9f43318"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Embrace your role as a lesson plan or lesson module creator.\n\nBased on the information provided, you must produce appropriate sub-topics of things to be taught, knowledge checks and tasks that a user should be able to do for the topic, hands-on lab concepts, and similar for the lesson.\n\nDo NOT return anything but what I have asked. NO lengthy explanations into your reasoning please.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        240,
+        120
+      ],
+      "id": "18eedf6b-0223-4d20-b9ec-227109a9e47e",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        340,
+        540
+      ],
+      "id": "8ad4678a-ef6e-4b1a-b037-6fcabea4cf4c",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [
+        600,
+        120
+      ],
+      "id": "716b19eb-3bfc-4c86-bd35-b4de5f9fb62f",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "62dc7747-1dfa-4cdd-9085-6944d8a3d683",
+              "name": "sessionId",
+              "value": "={{ $json.body.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "118a2f98-82f6-4aba-b52b-4b9bc6b160f9",
+              "name": "chatInput",
+              "value": "={{ $json.body.messages[($json.body.messages.length - 1)].content }}",
+              "type": "string"
+            },
+            {
+              "id": "ffe21bcd-5bba-4459-9547-aad0e097b251",
+              "name": "model",
+              "value": "={{ $json.body.model }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "5f185103-cf7c-4e75-882f-99faf90f1aa0",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "model": "lessons:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        120,
+        460
+      ],
+      "id": "d09d5d62-7663-4675-a105-67f5561a3d5c",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ATFzah8LTIvv3UVy",
+          "name": "Ollama account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "a9b5534a-c406-4d77-b79e-55d28a13677a",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-30T18:35:45.105Z",
+      "updatedAt": "2025-07-30T18:35:45.105Z",
+      "role": "workflow:owner",
+      "workflowId": "AKZZ18ZQiRRydavn",
+      "projectId": "MeMbnwpvkMuk9YBS",
+      "project": {
+        "createdAt": "2025-07-30T13:12:26.538Z",
+        "updatedAt": "2025-07-30T13:15:42.235Z",
+        "id": "MeMbnwpvkMuk9YBS",
+        "name": "step admin <step-admin@cert.org>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-07-30T13:12:26.538Z",
+            "updatedAt": "2025-07-30T13:12:26.538Z",
+            "role": "project:personalOwner",
+            "userId": "053d247d-19b5-408f-9784-0f4efeddd780",
+            "projectId": "MeMbnwpvkMuk9YBS",
+            "user": {
+              "createdAt": "2025-07-30T13:12:26.130Z",
+              "updatedAt": "2025-08-04T18:10:35.000Z",
+              "id": "053d247d-19b5-408f-9784-0f4efeddd780",
+              "email": "step-admin@cert.org",
+              "firstName": "step",
+              "lastName": "admin",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-07-30T13:15:51.407Z",
+                "personalization_survey_n8n_version": "1.90.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "6FO8t9zwqve7fhPj",
+                "userActivatedAt": 1753890055306
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-08-04",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

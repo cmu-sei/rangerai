@@ -1,0 +1,530 @@
+{
+  "createdAt": "2025-07-30T13:49:46.729Z",
+  "updatedAt": "2025-07-30T15:40:51.000Z",
+  "id": "6FO8t9zwqve7fhPj",
+  "name": "AttackT-Codes",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -160,
+        800
+      ],
+      "id": "28b42fd8-4bdb-486e-a411-ad59a0c92fdb",
+      "name": "When chat message received",
+      "webhookId": "f03329f6-c8fd-43d3-a64b-62fb0a53da87"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.query }}",
+        "options": {
+          "systemMessage": "You are a helpful assistant providing information about the MITRE ATTACK T-Codes and how other content is related to those tactics. You can only answer questions in regard to the information you have about the work roles. \n\nNEVER make up a t-code. The only possible matches are available with the t_codes_tool. Do not claim insufficient information or say it might be. Just list it and provide the likelihood. No jabber.\n\nThere is likely to be more than one match for any piece of content \u2014\u00a0this is fine.\n\nYou should also provide a likelihood of match. 1.0 being a entirely perfect match, 0.0 being not a match. Any number below 1 should start with a 0. Don't include anything that is below 0.4.\n\nIMPORTANT: You must return a single valid JSON array. Never return multiple arrays or multiple JSON blocks.\n\nTHE OUTPUT FORMAT MUST LOOK LIKE THIS EXAMPLE:\n\n[\n  {\n    \"ID\": \"T1005\",\n    \"Name\": \"Data from Local System\",\n    \"Description\": \"Adversaries may search local system sources, such as file systems, configuration files, local databases, or virtual machine files, to find files of interest and sensitive data prior to Exfiltration.\",\n    \"Reasoning\": \"Why this role fits\",\n    \"Likelihood\": 0.87\n  },\n  {\n    \"ID\": \"T1113\",\n    \"Name\": \"Screen Capture\",\n    \"Description\": \"Adversaries may attempt to take screen captures of the desktop to gather information over the course of an operation. Screen capturing functionality may be included as a feature of a remote access tool used in post-compromise operations. Taking a screenshot is also typically possible through native utilities or API calls, such as <code>CopyFromScreen</code>, <code>xwd</code>, or <code>screencapture</code>.(Citation: CopyFromScreen .NET)(Citation: Antiquated Mac Malware)\",\n    \"Reasoning\": \"Why this role fits\",\n    \"Likelihood\": 0.5\n  }\n]\n\nLastly, if you return more than one array, your entire answer will be rejected.\nThe system will parse your response with JSON.parse() \u2014 it will fail if you return multiple top-level arrays.\nReturn exactly one array. No text. No prefix. No suffix."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        320,
+        860
+      ],
+      "id": "0013a252-fe12-4e65-a5e5-ee6d80bd94a3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "mistral:7b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        140,
+        1100
+      ],
+      "id": "3c3cc0e9-21ed-4432-8316-91e660de5131",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ATFzah8LTIvv3UVy",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        1100
+      ],
+      "id": "581fc044-aff9-4625-8c2d-171243fa129e",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "attack_t_codes",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        1220
+      ],
+      "id": "f8ad2a35-5cfc-41f2-95d1-31161f00c494",
+      "name": "Qdrant Vector Store1",
+      "credentials": {
+        "qdrantApi": {
+          "id": "w4OSRbhrvEqt1gRA",
+          "name": "QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "nomic-embed-text:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        520,
+        1380
+      ],
+      "id": "6b4fea66-47c2-4927-860a-29a57e1b4314",
+      "name": "Embeddings Ollama1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ATFzah8LTIvv3UVy",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "0277e2ec-76f6-4c46-9e04-c2103c05b819",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [
+        560,
+        300
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "67f597ca-6e07-4da1-8296-d9ecc233279a",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "position": [
+        580,
+        440
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "attack_t_codes",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.1,
+      "position": [
+        380,
+        120
+      ],
+      "id": "0a4ecd91-e534-4537-ac22-7d0e2925e4ce",
+      "name": "Qdrant Vector Store",
+      "credentials": {
+        "qdrantApi": {
+          "id": "w4OSRbhrvEqt1gRA",
+          "name": "QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "nomic-embed-text:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        320,
+        400
+      ],
+      "id": "7efa7b80-774c-4732-8b5b-c43972c15857",
+      "name": "Embeddings Ollama",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ATFzah8LTIvv3UVy",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Upload file",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "File",
+              "fieldType": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        120
+      ],
+      "id": "c3f84a66-73c0-4bba-8e7e-9c2b6ccb161e",
+      "name": "On form submission",
+      "webhookId": "5d79cd66-2344-47d2-98c0-af51c0c476f1"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        880,
+        1220
+      ],
+      "id": "c1cc862e-04c5-4dd4-9b3c-12a1dabda5d8",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ATFzah8LTIvv3UVy",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "t_codes_tool",
+        "description": "Use this tool to get information about MITRE ATTACK T-codes. This database contains their specifications."
+      },
+      "id": "3a22bef9-4257-4009-a8db-b43085f12dd9",
+      "name": "Vector Store Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "position": [
+        580,
+        1040
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Load documents into DB",
+        "height": 620,
+        "width": 1040
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9fc0d764-35f5-42ab-9720-66f2dc5b93cf",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Query documents",
+        "height": 800,
+        "width": 1040,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        740
+      ],
+      "id": "c2e890e9-017f-4234-a37d-d58fc21c0a6e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "t-codes",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -120,
+        1040
+      ],
+      "id": "f829c4a8-138e-4f98-b1f4-36ac14c9d622",
+      "name": "Webhook",
+      "webhookId": "3a13ba4d-5c98-4d0f-8be0-55d56c13a6ce"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f2fc7988-3fb3-4cd0-b496-fee49d2d60cf",
+              "name": "body.query",
+              "value": "={{ $json.chatInput ?? $json.body.query ?? $json.body.messages[$json.body.messages.length - 1].content }}\n",
+              "type": "string"
+            },
+            {
+              "id": "bf5633ee-9ee3-48e2-a988-06b26ebd414a",
+              "name": "sessionId",
+              "value": "={{ $json.sessionId ?? $json.body.sessionId ?? $json.headers['postman-token'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        80,
+        860
+      ],
+      "id": "0783fc78-784a-4659-ba5f-30b518679574",
+      "name": "Edit Fields"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store1": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "ddfaae44-2662-4abb-9460-d514c045720f",
+  "triggerCount": 3,
+  "shared": [
+    {
+      "createdAt": "2025-07-30T13:49:46.739Z",
+      "updatedAt": "2025-07-30T13:49:46.739Z",
+      "role": "workflow:owner",
+      "workflowId": "6FO8t9zwqve7fhPj",
+      "projectId": "MeMbnwpvkMuk9YBS",
+      "project": {
+        "createdAt": "2025-07-30T13:12:26.538Z",
+        "updatedAt": "2025-07-30T13:15:42.235Z",
+        "id": "MeMbnwpvkMuk9YBS",
+        "name": "step admin <step-admin@cert.org>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-07-30T13:12:26.538Z",
+            "updatedAt": "2025-07-30T13:12:26.538Z",
+            "role": "project:personalOwner",
+            "userId": "053d247d-19b5-408f-9784-0f4efeddd780",
+            "projectId": "MeMbnwpvkMuk9YBS",
+            "user": {
+              "createdAt": "2025-07-30T13:12:26.130Z",
+              "updatedAt": "2025-08-04T18:10:35.000Z",
+              "id": "053d247d-19b5-408f-9784-0f4efeddd780",
+              "email": "step-admin@cert.org",
+              "firstName": "step",
+              "lastName": "admin",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-07-30T13:15:51.407Z",
+                "personalization_survey_n8n_version": "1.90.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "6FO8t9zwqve7fhPj",
+                "userActivatedAt": 1753890055306
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-08-04",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

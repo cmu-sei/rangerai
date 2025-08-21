@@ -1,0 +1,532 @@
+{
+  "createdAt": "2025-07-30T13:53:09.086Z",
+  "updatedAt": "2025-07-30T13:53:13.000Z",
+  "id": "qhKLeeH94gmDyTLn",
+  "name": "WorkRoles",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -160,
+        800
+      ],
+      "id": "57766524-c9de-427e-9af2-05709060c1ff",
+      "name": "When chat message received",
+      "webhookId": "c384160e-db9f-4d99-9d31-91e44647e6ad"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.query }}",
+        "options": {
+          "systemMessage": "You are a helpful assistant providing information about the NICE work roles and how other content is related to those roles. You can only answer questions in regard to the information you have about the work roles. \n\nNEVER make up a work role. The only possible matches are from the work_roles_tool, in there you will find:\n\nOG-WRL-001\nOG-WRL-002\nOG-WRL-003\nOG-WRL-004\nOG-WRL-005\nOG-WRL-006\nOG-WRL-007\nOG-WRL-008\nOG-WRL-009\nOG-WRL-010\nOG-WRL-011\nOG-WRL-012\nOG-WRL-013\nOG-WRL-014\nOG-WRL-015\nOG-WRL-016\nDD-WRL-001\nDD-WRL-002\nDD-WRL-003\nDD-WRL-004\nDD-WRL-005\nDD-WRL-006\nDD-WRL-007\nDD-WRL-008\nDD-WRL-009\nIO-WRL-001\nIO-WRL-002\nIO-WRL-003\nIO-WRL-004\nIO-WRL-005\nIO-WRL-006\nIO-WRL-007\nPD-WRL-001\nPD-WRL-002\nPD-WRL-003\nPD-WRL-004\nPD-WRL-005\nPD-WRL-006\nPD-WRL-007\nIN-WRL-001\nIN-WRL-002\n\nIf you come up with one that isn't in this list, then remove it. Do not claim insufficient information or say it might be. Just list it and provide the likelihood. No jabber.\n\nIt is perfectly OK to have more than one match.\n\nYou should also provide a likelihood of match. 1.0 being a entirely perfect match, 0.0 being not a match. Any number below 1 should start with a 0. Don't include anything that is below 0.4.\n\nIMPORTANT: You must return a single valid JSON array. Never return multiple arrays or multiple JSON blocks.\n\nTHE OUTPUT FORMAT MUST LOOK LIKE THIS EXAMPLE:\n\n[\n  {\n    \"WORKROLEID\": \"OG-WRL-001\",\n    \"description\": \"Some description here\",\n    \"reasoning\": \"Why this role fits\",\n    \"likelihood\": 0.87\n  },\n  {\n    \"WORKROLEID\": \"PD-WRL-002\",\n    \"description\": \"Another description\",\n    \"reasoning\": \"Another justification\",\n    \"likelihood\": 0.91\n  }\n]\n\nLastly, \n\n[\n  { \"WORKROLEID\": \"OG-WRL-001\", ... }\n]\n[\n  { \"WORKROLEID\": \"OG-WRL-002\", ... }\n]\n\u274c THIS IS INVALID. NEVER DO THIS. \n\nIf you return more than one array, your entire answer will be rejected.\nThe system will parse your response with JSON.parse() \u2014 it will fail if you return multiple top-level arrays.\nReturn exactly one array. No text. No prefix. No suffix."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        320,
+        860
+      ],
+      "id": "c3485fec-db4d-495c-b220-4ea441ae5638",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "mistral:7b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        140,
+        1100
+      ],
+      "id": "2b763bf6-9b97-440e-844b-4fb3f9ee0ea0",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ATFzah8LTIvv3UVy",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        1100
+      ],
+      "id": "dddc6b64-5060-4df6-a272-5b06d8d494f8",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "workroles",
+          "mode": "list",
+          "cachedResultName": "workroles"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        1220
+      ],
+      "id": "877b8a17-2b77-4661-a84b-3f7584717845",
+      "name": "Qdrant Vector Store1",
+      "credentials": {
+        "qdrantApi": {
+          "id": "w4OSRbhrvEqt1gRA",
+          "name": "QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "nomic-embed-text:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        520,
+        1380
+      ],
+      "id": "65adba63-474c-4996-8700-1c6f47c3361e",
+      "name": "Embeddings Ollama1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ATFzah8LTIvv3UVy",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "c63ab39b-cd6c-4bc1-afe1-0e901185d5bb",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [
+        560,
+        300
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "b420a048-f30b-4061-8e6c-f0f72a427d96",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "position": [
+        580,
+        440
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "workroles",
+          "mode": "list",
+          "cachedResultName": "workroles"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.1,
+      "position": [
+        380,
+        120
+      ],
+      "id": "bcabd5fe-05e6-4e8d-90c6-410e57549b07",
+      "name": "Qdrant Vector Store",
+      "credentials": {
+        "qdrantApi": {
+          "id": "w4OSRbhrvEqt1gRA",
+          "name": "QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "nomic-embed-text:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        320,
+        400
+      ],
+      "id": "f120b3ce-96c3-4b71-a499-cc6bb8717e6d",
+      "name": "Embeddings Ollama",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ATFzah8LTIvv3UVy",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Upload file",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "File",
+              "fieldType": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        120
+      ],
+      "id": "a64bc1b3-fc6a-477c-a64a-e52408698baf",
+      "name": "On form submission",
+      "webhookId": "c2bc8a95-b393-4828-b1e4-224244df1afa"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        880,
+        1220
+      ],
+      "id": "db4213cf-a202-4147-9caf-5184ef93dcdf",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ATFzah8LTIvv3UVy",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "work_roles_tool",
+        "description": "Use this tool to get information about NICE Work roles."
+      },
+      "id": "e8431caf-a2dc-4df7-bbf4-f3d0d4a0f652",
+      "name": "Vector Store Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "position": [
+        580,
+        1040
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Load documents into DB",
+        "height": 620,
+        "width": 1040
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c5290d8e-6ede-4534-9504-0a77160e9bbe",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Query documents",
+        "height": 800,
+        "width": 1040,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        740
+      ],
+      "id": "d188077c-d68e-4841-ad7d-3733daaec1ae",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "work-roles",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -120,
+        1040
+      ],
+      "id": "f5e74040-d523-4cd4-81db-bdd231fbaa5f",
+      "name": "Webhook",
+      "webhookId": "c574c363-b114-442f-a270-8ddf1839d260"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f2fc7988-3fb3-4cd0-b496-fee49d2d60cf",
+              "name": "body.query",
+              "value": "={{ $json.chatInput ?? $json.body.query }}",
+              "type": "string"
+            },
+            {
+              "id": "bf5633ee-9ee3-48e2-a988-06b26ebd414a",
+              "name": "sessionId",
+              "value": "={{ $json.sessionId ?? $json.headers['postman-token'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        80,
+        860
+      ],
+      "id": "013daef9-56dc-436e-b135-62a5d8e5a4b5",
+      "name": "Edit Fields"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store1": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "5cc38747-f280-4fc6-8b36-c335cc29e1c9",
+  "triggerCount": 3,
+  "shared": [
+    {
+      "createdAt": "2025-07-30T13:53:09.098Z",
+      "updatedAt": "2025-07-30T13:53:09.098Z",
+      "role": "workflow:owner",
+      "workflowId": "qhKLeeH94gmDyTLn",
+      "projectId": "MeMbnwpvkMuk9YBS",
+      "project": {
+        "createdAt": "2025-07-30T13:12:26.538Z",
+        "updatedAt": "2025-07-30T13:15:42.235Z",
+        "id": "MeMbnwpvkMuk9YBS",
+        "name": "step admin <step-admin@cert.org>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-07-30T13:12:26.538Z",
+            "updatedAt": "2025-07-30T13:12:26.538Z",
+            "role": "project:personalOwner",
+            "userId": "053d247d-19b5-408f-9784-0f4efeddd780",
+            "projectId": "MeMbnwpvkMuk9YBS",
+            "user": {
+              "createdAt": "2025-07-30T13:12:26.130Z",
+              "updatedAt": "2025-08-04T18:10:35.000Z",
+              "id": "053d247d-19b5-408f-9784-0f4efeddd780",
+              "email": "step-admin@cert.org",
+              "firstName": "step",
+              "lastName": "admin",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-07-30T13:15:51.407Z",
+                "personalization_survey_n8n_version": "1.90.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "6FO8t9zwqve7fhPj",
+                "userActivatedAt": 1753890055306
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-08-04",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

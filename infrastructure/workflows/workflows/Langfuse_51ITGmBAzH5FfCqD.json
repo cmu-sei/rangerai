@@ -1,0 +1,172 @@
+{
+  "createdAt": "2025-07-30T18:31:55.405Z",
+  "updatedAt": "2025-07-30T18:31:55.405Z",
+  "id": "51ITGmBAzH5FfCqD",
+  "name": "Langfuse",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "e710ffdd-7eaf-4d73-85bd-2182f2b4d2f7",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "3917af54-131f-41c5-a250-b32e0ff9dc5f",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 100
+      },
+      "id": "e7bb69eb-cb10-4246-8150-ddd615357030",
+      "name": "mem",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        540,
+        240
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "code": {
+          "supplyData": {
+            "code": "const { CallbackHandler } = require(\"langfuse-langchain\");\nconst { initChatModel } = require(\"langchain/chat_models/universal\");\n\n// Get connected model\nconst model = await this.getInputConnectionData(\"ai_languageModel\", 0);\nconst modelProvider = model.lc_namespace[2].replace(\"_\", \"-\");\nconst modelName = model.model;\nconst temperature = model.temperature;\n\n// Initialize Langfuse callback handler\nconst sessionId = $input.item.json.sessionId;\nconst langfuseHandler = new CallbackHandler({\n  sessionId,\n});\n\nconst llm = await initChatModel(modelName, {\n  temperature,\n  modelProvider,\n  callbacks: [langfuseHandler],\n});\n\nreturn llm;\n"
+          }
+        },
+        "inputs": {
+          "input": [
+            {
+              "type": "ai_languageModel",
+              "maxConnections": 1,
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "output": [
+            {
+              "type": "ai_languageModel"
+            }
+          ]
+        }
+      },
+      "id": "1a1b6db1-0461-4467-a28f-2c19bb78918e",
+      "name": "Langfuse LLM",
+      "type": "@n8n/n8n-nodes-langchain.code",
+      "position": [
+        240,
+        240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "2f374f40-2116-4c1a-9d4e-4ac51479a0e2",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        340,
+        0
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "model": "mistral:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        160,
+        440
+      ],
+      "id": "f11f6b28-11f9-4b72-8b98-ab9fd95582b0",
+      "name": "Ollama Model"
+    }
+  ],
+  "connections": {
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Langfuse LLM",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "a3fc3d35-768f-40fe-875a-47102c93d911",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-30T18:31:55.418Z",
+      "updatedAt": "2025-07-30T18:31:55.418Z",
+      "role": "workflow:owner",
+      "workflowId": "51ITGmBAzH5FfCqD",
+      "projectId": "MeMbnwpvkMuk9YBS",
+      "project": {
+        "createdAt": "2025-07-30T13:12:26.538Z",
+        "updatedAt": "2025-07-30T13:15:42.235Z",
+        "id": "MeMbnwpvkMuk9YBS",
+        "name": "step admin <step-admin@cert.org>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-07-30T13:12:26.538Z",
+            "updatedAt": "2025-07-30T13:12:26.538Z",
+            "role": "project:personalOwner",
+            "userId": "053d247d-19b5-408f-9784-0f4efeddd780",
+            "projectId": "MeMbnwpvkMuk9YBS",
+            "user": {
+              "createdAt": "2025-07-30T13:12:26.130Z",
+              "updatedAt": "2025-08-04T18:10:35.000Z",
+              "id": "053d247d-19b5-408f-9784-0f4efeddd780",
+              "email": "step-admin@cert.org",
+              "firstName": "step",
+              "lastName": "admin",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-07-30T13:15:51.407Z",
+                "personalization_survey_n8n_version": "1.90.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "6FO8t9zwqve7fhPj",
+                "userActivatedAt": 1753890055306
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-08-04",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

@@ -1,0 +1,756 @@
+{
+  "createdAt": "2025-07-31T10:09:31.223Z",
+  "updatedAt": "2025-07-31T20:28:38.000Z",
+  "id": "AElMPYQ5O5hIvjfg",
+  "name": "daydreamer",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "model": "llama3.3:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        240,
+        220
+      ],
+      "id": "a5128045-be7c-4e33-a7df-b3f9a3c3cddb",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ATFzah8LTIvv3UVy",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json[\"output\"];\n\n// Parse the stringified JSON array inside the \"output\" field\nconst questions = JSON.parse(raw.match(/\\[([\\s\\S]*)\\]/)[0]);\n\nreturn questions.map(q => ({\n  json: {\n    Question: q.trim()\n  }\n}));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        -20
+      ],
+      "id": "fccdee19-f1db-458a-865d-addacc78734e",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "databaseId": 168,
+        "tableId": 681,
+        "additionalOptions": {
+          "filters": {
+            "fields": [
+              {
+                "field": 6617,
+                "value": "true"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -20
+      ],
+      "id": "ba809470-1542-4043-b355-cb2372301dad",
+      "name": "Get Topics",
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "baserowApi": {
+          "id": "l9kvaZEIfPOQ9Vjj",
+          "name": "Baserow account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "databaseId": 168,
+        "tableId": 682,
+        "returnAll": true,
+        "additionalOptions": {
+          "filters": {
+            "fields": [
+              {
+                "field": 6620,
+                "value": "true"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -20
+      ],
+      "id": "fbf8d96d-d4e1-4f56-ba75-521f8de0642a",
+      "name": "Get Results",
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "baserowApi": {
+          "id": "l9kvaZEIfPOQ9Vjj",
+          "name": "Baserow account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "databaseId": 168,
+        "tableId": 682,
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": 6618,
+              "fieldValue": "={{ $json.Question }}"
+            },
+            {
+              "fieldId": 6621,
+              "fieldValue": "={{ $json.Score }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        820,
+        -20
+      ],
+      "id": "55ed377b-075f-4b43-8541-b57839698f74",
+      "name": "Baserow",
+      "credentials": {
+        "baserowApi": {
+          "id": "l9kvaZEIfPOQ9Vjj",
+          "name": "Baserow account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -260,
+        -20
+      ],
+      "id": "59e58cd4-a878-45e1-becb-e4816b310cf1",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a product owner. Generate exactly 10 deep, domain-specific software capabilities or features that explore the space spanned by the topics below. Don't make them academic or \"too big to get started on\".\n\nCover the breadth of why it matters, how it could be engineered, and perspectives from the Department of Defense or frontline cyber defenders.\n\nThese capabilities should not be purely academic. We operate in the applied space\u2014something we can build, test, and deploy is preferred. An open-source software project is always the best outcome from the sort of capabilities you should explore.\n\nAt least 3 of the 10 features must explicitly bridge multiple topics.\n\nTOPICS:\n{{ \n  $items('Get Topics')\n    .filter(item => item.json.Active)\n    .filter((item, idx, all) =>\n      all.findIndex(x => x.json.Name === item.json.Name) === idx\n    )\n    .map(item => `- ${item.json.Name}: ${item.json.Notes || ''}`)\n    .join('\\n')\n}}\n\nPRIOR QUESTIONS WITH RATINGS (0=bad, 5=great):\n{{ \n  $('Get Results').all()\n    .filter(i => i.json.Active)\n    .map(i => `- ${i.json.Question} (${i.json.Rating})`)\n    .join('\\n') \n}}\n\n\nCONSTRAINTS:\n- Output must be a JSON array of strings, nothing else. Example: [\"q1\", \"q2\", ...]\n- Exactly 10 capabilities or features.\n- Do NOT repeat topic names verbatim.\n- NO boilerplate stems: Avoid \u201cHow can\u2026\u201d, \u201cWhat are the challenges\u2026\u201d, \u201cIn what ways\u2026\u201d.\n- Use precise operators: quantify, bound, compare, specify metrics, contexts, and actors.\n- Novelty rule: No two items should share the same core predicate (\u22656 content words overlap = rewrite).\n- Bridge rule: \u22653 features must integrate at least two topics and make the linkage explicit.\n- Return only the JSON array. No explanations, commentary, or markdown.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        240,
+        -20
+      ],
+      "id": "d15dcd5f-ebdf-4f0d-a167-4e9b763fb5d5",
+      "name": "Daydreamer Agent"
+    },
+    {
+      "parameters": {
+        "model": "mistral:7b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        160,
+        620
+      ],
+      "id": "7d2261c2-5fff-40ab-babd-aced82a2533d",
+      "name": "Ollama Chat Model1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ATFzah8LTIvv3UVy",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "/*\nitems = [\n  { json: { output: \" ...large string...\" }},\n  ...\n]\nGoal: return one item per {Question, Score}\n*/\n\nconst out = [];\n\nfor (const itm of items) {\n  const raw = itm.json.output;\n\n  // Grab the first [{\u2026}] block in the string\n  const match = raw.match(/\\{\\s*\"question\"[\\s\\S]*?\\}/g);\n  if (!match) continue;\n\n  // Wrap in [ ] if needed and parse\n  let arr;\n  try {\n    arr = JSON.parse(raw.slice(raw.indexOf('{')));\n    // If parsed object has .questions array, use it\n    if (arr.questions) arr = arr.questions;\n    if (!Array.isArray(arr)) arr = [arr];\n  } catch (e) {\n    // Fallback: parse bracketed array\n    try { arr = JSON.parse(match[0].startsWith('[') ? match[0] : `[${match.join(',')}]`); }\n    catch { continue; }\n  }\n\n  for (const q of arr) {\n    out.push({\n      json: {\n        Question: q.question.trim(),\n        Score: parseInt(q.score, 10) || 0\n      }\n    });\n  }\n}\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        380
+      ],
+      "id": "d66a317f-f44e-43d0-a8ab-ff63bf6a8542",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "daydream_items",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        -700
+      ],
+      "id": "e6b723f0-14f6-49ac-b428-969fa52b0882",
+      "name": "Qdrant Vector Store",
+      "alwaysOutputData": true,
+      "credentials": {
+        "qdrantApi": {
+          "id": "w4OSRbhrvEqt1gRA",
+          "name": "QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "nomic-embed-text:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        20,
+        -460
+      ],
+      "id": "a5b97c37-88b6-47a2-9275-d5352079d66c",
+      "name": "Embeddings Ollama",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ATFzah8LTIvv3UVy",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -460
+      ],
+      "id": "a4d38040-0ade-4bc4-98c6-121db1fabaf2",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        260,
+        -300
+      ],
+      "id": "bddc6ab3-afab-4de4-b77c-d360c2c09441",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "databaseId": 168,
+        "tableId": 682,
+        "returnAll": true,
+        "additionalOptions": {
+          "filters": {
+            "fields": [
+              {
+                "field": 6620,
+                "operator": "not_equal",
+                "value": "true"
+              },
+              {
+                "field": 6621,
+                "operator": "not_empty"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        -700
+      ],
+      "id": "3aa8aaf9-60a6-45cd-95ae-21dd4ed62791",
+      "name": "Get Not Active But Scored",
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "baserowApi": {
+          "id": "l9kvaZEIfPOQ9Vjj",
+          "name": "Baserow account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "databaseId": 168,
+        "tableId": 682,
+        "rowId": "={{ $('Get Not Active But Scored').item.json.id || '' }}",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": 6620,
+              "fieldValue": "true"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        440,
+        -700
+      ],
+      "id": "fe53df6c-3e55-4bda-8b4b-e54201bb8251",
+      "name": "Update Now Active Rows",
+      "alwaysOutputData": true,
+      "credentials": {
+        "baserowApi": {
+          "id": "l9kvaZEIfPOQ9Vjj",
+          "name": "Baserow account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "existing_items",
+        "toolDescription": "Work with all prior scored items.",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "daydream_items",
+          "mode": "list",
+          "cachedResultName": "daydream_items"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        620
+      ],
+      "id": "4cc0fdf2-ad61-46d2-b1cb-672cb4ef3cd3",
+      "name": "Qdrant Vector Store1",
+      "credentials": {
+        "qdrantApi": {
+          "id": "w4OSRbhrvEqt1gRA",
+          "name": "QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "nomic-embed-text:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        320,
+        780
+      ],
+      "id": "6b614c8e-bb29-4596-8ec5-61999fdca46f",
+      "name": "Embeddings Ollama1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ATFzah8LTIvv3UVy",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "databaseId": 168,
+        "tableId": 682,
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": 6618,
+              "fieldValue": "={{ $json.Question }}"
+            },
+            {
+              "fieldId": 6621,
+              "fieldValue": "={{ $json.Score }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        820,
+        380
+      ],
+      "id": "4c0b519b-bec9-458c-aefe-4edf522dace2",
+      "name": "Baserow1",
+      "credentials": {
+        "baserowApi": {
+          "id": "l9kvaZEIfPOQ9Vjj",
+          "name": "Baserow account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Store scored records in vector DB",
+        "height": 680,
+        "width": 1380,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -800
+      ],
+      "id": "17141c20-cea1-40cf-a521-7f1e323e22be",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Create new ideas fom BR",
+        "height": 680,
+        "width": 1380,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -100
+      ],
+      "id": "2550234d-e323-4548-baf9-815d1cae0fe3",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Create new ideas fom Vector store",
+        "height": 360,
+        "width": 1380,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        600
+      ],
+      "id": "b4b6a2c8-f0ba-4326-b870-9721b1df5e28",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a product owner. Generate exactly 10 deep, domain-specific software capabilities or features that explore the space spanned by the items below. Don't make them academic or \"too big to get started on\".\n\nCover the breadth of why it matters, how it could be engineered, and perspectives from the Department of Defense or frontline cyber defenders.\n\nThese capabilities should not be purely academic. We operate in the applied space\u2014something we can build, test, and deploy is preferred. An open-source software project is always the best outcome from the sort of capabilities you should explore.\n\nPRIOR QUESTIONS WITH RATINGS (0=bad, 5=great):\nUse the existing_items() tool that you can access.\n\nCONSTRAINTS:\n- Output must be a JSON array of strings, nothing else. Example: [\"q1\", \"q2\", ...]\n- Exactly 10 capabilities or features.\n- Do NOT repeat topic names verbatim.\n- NO boilerplate stems: Avoid \u201cHow can\u2026\u201d, \u201cWhat are the challenges\u2026\u201d, \u201cIn what ways\u2026\u201d.\n- Use precise operators: quantify, bound, compare, specify metrics, contexts, and actors.\n- Novelty rule: No two items should share the same core predicate (\u22656 content words overlap = rewrite).\n- Bridge rule: \u22653 features must integrate at least two topics and make the linkage explicit.\n- Return only the JSON array. No explanations, commentary, or markdown.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        160,
+        380
+      ],
+      "id": "e57f19f9-e46b-4d1f-a124-1a17de21abe6",
+      "name": "Daydreamer RAG Agent"
+    }
+  ],
+  "connections": {
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Daydreamer Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Baserow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Topics": {
+      "main": [
+        [
+          {
+            "node": "Get Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Results": {
+      "main": [
+        [
+          {
+            "node": "Daydreamer Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Not Active But Scored",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daydreamer Agent": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Daydreamer RAG Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Baserow1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Baserow": {
+      "main": [
+        [
+          {
+            "node": "Daydreamer RAG Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store": {
+      "main": [
+        [
+          {
+            "node": "Update Now Active Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Not Active But Scored": {
+      "main": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Now Active Rows": {
+      "main": [
+        [
+          {
+            "node": "Get Topics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Daydreamer RAG Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daydreamer RAG Agent": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "32e2cd09-64da-4de9-a8ae-76c6f47fe518",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-31T10:09:31.232Z",
+      "updatedAt": "2025-07-31T10:09:31.232Z",
+      "role": "workflow:owner",
+      "workflowId": "AElMPYQ5O5hIvjfg",
+      "projectId": "MeMbnwpvkMuk9YBS",
+      "project": {
+        "createdAt": "2025-07-30T13:12:26.538Z",
+        "updatedAt": "2025-07-30T13:15:42.235Z",
+        "id": "MeMbnwpvkMuk9YBS",
+        "name": "step admin <step-admin@cert.org>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-07-30T13:12:26.538Z",
+            "updatedAt": "2025-07-30T13:12:26.538Z",
+            "role": "project:personalOwner",
+            "userId": "053d247d-19b5-408f-9784-0f4efeddd780",
+            "projectId": "MeMbnwpvkMuk9YBS",
+            "user": {
+              "createdAt": "2025-07-30T13:12:26.130Z",
+              "updatedAt": "2025-08-04T18:10:35.000Z",
+              "id": "053d247d-19b5-408f-9784-0f4efeddd780",
+              "email": "step-admin@cert.org",
+              "firstName": "step",
+              "lastName": "admin",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-07-30T13:15:51.407Z",
+                "personalization_survey_n8n_version": "1.90.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "6FO8t9zwqve7fhPj",
+                "userActivatedAt": 1753890055306
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-08-04",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

@@ -1,0 +1,13 @@
+#cloud-config
+autoinstall:
+  version: 1
+  early-commands:
+    - systemctl stop ssh
+  identity:
+    hostname: ranger-appliance
+    username: ranger
+    password: "$6$eAb77zz6RWqUmkXi$Tc6J9/RWU2aIVHt2ZirxN6I0p32GWDvRB4PeZx6jcG/CX4Bo1rQtYbWFeS7aufXmZHQxjE4oEfhQ/XBjOlqg81"
+  ssh:
+    install-server: true
+  packages:
+    - qemu-guest-agent

@@ -1,0 +1,106 @@
+networks:
+  ranger-net:
+
+volumes:
+  n8n_data:
+  open-webui-data:
+  baserow_data:
+  n8n-postgres-data:
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: n8n
+      POSTGRES_PASSWORD: n8npass
+      POSTGRES_DB: n8ndb
+    volumes:
+      - n8n-postgres-data:/var/lib/postgresql/data
+    networks:
+      - ranger-net
+    restart: unless-stopped
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:1.106.0
+    container_name: n8n
+    ports:
+      - "5678:5678"
+    environment:
+      N8N_SECURE_COOKIE: "false"
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: n8ndb
+      DB_POSTGRESDB_USER: n8n
+      DB_POSTGRESDB_PASSWORD: n8npass
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - ranger-net
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    ports:
+      - "3333:8080"
+    environment:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+    ulimits:
+      nproc: 8192
+      nofile:
+        soft: 65535
+        hard: 65535
+    volumes:
+      - open-webui-data:/app/backend/data
+    networks:
+      - ranger-net
+    restart: always
+
+  # pipelines:
+  #   image: ghcr.io/open-webui/pipelines:main
+  #   container_name: pipelines
+  #   ports:
+  #     - "9099:9099"
+  #   networks:
+  #     - ranger-net
+  #   restart: always
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: qdrant
+    ports:
+      - "6333:6333"
+    networks:
+      - ranger-net
+    restart: unless-stopped
+
+  baserow:
+    image: baserow/baserow:1.32.5
+    container_name: baserow
+    ports:
+      - "8081:80"
+    environment:
+      BASEROW_PUBLIC_URL: http://baserow:8081
+    volumes:
+      - baserow_data:/baserow/data
+    networks:
+      - ranger-net
+    restart: unless-stopped
+
+  ranger:
+    build:
+      context: ./ranger-api
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    container_name: ranger
+    ports:
+      - "5076:5000"
+    networks:
+      - ranger-net
+    restart: unless-stopped
