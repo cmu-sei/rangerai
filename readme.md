@@ -23,7 +23,7 @@ At its core, Ranger is not just a chatbot, but a modular suite of AI tools that 
 
 ## Quick Start
 
-Head over to the [Quick Start Guide](https://cmu-sei.github.io/rangerai/quick-start) in the Ranger docs to get started.
+Head over to the [Quick Start Guide](https://cmu-sei.github.io/rangerai/) in the Ranger docs to get started.
 
 ## License
 
