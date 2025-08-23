@@ -19,7 +19,7 @@ Whether you're running a training range, building a scenario, or experimenting w
 
 Cyber ranges are awesome, but let’s face it, they can be difficult to manage. Scenario setup is tedious. Injecting new events takes a human. Exercises feel like plays stuck in rehearsal: Scripted, brittle, and already a bit outdated the moment they run.
 
-**Ranger fixes that.** It’s an intelligent layer that sits on top of your range tooling and makes things actually dynamic. It looks to:
+**Ranger hopes to fix that.** It’s an intelligent layer that sits on top of your range tooling and makes things actually dynamic. It looks to:
 
 - Drive live injects based on trainee behavior
 - Adapt to how teams are performing
