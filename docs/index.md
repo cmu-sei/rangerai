@@ -13,6 +13,8 @@ Whether you're running a training range, building a scenario, or experimenting w
     ![Crucible Logo](assets/crucible-icon-c-alpha.svg)
     Ranger runs alongside the SEI's **Crucible Framework**, a modular system for creating and managing virtual environments for training and exercises. Find more on [Crucible's source code](https://github.com/cmu-sei/crucible) and [Crucible Docs](https://cmu-sei.github.io/crucible/).
 
+    Ranger is also designed to drive GHOSTS NPC agents in simulating all manner of user behavior in your range. Learn more about [GHOSTS](https://github.com/cmu-sei/GHOSTS/).
+
 ## Why We Built Ranger
 
 Cyber ranges are awesome, but let’s face it, they can be difficult to manage. Scenario setup is tedious. Injecting new events takes a human. Exercises feel like plays stuck in rehearsal: Scripted, brittle, and already a bit outdated the moment they run.
