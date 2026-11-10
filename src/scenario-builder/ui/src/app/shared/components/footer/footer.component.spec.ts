@@ -8,14 +8,17 @@ describe('FooterComponent', () => {
 
   const notices = (root: HTMLElement) => [...root.querySelectorAll('footer span')].map(s => s.textContent?.trim());
 
-  it('carries the standard notice and the API version, with no GHOSTS name or links', async () => {
+  it('carries the standard notice, the API version and a link to the repository, with no GHOSTS name', async () => {
     const fixture = TestBed.createComponent(FooterComponent);
     TestBed.inject(HttpTestingController).expectOne('/api/version').flush({ version: '0.1.0' });
     await fixture.whenStable();
     const root = fixture.nativeElement as HTMLElement;
 
-    expect(notices(root)).toEqual(['Ranger Scenario Builder. v0.1.0.', 'CERT © 2017. All rights reserved.']);
-    expect(root.querySelectorAll('a')).toHaveLength(0);
+    expect(notices(root)).toEqual(['Ranger Scenario Builder. v0.1.0.', 'CERT © 2022. All rights reserved.']);
+    const links = [...root.querySelectorAll('a')];
+    expect(links.map(a => a.getAttribute('href'))).toEqual(['https://github.com/cmu-sei/rangerai']);
+    expect(links[0].getAttribute('aria-label')).toBe('Ranger on GitHub');
+    expect(links[0].querySelector('svg')).not.toBeNull();
   });
 
   it('leaves the version off when the API can\'t say', async () => {
