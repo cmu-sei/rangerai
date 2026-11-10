@@ -1,8 +1,8 @@
 site_name: Ranger Documentation
-site_description: "Ranger is tactical AI infrastructure that helps with automation and orchestration for cyber range training, experimentation, and exercise."
+site_description: "Ranger is AI tooling for cyber range training, exercises and simulation: Chronicle, Scenario Builder and Range Automation."
 site_author: "Ranger Team at CMU SEI"
 copyright: >
-  Copyright &copy; 2025 Carnegie Mellon University. All rights reserved.
+  Copyright &copy; 2026 Carnegie Mellon University. All rights reserved.
 extra_css:
   - assets/extra.css
 theme:
@@ -48,8 +48,8 @@ markdown_extensions:
   - pymdownx.caret
   - pymdownx.details
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.keys
@@ -77,10 +77,10 @@ extra:
       name: Request a Feature
     - icon: fontawesome/regular/comments
       link: https://github.com/cmu-sei/rangerai/discussions
-      name: SSVC Community Discussions
+      name: Ranger Community Discussions
     - icon: fontawesome/brands/github
       link: https://github.com/cmu-sei/rangerai
-      name: cmu-sei/GHOSTS on Github
+      name: cmu-sei/rangerai on GitHub
     - icon: fontawesome/regular/envelope
       link: mailto:info@sei.cmu.edu?subject=ranger%20Feedback
       name: Email Ranger Team at CMU SEI
@@ -89,20 +89,9 @@ extra:
       name: Software Engineering Institute
 nav:
   - Home: index.md
-  - Docker Quick Start: quickstart.md
-  - Appliance Quick Start: quickstart-appliance.md
-  - Infrastructure:
-      - infrastructure/index.md
-      - Client Interface: infrastructure/user_interface.md
-      - Ranger Core API: infrastructure/ranger_api.md
-      - Workflows: infrastructure/workflows.md
-      - MCP: infrastructure/mcp.md
-      - RAG: infrastructure/rag.md
-      - Data Storage: infrastructure/data_storage.md
-      - AI Provider: infrastructure/ai_provider.md
-  - Deployment:
-      - Deployment: deployment/index.md
-      - Configuration: deployment/configuration.md
-      - Tuning: deployment/tuning.md
+  - Chronicle: chronicle.md
+  - Scenario Builder: scenario-builder/index.md
+  - Range Automation: range-automation.md
+  - Local Development: development.md
 repo_url: "https://github.com/cmu-sei/rangerai"
 repo_name: "cmu-sei/rangerai"

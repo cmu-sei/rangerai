@@ -1,47 +1,39 @@
 # ![](assets/ranger-face.png) Meet Ranger
 
+???+ info "Ranger is being reorganized"
+    The earlier Ranger stack (a chat API with workflows, MCP and RAG, shipped as a Docker stack or an appliance) is being retired. Ranger is now built from the parts below. These docs describe the new layout and grow as each part lands.
 
-???+ info "Note"
-    Ranger is under active development, and the documentation is a work in progress. We welcome contributions and feedback to improve it. 😍
+Ranger is AI tooling for cyber range training, exercises and simulation. It helps you design an event, build and run it, and learn from it, using local or frontier models. It works on closed and air-gapped ranges.
 
+## The Problem
 
-Ranger is AI infrastructure for cyber range work. It helps you automate the boring stuff, orchestrate the complicated stuff, and build capabilities that are more realistic, scale more easily, and provide increased value.
+An exercise today lives in pieces: a scenario document, a network build, injects in a spreadsheet, activity in logs, and lessons in someone's notes. A good scenario takes an engineer and days of back-and-forth. Once it's written, every tool that builds or runs the event has to be told the same things again.
 
-Whether you're running a training range, building a scenario, or experimenting with AI-enabled operations, Ranger acts as your range co-pilot: Planning, deploying, and dynamically adapting different areas of the exercise in real time using an open-source (OSS) and modular generative AI stack.
+AI makes this worse when it works from scraps. A model asked cold invents things: a news story that contradicts the ground truth, a simulated bank clerk who doesn't know which bank they work for, an after-action summary that can't tell the plan from what actually happened.
 
-???+ tip "Run Ranger on the Crucible Framework"
+## The Parts
+
+| Part | Status | What it does |
+|---|---|---|
+| [Chronicle](chronicle.md) | Concept | One record for the whole event. Apps publish what they add and subscribe to what they need. |
+| [Scenario Builder](scenario-builder/index.md) | Experimental | A guided workspace, with an AI agent, for writing the scenario: the world and what the event must achieve. |
+| [Range Automation](range-automation.md) | Next | Builds, runs and adapts the range from the Chronicle. |
+
+They fit together like this:
+
+1. **Scenario Builder** asks the designer the questions that lead to a good scenario and records every answer, along with who gave it and why. Its output is one scenario JSON document.
+2. That document is the first page of a **Chronicle**, the record of the event.
+3. **Range Automation** and other apps (GraySpace, GHOSTS, the Crucible apps) subscribe to the parts they need, build and run the event, and write back what they built, did and saw.
+4. When the event ends, the Chronicle *is* the event, ready to seed the next one.
+
+## Works With
+
+???+ tip "Crucible and GHOSTS"
     ![Crucible Logo](assets/crucible-icon-c-alpha.svg)
-    Ranger runs alongside the SEI's **Crucible Framework**, a modular system for creating and managing virtual environments for training and exercises. Find more on [Crucible's source code](https://github.com/cmu-sei/crucible) and [Crucible Docs](https://cmu-sei.github.io/crucible/).
+    Ranger works alongside the SEI's **Crucible Framework**, a modular system for creating and managing virtual environments for training and exercises ([source](https://github.com/cmu-sei/crucible), [docs](https://cmu-sei.github.io/crucible/)), and **GHOSTS**, which simulates the people on the range ([source](https://github.com/cmu-sei/GHOSTS/)).
 
-    Ranger is also designed to drive GHOSTS NPC agents in simulating all manner of user behavior in your range. Learn more about [GHOSTS](https://github.com/cmu-sei/GHOSTS/).
+## Principles
 
-## Why We Built Ranger
-
-Cyber ranges are awesome, but let’s face it, they can be difficult to manage. Scenario setup is tedious. Injecting new events takes a human. Exercises feel like plays stuck in rehearsal: Scripted, brittle, and already a bit outdated the moment they run.
-
-**Ranger hopes to fix that.** It’s an intelligent layer that sits on top of your range tooling and makes things actually dynamic. It looks to:
-
-- Drive live injects based on trainee behavior
-- Adapt to how teams are performing
-- Automate red/blue/gray actions in real time
-- Scale without instructors watching every move
-
-## What Ranger Actually Does
-
-Ranger is more than a chatbot. Here’s how it works in practice:
-
-1. **You describe what you want.** Natural language, no scripting required. "I want ghosts agents to set off a phishing campaign after the team resets the firewall." Cool, noted.
-2. **Ranger asks questions.** If your description is unclear to Ranger, it asks follow up questions, checks what’s possible, and proposes a course of action.
-3. **It acts on your behalf.** It actually executes commands: Launches NPC activity through GHOSTS, connects services, and injects network events.
-
-All of this works without references to cloud services and can utilize **open-weight models**, so you can use Ranger in secure or air-gapped environments.
-
-## Why Use Ranger?
-
-Here’s what you get when you bring Ranger into the mix:
-
-- **Faster scenario creation** — From hours of YAML to a few lines of conversation
-- **Live, adaptive exercises** — Trainees act, Ranger responds
-- **Realistic content** — Fake news, social media, email traffic, user behavior, and more
-- **No vendor lock-in** — Runs locally, supports open models, speaks API
-- **Lowers the barrier to entry** — You shouldn't need to be a range ninja or an LLM whisperer
+- **Local models first.** Every part is built and tested to work on an open-weight model such as gemma-4-26b served by Ollama. A frontier model is used where one is available.
+- **People decide.** The AI drafts and proposes. Nothing a person stated changes without their approval, and every change records who made it.
+- **The right eyes only.** Ground truth stays with exercise control, and visibility travels with the data, for AI models as well as people.

@@ -162,9 +162,20 @@ describe('GraySpacePageComponent', () => {
 
     const spans = Array.from(root.querySelectorAll('[data-testid="server-summary"] span'));
     expect(spans.map(s => s.textContent?.trim())).toEqual([
-      'Base grayspace/2026.10 (full)', '1 image, 2 roles', expect.stringMatching(/^pve: 16 CPUs, 12(\.0)? GiB of 64(\.0)? GiB free$/), 'Can’t run jobs yet'
+      'Base grayspace/2026.10 (full)', '1 image, 2 roles', expect.stringMatching(/^pve: 16 CPUs, 12(\.0)? GiB of 64(\.0)? GiB free$/)
     ]);
-    expect(spans[3].getAttribute('title')).toBe(reason);
+    expect(root.querySelector('[data-testid="jobs-reason"]')?.textContent?.trim()).toBe(`Can’t run jobs yet. ${reason}`);
+    // Second line, straight under the connection, before the summary.
+    const overview = root.querySelector('.overview')!;
+    expect(Array.from(overview.children).map(c => c.getAttribute('data-testid') ?? c.className).slice(0, 3))
+      .toEqual(['overview-top', 'jobs-reason', 'server-summary']);
+  });
+
+  it('says only that it can’t run jobs yet when GraySpace doesn’t say why', async () => {
+    const server = { ...offers.server, jobs: false, jobs_unavailable_reason: null };
+    const { root } = await render(undefined, undefined, { ...offers, server });
+
+    expect(root.querySelector('[data-testid="jobs-reason"]')?.textContent?.trim()).toBe('Can’t run jobs yet');
   });
 
   it('links the map through the browser’s own host when the API reaches GraySpace on a Docker-internal address', async () => {

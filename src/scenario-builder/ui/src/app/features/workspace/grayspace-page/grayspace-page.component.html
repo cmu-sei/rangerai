@@ -18,6 +18,9 @@
         }
       </div>
       @if (connected() && server(); as srv) {
+        @if (!srv.jobs) {
+          <p class="pill jobs-pill" role="note" data-testid="jobs-reason">Can’t run jobs yet@if (srv.jobs_unavailable_reason) {. {{ srv.jobs_unavailable_reason }}}</p>
+        }
         <p class="server" data-testid="server-summary">
           <span>{{ srv.base ? 'Base ' + srv.base.name + ' (' + srv.base.scope + ')' : 'No base deployed' }}</span>
           <span>{{ srv.images.length }} {{ srv.images.length === 1 ? 'image' : 'images' }}, {{ srv.roles.length }} {{ srv.roles.length === 1 ? 'role' : 'roles' }}</span>
@@ -26,7 +29,7 @@
           } @else {
             <span>Capacity unknown</span>
           }
-          <span [class.warn]="!srv.jobs" [attr.title]="srv.jobs_unavailable_reason ?? null">{{ srv.jobs ? 'Runs jobs' : 'Can’t run jobs yet' }}</span>
+          @if (srv.jobs) { <span>Runs jobs</span> }
         </p>
       }
       @if (connected()) {
