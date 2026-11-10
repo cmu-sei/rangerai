@@ -10,8 +10,8 @@ Ranger is AI tooling for cyber range training, exercises and simulation. It runs
 
 | Part | Status | What it does |
 |---|---|---|
-| [Chronicle](src/chronicle/) | Concept | One living record of an event, from the first idea to the last lesson. Apps publish to it and subscribe to it, and don't have to call each other for data. We feel this is important as AI applications need context to make the right decisions. |
 | [Scenario Builder](src/scenario-builder/) | Experimental | Walks a designer who isn't an engineer through the questions that lead to a good scenario, with an AI agent in a side panel. Its output is the scenario JSON that starts a Chronicle. |
+| [Chronicle](src/chronicle/) | Concept | One living record of an event, from the first idea to the last lesson. Apps publish to it and subscribe to it, and don't have to call each other for data. We feel this is important as AI applications need context to make the right decisions. |
 | Range Automation | Next | Builds, runs and adapts the range from the Chronicle: deploying environments, driving GHOSTS NPCs, and triggering injects during play. |
 
 ## Why
