@@ -6,6 +6,7 @@ then watch logs and status in the Aspire dashboard (http://localhost:15180).
 
 | Resource | URL | What |
 |---|---|---|
+| `chronicle-api` | http://localhost:5285 | Chronicle API: publish and subscribe to Chronicles (Swagger at `/swagger`) |
 | `scenario-builder-api` | http://localhost:5280 | Scenario Builder .NET API |
 | `scenario-builder-ui` | http://localhost:4310 | Scenario Builder Angular UI (proxies `/api` to :5280) |
 | `scenario-builder-fake-model` | http://localhost:5299 | Stand-in model server (the API's `fake` model) |

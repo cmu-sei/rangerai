@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <!-- Each project the AppHost runs. Add future .NET projects here and in AppHost.cs. -->
+    <ProjectReference Include="../chronicle/Chronicle.Api/Chronicle.Api.csproj" />
     <ProjectReference Include="../scenario-builder/api/ScenarioBuilder.Api/ScenarioBuilder.Api.csproj" />
   </ItemGroup>
 

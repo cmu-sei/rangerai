@@ -1,0 +1,1390 @@
+{
+  "schemaVersion": "0.1.0",
+  "id": "harbor-ttx",
+  "name": "Harbor Ransomware Tabletop",
+  "kind": "exercise",
+  "description": "Port authority leaders respond to ransomware that reaches the cargo scheduling system.",
+  "created": "2026-11-02T14:00:00+00:00",
+  "world": [
+    {
+      "kind": "side",
+      "id": "blue",
+      "visibility": "participant",
+      "name": "Port Authority",
+      "relations": [
+        {
+          "sideId": "red",
+          "stance": "hostile"
+        }
+      ],
+      "standing": "stated"
+    },
+    {
+      "kind": "side",
+      "id": "red",
+      "visibility": "excon",
+      "name": "Tidewater Crew",
+      "description": "A ransomware affiliate.",
+      "relations": [
+        {
+          "sideId": "blue",
+          "stance": "hostile"
+        }
+      ],
+      "standing": "stated"
+    },
+    {
+      "kind": "organization",
+      "id": "port-authority",
+      "visibility": "participant",
+      "name": "Bayport Port Authority",
+      "sector": "transportation",
+      "sideId": "blue",
+      "location": {
+        "name": "Bayport"
+      },
+      "standing": "stated"
+    },
+    {
+      "kind": "network",
+      "id": "corp-net",
+      "visibility": "participant",
+      "cidr": "10.1.20.0/24",
+      "protocol": "IPv4",
+      "name": "Corporate",
+      "standing": "stated"
+    },
+    {
+      "kind": "device",
+      "id": "mail-01",
+      "visibility": "participant",
+      "deviceTypes": [
+        "ComputerNode"
+      ],
+      "isVirtual": true,
+      "role": "mail server",
+      "networkInterfaces": [
+        {
+          "relatedObjectId": "corp-net",
+          "name": "mail-01.bayport.example",
+          "address": "10.1.20.10"
+        }
+      ],
+      "name": "mail-01",
+      "standing": "stated"
+    },
+    {
+      "kind": "operatingSystem",
+      "id": "mail-01-os",
+      "visibility": "participant",
+      "osType": "MicrosoftWindows",
+      "version": "2022",
+      "name": "Windows Server",
+      "relatedObjects": [
+        {
+          "objectId": "mail-01",
+          "relationship": "ResidesOn"
+        }
+      ],
+      "standing": "stated"
+    },
+    {
+      "kind": "service",
+      "id": "mail",
+      "visibility": "participant",
+      "serviceType": "Email",
+      "address": "mail.bayport.example",
+      "name": "Port Authority mail",
+      "relatedObjects": [
+        {
+          "objectId": "mail-01",
+          "relationship": "ResidesOn"
+        }
+      ],
+      "standing": "stated"
+    },
+    {
+      "kind": "service",
+      "id": "harbor-talk",
+      "visibility": "participant",
+      "serviceType": "Web",
+      "name": "Harbor Talk",
+      "description": "The town's social media site.",
+      "standing": "stated"
+    },
+    {
+      "kind": "personaPool",
+      "id": "office-staff",
+      "visibility": "participant",
+      "name": "Office staff",
+      "description": "Busy, helpful, and quick to open attachments from the harbor master.",
+      "role": "administrative staff",
+      "count": 40,
+      "organizationId": "port-authority",
+      "uses": [
+        "corp-net",
+        "mail",
+        "harbor-talk"
+      ],
+      "standing": "stated"
+    },
+    {
+      "kind": "vulnerability",
+      "id": "vpn-cve",
+      "visibility": "excon",
+      "assetId": "mail-01",
+      "description": "Unpatched remote access on the mail host.",
+      "cve": "CVE-2024-21762",
+      "mitreTechniqueIds": [
+        "T1190"
+      ],
+      "standing": "stated"
+    },
+    {
+      "kind": "fact",
+      "id": "background",
+      "visibility": "participant",
+      "topic": "background",
+      "text": "Bayport handles a third of the region's container traffic.",
+      "standing": "stated"
+    },
+    {
+      "kind": "fact",
+      "id": "patient-zero",
+      "visibility": "excon",
+      "topic": "groundTruth",
+      "text": "The crew got in through a phishing email to the harbor master's assistant, two weeks before play.",
+      "about": [
+        "mail-01"
+      ],
+      "standing": "stated"
+    },
+    {
+      "kind": "fact",
+      "id": "harbor-master-away",
+      "visibility": "excon",
+      "topic": "situation",
+      "text": "The harbor master is on leave this week; staff know, participants must find out.",
+      "knownBy": [
+        "office-staff"
+      ],
+      "standing": "stated"
+    }
+  ],
+  "intent": [
+    {
+      "kind": "objective",
+      "id": "obj-escalate",
+      "visibility": "participant",
+      "text": "Leaders decide when to escalate to the national CERT.",
+      "measures": [
+        "Escalation decided within 30 minutes of the ransom note."
+      ],
+      "standing": "stated"
+    },
+    {
+      "kind": "teachingPoint",
+      "id": "tp-plan",
+      "visibility": "participant",
+      "text": "An incident response plan only works if people know who owns each decision.",
+      "objectiveIds": [
+        "obj-escalate"
+      ],
+      "standing": "stated"
+    },
+    {
+      "kind": "rule",
+      "id": "rule-scope",
+      "visibility": "participant",
+      "text": "Ransom payment is in scope for discussion.",
+      "category": "scope",
+      "standing": "stated"
+    },
+    {
+      "kind": "term",
+      "id": "term-cert",
+      "visibility": "participant",
+      "text": "national CERT",
+      "usage": "fixed",
+      "standing": "stated"
+    },
+    {
+      "kind": "plannedEvent",
+      "id": "pe-phish",
+      "visibility": "excon",
+      "title": "Phishing email",
+      "offset": "00:10:00",
+      "objectiveIds": [
+        "obj-escalate"
+      ],
+      "inject": {
+        "channel": "email",
+        "from": "harbor-master",
+        "to": [
+          "office-staff"
+        ],
+        "content": "Updated berth schedule attached."
+      },
+      "cyber": {
+        "class": "PhishingAttack",
+        "actorIds": [
+          "red"
+        ],
+        "targetIds": [
+          "mail"
+        ],
+        "mitreTechniqueIds": [
+          "T1566.001"
+        ]
+      },
+      "expectedResponse": "Nobody notices yet.",
+      "standing": "stated"
+    },
+    {
+      "kind": "plannedEvent",
+      "id": "pe-news",
+      "visibility": "excon",
+      "title": "Local news picks it up",
+      "offset": "00:45:00",
+      "after": [
+        "pe-phish"
+      ],
+      "influence": {
+        "action": "post",
+        "actorId": "office-staff",
+        "serviceId": "harbor-talk",
+        "text": "Anyone else's email down at the port?"
+      },
+      "escalations": [
+        "If nobody reacts, a reporter calls the communications lead."
+      ],
+      "standing": "stated"
+    }
+  ],
+  "asBuilt": [
+    {
+      "kind": "deployment",
+      "id": "dep-grayspace",
+      "visibility": "excon",
+      "builder": "grayspace",
+      "reference": "harbor-ttx",
+      "version": "3",
+      "state": "ready",
+      "at": "2026-11-07T14:00:00+00:00",
+      "builds": [
+        "corp-net",
+        "mail-01"
+      ],
+      "standing": "stated"
+    },
+    {
+      "kind": "realization",
+      "id": "real-mail-01",
+      "visibility": "excon",
+      "of": "mail-01",
+      "deploymentId": "dep-grayspace",
+      "identifiers": {
+        "vmId": "vm-4471",
+        "hostname": "mail-01",
+        "address": "10.1.20.10"
+      },
+      "standing": "stated"
+    },
+    {
+      "kind": "persona",
+      "id": "npc-dana",
+      "visibility": "participant",
+      "accounts": [
+        {
+          "serviceId": "mail",
+          "username": "dana.reyes@bayport.example"
+        },
+        {
+          "serviceId": "harbor-talk",
+          "username": "dana_r",
+          "displayName": "Dana R."
+        }
+      ],
+      "organizationId": "port-authority",
+      "role": "assistant to the harbor master",
+      "poolId": "office-staff",
+      "origin": "generated",
+      "traits": [
+        {
+          "name": "motivation",
+          "value": "keep the berths on schedule"
+        }
+      ],
+      "name": "dana.reyes@bayport.example",
+      "relatedObjects": [
+        {
+          "objectId": "mail-01",
+          "relationship": "Uses"
+        }
+      ],
+      "standing": "stated"
+    },
+    {
+      "kind": "content",
+      "id": "article-traffic",
+      "visibility": "participant",
+      "format": "article",
+      "title": "Record month for Bayport",
+      "body": "Container traffic rose for the fourth month running.",
+      "attributedTo": "port-authority",
+      "serviceId": "harbor-talk",
+      "standing": "stated"
+    }
+  ],
+  "asRun": [
+    {
+      "kind": "milestone",
+      "id": "startex",
+      "visibility": "participant",
+      "type": "start",
+      "at": "2026-11-09T14:00:00+00:00",
+      "standing": "stated"
+    },
+    {
+      "kind": "cyberActivity",
+      "id": "act-phish",
+      "visibility": "excon",
+      "event": {
+        "class": "PhishingAttack",
+        "phase": "Start",
+        "actorIds": [
+          "red"
+        ],
+        "targetIds": [
+          "npc-dana"
+        ]
+      },
+      "observedBy": "ghosts",
+      "at": "2026-11-09T14:11:00+00:00",
+      "plannedEventId": "pe-phish",
+      "standing": "stated"
+    },
+    {
+      "kind": "injectDelivery",
+      "id": "inj-phish",
+      "visibility": "excon",
+      "to": [
+        "npc-dana"
+      ],
+      "note": "Opened at 14:12.",
+      "at": "2026-11-09T14:11:00+00:00",
+      "plannedEventId": "pe-phish",
+      "standing": "stated"
+    },
+    {
+      "kind": "participantAction",
+      "id": "dec-cert",
+      "visibility": "participant",
+      "by": "Executive team",
+      "text": "Escalated to the national CERT.",
+      "objectiveIds": [
+        "obj-escalate"
+      ],
+      "at": "2026-11-09T14:52:00+00:00",
+      "standing": "stated"
+    },
+    {
+      "kind": "observation",
+      "id": "obs-owner",
+      "visibility": "excon",
+      "by": "controller@example.org",
+      "text": "Nobody knew who could authorise taking mail offline.",
+      "objectiveIds": [
+        "obj-escalate"
+      ],
+      "at": "2026-11-09T14:40:00+00:00",
+      "standing": "stated"
+    }
+  ],
+  "lessons": [
+    {
+      "kind": "assessment",
+      "id": "assess-escalate",
+      "visibility": "participant",
+      "objectiveId": "obj-escalate",
+      "rating": "partiallyMet",
+      "text": "They escalated, 22 minutes late.",
+      "evidence": [
+        "dec-cert",
+        "obs-owner"
+      ],
+      "standing": "stated"
+    },
+    {
+      "kind": "lesson",
+      "id": "lesson-owner",
+      "visibility": "participant",
+      "text": "Decision ownership for isolating systems is unclear.",
+      "recommendation": "Name an owner for each containment decision in the plan.",
+      "for": "participants' organization",
+      "evidence": [
+        "obs-owner"
+      ],
+      "standing": "proposed"
+    }
+  ],
+  "history": [
+    {
+      "id": "0195f000-0000-7000-8000-000000000001",
+      "chronicleId": "harbor-ttx",
+      "sequence": 1,
+      "recordedAt": "2026-11-02T14:00:00+00:00",
+      "part": "world",
+      "kind": "side",
+      "op": "add",
+      "itemId": "blue",
+      "item": {
+        "kind": "side",
+        "id": "blue",
+        "visibility": "participant",
+        "name": "Port Authority",
+        "relations": [
+          {
+            "sideId": "red",
+            "stance": "hostile"
+          }
+        ],
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000002",
+      "chronicleId": "harbor-ttx",
+      "sequence": 2,
+      "recordedAt": "2026-11-02T14:01:00+00:00",
+      "part": "world",
+      "kind": "side",
+      "op": "add",
+      "itemId": "red",
+      "item": {
+        "kind": "side",
+        "id": "red",
+        "visibility": "excon",
+        "name": "Tidewater Crew",
+        "description": "A ransomware affiliate.",
+        "relations": [
+          {
+            "sideId": "blue",
+            "stance": "hostile"
+          }
+        ],
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000003",
+      "chronicleId": "harbor-ttx",
+      "sequence": 3,
+      "recordedAt": "2026-11-02T14:02:00+00:00",
+      "part": "world",
+      "kind": "organization",
+      "op": "add",
+      "itemId": "port-authority",
+      "item": {
+        "kind": "organization",
+        "id": "port-authority",
+        "visibility": "participant",
+        "name": "Bayport Port Authority",
+        "sector": "transportation",
+        "sideId": "blue",
+        "location": {
+          "name": "Bayport"
+        },
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000004",
+      "chronicleId": "harbor-ttx",
+      "sequence": 4,
+      "recordedAt": "2026-11-02T14:03:00+00:00",
+      "part": "world",
+      "kind": "network",
+      "op": "add",
+      "itemId": "corp-net",
+      "item": {
+        "kind": "network",
+        "id": "corp-net",
+        "visibility": "participant",
+        "cidr": "10.1.20.0/24",
+        "protocol": "IPv4",
+        "name": "Corporate",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000005",
+      "chronicleId": "harbor-ttx",
+      "sequence": 5,
+      "recordedAt": "2026-11-02T14:04:00+00:00",
+      "part": "world",
+      "kind": "device",
+      "op": "add",
+      "itemId": "mail-01",
+      "item": {
+        "kind": "device",
+        "id": "mail-01",
+        "visibility": "participant",
+        "deviceTypes": [
+          "ComputerNode"
+        ],
+        "isVirtual": true,
+        "role": "mail server",
+        "networkInterfaces": [
+          {
+            "relatedObjectId": "corp-net",
+            "name": "mail-01.bayport.example",
+            "address": "10.1.20.10"
+          }
+        ],
+        "name": "mail-01",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000006",
+      "chronicleId": "harbor-ttx",
+      "sequence": 6,
+      "recordedAt": "2026-11-02T14:05:00+00:00",
+      "part": "world",
+      "kind": "operatingSystem",
+      "op": "add",
+      "itemId": "mail-01-os",
+      "item": {
+        "kind": "operatingSystem",
+        "id": "mail-01-os",
+        "visibility": "participant",
+        "osType": "MicrosoftWindows",
+        "version": "2022",
+        "name": "Windows Server",
+        "relatedObjects": [
+          {
+            "objectId": "mail-01",
+            "relationship": "ResidesOn"
+          }
+        ],
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000007",
+      "chronicleId": "harbor-ttx",
+      "sequence": 7,
+      "recordedAt": "2026-11-02T14:06:00+00:00",
+      "part": "world",
+      "kind": "service",
+      "op": "add",
+      "itemId": "mail",
+      "item": {
+        "kind": "service",
+        "id": "mail",
+        "visibility": "participant",
+        "serviceType": "Email",
+        "address": "mail.bayport.example",
+        "name": "Port Authority mail",
+        "relatedObjects": [
+          {
+            "objectId": "mail-01",
+            "relationship": "ResidesOn"
+          }
+        ],
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000008",
+      "chronicleId": "harbor-ttx",
+      "sequence": 8,
+      "recordedAt": "2026-11-02T14:07:00+00:00",
+      "part": "world",
+      "kind": "service",
+      "op": "add",
+      "itemId": "harbor-talk",
+      "item": {
+        "kind": "service",
+        "id": "harbor-talk",
+        "visibility": "participant",
+        "serviceType": "Web",
+        "name": "Harbor Talk",
+        "description": "The town's social media site.",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000009",
+      "chronicleId": "harbor-ttx",
+      "sequence": 9,
+      "recordedAt": "2026-11-02T14:08:00+00:00",
+      "part": "world",
+      "kind": "personaPool",
+      "op": "add",
+      "itemId": "office-staff",
+      "item": {
+        "kind": "personaPool",
+        "id": "office-staff",
+        "visibility": "participant",
+        "name": "Office staff",
+        "description": "Busy, helpful, and quick to open attachments from the harbor master.",
+        "role": "administrative staff",
+        "count": 40,
+        "organizationId": "port-authority",
+        "uses": [
+          "corp-net",
+          "mail",
+          "harbor-talk"
+        ],
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "agent"
+      },
+      "reason": "Proposed from the designer's staffing notes."
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000010",
+      "chronicleId": "harbor-ttx",
+      "sequence": 10,
+      "recordedAt": "2026-11-02T14:09:00+00:00",
+      "part": "world",
+      "kind": "vulnerability",
+      "op": "add",
+      "itemId": "vpn-cve",
+      "item": {
+        "kind": "vulnerability",
+        "id": "vpn-cve",
+        "visibility": "excon",
+        "assetId": "mail-01",
+        "description": "Unpatched remote access on the mail host.",
+        "cve": "CVE-2024-21762",
+        "mitreTechniqueIds": [
+          "T1190"
+        ],
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000011",
+      "chronicleId": "harbor-ttx",
+      "sequence": 11,
+      "recordedAt": "2026-11-02T14:10:00+00:00",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "background",
+      "item": {
+        "kind": "fact",
+        "id": "background",
+        "visibility": "participant",
+        "topic": "background",
+        "text": "Bayport handles a third of the region's container traffic.",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000012",
+      "chronicleId": "harbor-ttx",
+      "sequence": 12,
+      "recordedAt": "2026-11-02T14:11:00+00:00",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "patient-zero",
+      "item": {
+        "kind": "fact",
+        "id": "patient-zero",
+        "visibility": "excon",
+        "topic": "groundTruth",
+        "text": "The crew got in through a phishing email to the harbor master's assistant.",
+        "about": [
+          "mail-01"
+        ],
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000013",
+      "chronicleId": "harbor-ttx",
+      "sequence": 13,
+      "recordedAt": "2026-11-02T14:12:00+00:00",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "harbor-master-away",
+      "item": {
+        "kind": "fact",
+        "id": "harbor-master-away",
+        "visibility": "excon",
+        "topic": "situation",
+        "text": "The harbor master is on leave this week; staff know, participants must find out.",
+        "knownBy": [
+          "office-staff"
+        ],
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000014",
+      "chronicleId": "harbor-ttx",
+      "sequence": 14,
+      "recordedAt": "2026-11-02T14:13:00+00:00",
+      "part": "intent",
+      "kind": "objective",
+      "op": "add",
+      "itemId": "obj-escalate",
+      "item": {
+        "kind": "objective",
+        "id": "obj-escalate",
+        "visibility": "participant",
+        "text": "Leaders decide when to escalate to the national CERT.",
+        "measures": [
+          "Escalation decided within 30 minutes of the ransom note."
+        ],
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000015",
+      "chronicleId": "harbor-ttx",
+      "sequence": 15,
+      "recordedAt": "2026-11-02T14:14:00+00:00",
+      "part": "intent",
+      "kind": "teachingPoint",
+      "op": "add",
+      "itemId": "tp-plan",
+      "item": {
+        "kind": "teachingPoint",
+        "id": "tp-plan",
+        "visibility": "participant",
+        "text": "An incident response plan only works if people know who owns each decision.",
+        "objectiveIds": [
+          "obj-escalate"
+        ],
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000016",
+      "chronicleId": "harbor-ttx",
+      "sequence": 16,
+      "recordedAt": "2026-11-02T14:15:00+00:00",
+      "part": "intent",
+      "kind": "rule",
+      "op": "add",
+      "itemId": "rule-scope",
+      "item": {
+        "kind": "rule",
+        "id": "rule-scope",
+        "visibility": "participant",
+        "text": "Ransom payment is in scope for discussion.",
+        "category": "scope",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000017",
+      "chronicleId": "harbor-ttx",
+      "sequence": 17,
+      "recordedAt": "2026-11-02T14:16:00+00:00",
+      "part": "intent",
+      "kind": "term",
+      "op": "add",
+      "itemId": "term-cert",
+      "item": {
+        "kind": "term",
+        "id": "term-cert",
+        "visibility": "participant",
+        "text": "national CERT",
+        "usage": "fixed",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000018",
+      "chronicleId": "harbor-ttx",
+      "sequence": 18,
+      "recordedAt": "2026-11-02T14:17:00+00:00",
+      "part": "intent",
+      "kind": "plannedEvent",
+      "op": "add",
+      "itemId": "pe-phish",
+      "item": {
+        "kind": "plannedEvent",
+        "id": "pe-phish",
+        "visibility": "excon",
+        "title": "Phishing email",
+        "offset": "00:10:00",
+        "objectiveIds": [
+          "obj-escalate"
+        ],
+        "inject": {
+          "channel": "email",
+          "from": "harbor-master",
+          "to": [
+            "office-staff"
+          ],
+          "content": "Updated berth schedule attached."
+        },
+        "cyber": {
+          "class": "PhishingAttack",
+          "actorIds": [
+            "red"
+          ],
+          "targetIds": [
+            "mail"
+          ],
+          "mitreTechniqueIds": [
+            "T1566.001"
+          ]
+        },
+        "expectedResponse": "Nobody notices yet.",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000019",
+      "chronicleId": "harbor-ttx",
+      "sequence": 19,
+      "recordedAt": "2026-11-02T14:18:00+00:00",
+      "part": "intent",
+      "kind": "plannedEvent",
+      "op": "add",
+      "itemId": "pe-news",
+      "item": {
+        "kind": "plannedEvent",
+        "id": "pe-news",
+        "visibility": "excon",
+        "title": "Local news picks it up",
+        "offset": "00:45:00",
+        "after": [
+          "pe-phish"
+        ],
+        "influence": {
+          "action": "post",
+          "actorId": "office-staff",
+          "serviceId": "harbor-talk",
+          "text": "Anyone else's email down at the port?"
+        },
+        "escalations": [
+          "If nobody reacts, a reporter calls the communications lead."
+        ],
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000020",
+      "chronicleId": "harbor-ttx",
+      "sequence": 20,
+      "recordedAt": "2026-11-02T14:19:00+00:00",
+      "part": "world",
+      "kind": "fact",
+      "op": "revise",
+      "itemId": "patient-zero",
+      "item": {
+        "kind": "fact",
+        "id": "patient-zero",
+        "visibility": "excon",
+        "topic": "groundTruth",
+        "text": "The crew got in through a phishing email to the harbor master's assistant, two weeks before play.",
+        "about": [
+          "mail-01"
+        ],
+        "standing": "stated"
+      },
+      "revises": "0195f000-0000-7000-8000-000000000012",
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      },
+      "reason": "The timeline needed the crew in place before the exercise starts."
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000021",
+      "chronicleId": "harbor-ttx",
+      "sequence": 21,
+      "recordedAt": "2026-11-02T14:20:00+00:00",
+      "part": "intent",
+      "kind": "rule",
+      "op": "add",
+      "itemId": "rule-press",
+      "item": {
+        "kind": "rule",
+        "id": "rule-press",
+        "visibility": "participant",
+        "text": "No real press contact.",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "agent"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000022",
+      "chronicleId": "harbor-ttx",
+      "sequence": 22,
+      "recordedAt": "2026-11-02T14:21:00+00:00",
+      "part": "intent",
+      "kind": "rule",
+      "op": "retract",
+      "itemId": "rule-press",
+      "revises": "0195f000-0000-7000-8000-000000000021",
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "person"
+      },
+      "reason": "Covered by the venue's rules."
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000023",
+      "chronicleId": "harbor-ttx",
+      "sequence": 23,
+      "recordedAt": "2026-11-02T14:22:00+00:00",
+      "part": "asBuilt",
+      "kind": "deployment",
+      "op": "add",
+      "itemId": "dep-grayspace",
+      "item": {
+        "kind": "deployment",
+        "id": "dep-grayspace",
+        "visibility": "excon",
+        "builder": "grayspace",
+        "reference": "harbor-ttx",
+        "version": "3",
+        "state": "ready",
+        "at": "2026-11-07T14:00:00+00:00",
+        "builds": [
+          "corp-net",
+          "mail-01"
+        ],
+        "standing": "stated"
+      },
+      "author": {
+        "app": "grayspace",
+        "via": "app"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000024",
+      "chronicleId": "harbor-ttx",
+      "sequence": 24,
+      "recordedAt": "2026-11-02T14:23:00+00:00",
+      "part": "asBuilt",
+      "kind": "realization",
+      "op": "add",
+      "itemId": "real-mail-01",
+      "item": {
+        "kind": "realization",
+        "id": "real-mail-01",
+        "visibility": "excon",
+        "of": "mail-01",
+        "deploymentId": "dep-grayspace",
+        "identifiers": {
+          "vmId": "vm-4471",
+          "hostname": "mail-01",
+          "address": "10.1.20.10"
+        },
+        "standing": "stated"
+      },
+      "author": {
+        "app": "grayspace",
+        "via": "app"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000025",
+      "chronicleId": "harbor-ttx",
+      "sequence": 25,
+      "recordedAt": "2026-11-02T14:24:00+00:00",
+      "part": "asBuilt",
+      "kind": "persona",
+      "op": "add",
+      "itemId": "npc-dana",
+      "item": {
+        "kind": "persona",
+        "id": "npc-dana",
+        "visibility": "participant",
+        "accounts": [
+          {
+            "serviceId": "mail",
+            "username": "dana.reyes@bayport.example"
+          },
+          {
+            "serviceId": "harbor-talk",
+            "username": "dana_r",
+            "displayName": "Dana R."
+          }
+        ],
+        "organizationId": "port-authority",
+        "role": "assistant to the harbor master",
+        "poolId": "office-staff",
+        "origin": "generated",
+        "traits": [
+          {
+            "name": "motivation",
+            "value": "keep the berths on schedule"
+          }
+        ],
+        "name": "dana.reyes@bayport.example",
+        "relatedObjects": [
+          {
+            "objectId": "mail-01",
+            "relationship": "Uses"
+          }
+        ],
+        "standing": "stated"
+      },
+      "author": {
+        "app": "ghosts",
+        "via": "app"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000026",
+      "chronicleId": "harbor-ttx",
+      "sequence": 26,
+      "recordedAt": "2026-11-02T14:25:00+00:00",
+      "part": "asBuilt",
+      "kind": "content",
+      "op": "add",
+      "itemId": "article-traffic",
+      "item": {
+        "kind": "content",
+        "id": "article-traffic",
+        "visibility": "participant",
+        "format": "article",
+        "title": "Record month for Bayport",
+        "body": "Container traffic rose for the fourth month running.",
+        "attributedTo": "port-authority",
+        "serviceId": "harbor-talk",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "pandora",
+        "via": "app"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000027",
+      "chronicleId": "harbor-ttx",
+      "sequence": 27,
+      "recordedAt": "2026-11-02T14:26:00+00:00",
+      "part": "asRun",
+      "kind": "milestone",
+      "op": "add",
+      "itemId": "startex",
+      "item": {
+        "kind": "milestone",
+        "id": "startex",
+        "visibility": "participant",
+        "type": "start",
+        "at": "2026-11-09T14:00:00+00:00",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "exercise-control",
+        "actor": "controller@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000028",
+      "chronicleId": "harbor-ttx",
+      "sequence": 28,
+      "recordedAt": "2026-11-02T14:27:00+00:00",
+      "part": "asRun",
+      "kind": "cyberActivity",
+      "op": "add",
+      "itemId": "act-phish",
+      "item": {
+        "kind": "cyberActivity",
+        "id": "act-phish",
+        "visibility": "excon",
+        "event": {
+          "class": "PhishingAttack",
+          "phase": "Start",
+          "actorIds": [
+            "red"
+          ],
+          "targetIds": [
+            "npc-dana"
+          ]
+        },
+        "observedBy": "ghosts",
+        "at": "2026-11-09T14:11:00+00:00",
+        "plannedEventId": "pe-phish",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "ghosts",
+        "via": "app"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000029",
+      "chronicleId": "harbor-ttx",
+      "sequence": 29,
+      "recordedAt": "2026-11-02T14:28:00+00:00",
+      "part": "asRun",
+      "kind": "injectDelivery",
+      "op": "add",
+      "itemId": "inj-phish",
+      "item": {
+        "kind": "injectDelivery",
+        "id": "inj-phish",
+        "visibility": "excon",
+        "to": [
+          "npc-dana"
+        ],
+        "note": "Opened at 14:12.",
+        "at": "2026-11-09T14:11:00+00:00",
+        "plannedEventId": "pe-phish",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "ghosts",
+        "via": "app"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000030",
+      "chronicleId": "harbor-ttx",
+      "sequence": 30,
+      "recordedAt": "2026-11-02T14:29:00+00:00",
+      "part": "asRun",
+      "kind": "participantAction",
+      "op": "add",
+      "itemId": "dec-cert",
+      "item": {
+        "kind": "participantAction",
+        "id": "dec-cert",
+        "visibility": "participant",
+        "by": "Executive team",
+        "text": "Escalated to the national CERT.",
+        "objectiveIds": [
+          "obj-escalate"
+        ],
+        "at": "2026-11-09T14:52:00+00:00",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "exercise-control",
+        "actor": "controller@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000031",
+      "chronicleId": "harbor-ttx",
+      "sequence": 31,
+      "recordedAt": "2026-11-02T14:30:00+00:00",
+      "part": "asRun",
+      "kind": "observation",
+      "op": "add",
+      "itemId": "obs-owner",
+      "item": {
+        "kind": "observation",
+        "id": "obs-owner",
+        "visibility": "excon",
+        "by": "controller@example.org",
+        "text": "Nobody knew who could authorise taking mail offline.",
+        "objectiveIds": [
+          "obj-escalate"
+        ],
+        "at": "2026-11-09T14:40:00+00:00",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "exercise-control",
+        "actor": "controller@example.org",
+        "via": "person"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000032",
+      "chronicleId": "harbor-ttx",
+      "sequence": 32,
+      "recordedAt": "2026-11-02T14:31:00+00:00",
+      "part": "lessons",
+      "kind": "assessment",
+      "op": "add",
+      "itemId": "assess-escalate",
+      "item": {
+        "kind": "assessment",
+        "id": "assess-escalate",
+        "visibility": "participant",
+        "objectiveId": "obj-escalate",
+        "rating": "partiallyMet",
+        "text": "They escalated, 22 minutes late.",
+        "evidence": [
+          "dec-cert",
+          "obs-owner"
+        ],
+        "standing": "stated"
+      },
+      "author": {
+        "app": "after-action",
+        "actor": "designer@example.org",
+        "via": "agent"
+      }
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000033",
+      "chronicleId": "harbor-ttx",
+      "sequence": 33,
+      "recordedAt": "2026-11-02T14:32:00+00:00",
+      "part": "lessons",
+      "kind": "lesson",
+      "op": "add",
+      "itemId": "lesson-owner",
+      "item": {
+        "kind": "lesson",
+        "id": "lesson-owner",
+        "visibility": "participant",
+        "text": "Decision ownership for isolating systems is unclear.",
+        "recommendation": "Name an owner for each containment decision in the plan.",
+        "for": "participants' organization",
+        "evidence": [
+          "obs-owner"
+        ],
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "after-action",
+        "actor": "designer@example.org",
+        "via": "agent"
+      }
+    }
+  ],
+  "items": [
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {}
+  ]
+}

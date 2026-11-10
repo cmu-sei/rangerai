@@ -15,14 +15,14 @@ AI makes this worse when it works from scraps. A model asked cold invents things
 
 | Part | Status | What it does |
 |---|---|---|
-| [Chronicle](chronicle.md) | Concept | One record for the whole event. Apps publish what they add and subscribe to what they need. |
+| [Chronicle](chronicle.md) | Draft | One record for the whole event. Apps publish what they add and subscribe to what they need. |
 | [Scenario Builder](scenario-builder/index.md) | Experimental | A guided workspace, with an AI agent, for writing the scenario: the world and what the event must achieve. |
 | [Range Automation](range-automation.md) | Next | Builds, runs and adapts the range from the Chronicle. |
 
 They fit together like this:
 
 1. **Scenario Builder** asks the designer the questions that lead to a good scenario and records every answer, along with who gave it and why. Its output is one scenario JSON document.
-2. That document is the first page of a **Chronicle**, the record of the event.
+2. That document is the first page of a **Chronicle**, the record of the event. The Chronicle API stores it and carries every change to the apps that subscribe.
 3. **Range Automation** and other apps (GraySpace, GHOSTS, the Crucible apps) subscribe to the parts they need, build and run the event, and write back what they built, did and saw.
 4. When the event ends, the Chronicle *is* the event, ready to seed the next one.
 

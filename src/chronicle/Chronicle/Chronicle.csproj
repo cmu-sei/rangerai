@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Chronicle</RootNamespace>
+    <!-- The library's own version. The schema's version is ChronicleRecord.SchemaVersion. -->
+    <Version>0.1.0</Version>
+    <Description>The Chronicle specification: the record of an event, the entries apps publish to it, and the rules every reader and writer shares.</Description>
+    <!-- The XML documentation is also the JSON Schema's descriptions. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Self-describing names, such as enumeration members and SISO's constants, go undocumented. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+</Project>

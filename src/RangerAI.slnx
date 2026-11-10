@@ -1,4 +1,10 @@
 <Solution>
+  <Folder Name="/chronicle/">
+    <Project Path="chronicle/Chronicle/Chronicle.csproj" />
+    <Project Path="chronicle/Chronicle.Api/Chronicle.Api.csproj" />
+    <Project Path="chronicle/Chronicle.Api.Tests/Chronicle.Api.Tests.csproj" />
+    <Project Path="chronicle/Chronicle.Tests/Chronicle.Tests.csproj" />
+  </Folder>
   <Folder Name="/scenario-builder/">
     <Project Path="scenario-builder/api/ScenarioBuilder.Api/ScenarioBuilder.Api.csproj" />
     <Project Path="scenario-builder/api/ScenarioBuilder.Api.Tests/ScenarioBuilder.Api.Tests.csproj" />

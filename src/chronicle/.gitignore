@@ -1,0 +1,4 @@
+# The API's local database.
+*.db
+*.db-shm
+*.db-wal

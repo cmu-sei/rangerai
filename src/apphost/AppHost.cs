@@ -4,6 +4,13 @@
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+// ---- Chronicle (src/chronicle) ----
+// The Chronicle API: apps publish entries and subscribe to them. Its "http" launch profile
+// puts it on :5285; in Development it imports the sample Chronicles in src/chronicle/samples.
+var chronicleApi = builder.AddProject<Projects.Chronicle_Api>("chronicle-api", launchProfileName: "http")
+    .WithHttpHealthCheck("/health")
+    .WithUrl("/swagger", "Swagger UI");
+
 // ---- Scenario Builder (src/scenario-builder) ----
 // Ports stay the ones in its README, since the UI's proxy.conf.json and the API's
 // appsettings.json hard-code them: API :5280, UI :4310, fake model :5299.

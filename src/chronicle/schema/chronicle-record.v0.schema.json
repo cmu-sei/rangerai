@@ -1,0 +1,2805 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ranger:chronicle:record:v0",
+  "title": "Chronicle record, schema 0.1.0",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "description": "The schema version the record follows, as semantic versioning: a change that alters an existing field's meaning is a major version.",
+      "type": "string",
+      "pattern": "^0\\.[0-9]+\\.[0-9]+$"
+    },
+    "id": {
+      "description": "The Chronicle's id. Letters, digits, '.', '_' and '-'; it never changes.",
+      "type": "string"
+    },
+    "name": {
+      "description": "The event's name.",
+      "type": "string"
+    },
+    "kind": {
+      "description": "What kind of event it is.",
+      "$ref": "#/$defs/EventKind"
+    },
+    "description": {
+      "description": "The event in a sentence or two.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created": {
+      "description": "When the Chronicle was started.",
+      "type": "string",
+      "format": "date-time"
+    },
+    "seededFrom": {
+      "description": "Earlier Chronicles whose lessons seeded this one.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "world": {
+      "description": "What the world looks like.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Item"
+      }
+    },
+    "intent": {
+      "description": "What the event must achieve, and how it is planned to unfold.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Item"
+      }
+    },
+    "asBuilt": {
+      "description": "What was built.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Item"
+      }
+    },
+    "asRun": {
+      "description": "What happened.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Item"
+      }
+    },
+    "lessons": {
+      "description": "What was learned.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Item"
+      }
+    },
+    "history": {
+      "description": "Every entry, in sequence order. Empty in an export that carries only the current view.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Entry"
+      }
+    },
+    "items": {
+      "description": "Every item, with its part.",
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "id",
+    "name",
+    "kind",
+    "created"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "Account": {
+      "description": "A persona's account on one service. Credentials are never here: they are Data of type Credentials.",
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "description": "The service.",
+          "type": "string"
+        },
+        "username": {
+          "description": "The username, or email address, that every post and message on the service is attributed to.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "The name the service shows, if it differs.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "serviceId",
+        "username"
+      ],
+      "additionalProperties": false
+    },
+    "Application": {
+      "description": "A program on a device (the Cyber DEM's Application).",
+      "properties": {
+        "kind": {
+          "const": "application"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "version": {
+          "description": "The version.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "company": {
+          "description": "The company that makes it.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "description": "The object's name, in the Cyber DEM's sense for its class.",
+          "type": "string"
+        },
+        "description": {
+          "description": "What the object is.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relatedObjects": {
+          "description": "The other cyber objects this one is related to, and how.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RelatedObject"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Assessment": {
+      "description": "How well the event met one objective, and the evidence.",
+      "properties": {
+        "kind": {
+          "const": "assessment"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "objectiveId": {
+          "description": "The objective.",
+          "type": "string"
+        },
+        "rating": {
+          "description": "How well it was met.",
+          "$ref": "#/$defs/Rating"
+        },
+        "text": {
+          "description": "Why.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence": {
+          "description": "The As Run items that show it.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "objectiveId",
+        "rating"
+      ],
+      "additionalProperties": false
+    },
+    "Audience": {
+      "description": "Who may see an item. The ladder is participant, then exercise control, then designer; an audience sees what is marked at or below its own rung.",
+      "enum": [
+        "participant",
+        "excon",
+        "designer"
+      ]
+    },
+    "Author": {
+      "description": "Who made a change.",
+      "type": "object",
+      "properties": {
+        "app": {
+          "description": "The app that published the entry, such as scenario-builder, grayspace or ghosts.",
+          "type": "string"
+        },
+        "actor": {
+          "description": "The person, or the person whose agent acted, in the app's own terms; absent when the app acted on its own.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "via": {
+          "description": "How the author acted.",
+          "$ref": "#/$defs/Via"
+        }
+      },
+      "required": [
+        "app",
+        "via"
+      ],
+      "additionalProperties": false
+    },
+    "Content": {
+      "description": "A piece of content made for the event: a news article, a post, an email, a file. Content made before play is in the As Built; content made during play is in the As Run.",
+      "properties": {
+        "kind": {
+          "const": "content"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "format": {
+          "description": "What kind of content, such as article, post, email or file.",
+          "type": "string"
+        },
+        "title": {
+          "description": "The title or subject.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "body": {
+          "description": "The content itself, when it is text.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "uri": {
+          "description": "Where the content is, when it isn't held here.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "attributedTo": {
+          "description": "The persona or organization it is attributed to.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "serviceId": {
+          "description": "The service it is published on.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "plannedEventId": {
+          "description": "The planned event it was made for.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "format"
+      ],
+      "additionalProperties": false
+    },
+    "CyberActivity": {
+      "description": "A cyber event that happened on the range or in a simulation, in the Cyber DEM's terms.",
+      "properties": {
+        "kind": {
+          "const": "cyberActivity"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "event": {
+          "description": "The event.",
+          "$ref": "#/$defs/CyberEvent"
+        },
+        "observedBy": {
+          "description": "The app or sensor that saw it.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "at": {
+          "description": "When it happened, by the wall clock.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "plannedEventId": {
+          "description": "The planned event it carried out; absent when it wasn't planned.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "event",
+        "at"
+      ],
+      "additionalProperties": false
+    },
+    "CyberEvent": {
+      "description": "A cyber event, in the Cyber DEM's terms (SISO-STD-025.2-2023): its class, phase, actors, targets and sources. ATT&CK ids are supporting detail, after the class (BONES §5, pattern 6). Cyber events target cyber objects only (pattern 3).",
+      "type": "object",
+      "properties": {
+        "class": {
+          "description": "The Cyber DEM event class, the most specific that fits, such as PhishingAttack or Degrade.",
+          "type": "string"
+        },
+        "phase": {
+          "description": "The event's phase: Start, Suspend, Continue, ContinueWithChanges, End or Cancel.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "x-siso-ref-010": {
+            "uid": 679,
+            "table": "Cyber Cyber Event Phase Type"
+          }
+        },
+        "actorIds": {
+          "description": "Who carries it out: personas, devices or other cyber objects.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "targetIds": {
+          "description": "The cyber objects it targets.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "targetModifiers": {
+          "description": "Conditions that must all hold for a target to count.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sourceIds": {
+          "description": "The cyber events it follows from (SourceIDs): planned events in the Intent, cyber activity in the As Run.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "duration": {
+          "description": "How long it lasts.",
+          "$comment": "Represents a System.TimeSpan value.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$"
+        },
+        "mitreTechniqueIds": {
+          "description": "ATT&CK techniques and subtechniques, for an attack.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mitreMitigationIds": {
+          "description": "ATT&CK mitigations, for a defense.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mitreDetectionIds": {
+          "description": "ATT&CK detections, for recon or detection.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "details": true
+      },
+      "required": [
+        "class"
+      ],
+      "additionalProperties": false
+    },
+    "CyberSystem": {
+      "description": "A group of objects that work together, such as a SCADA, C2 or ICS system (the Cyber DEM's System).",
+      "properties": {
+        "kind": {
+          "const": "system"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "systemType": {
+          "description": "The system type, such as SCADA, C2 or ICS.",
+          "type": "string",
+          "x-siso-ref-010": {
+            "uid": 698,
+            "table": "Cyber System Type"
+          }
+        },
+        "name": {
+          "description": "The object's name, in the Cyber DEM's sense for its class.",
+          "type": "string"
+        },
+        "description": {
+          "description": "What the object is.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relatedObjects": {
+          "description": "The other cyber objects this one is related to, and how.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RelatedObject"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "systemType",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Data": {
+      "description": "Files, messages, records and credentials (the Cyber DEM's Data). A persona's passwords are Data of type Credentials.",
+      "properties": {
+        "kind": {
+          "const": "data"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "dataType": {
+          "description": "The data type, such as Credentials.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "x-siso-ref-010": {
+            "uid": 682,
+            "table": "Cyber Data Type"
+          }
+        },
+        "status": {
+          "description": "The data's state, such as Intact, Compromised or Corrupted.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "x-siso-ref-010": {
+            "uid": 681,
+            "table": "Cyber Data Status Type"
+          }
+        },
+        "sensitivity": {
+          "description": "How sensitive the data is, such as PII.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "x-siso-ref-010": {
+            "uid": 696,
+            "table": "Cyber Sensitivity Type"
+          }
+        },
+        "encrypted": {
+          "description": "Whether the data is encrypted.",
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "encryptionType": {
+          "description": "How it is encrypted.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "x-siso-ref-010": {
+            "uid": 684,
+            "table": "Cyber Encryption Type"
+          }
+        },
+        "name": {
+          "description": "The object's name, in the Cyber DEM's sense for its class.",
+          "type": "string"
+        },
+        "description": {
+          "description": "What the object is.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relatedObjects": {
+          "description": "The other cyber objects this one is related to, and how.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RelatedObject"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Defense": {
+      "description": "A defense in place before the event starts. A defense taken during play is a CyberActivity of class CyberDefend.",
+      "properties": {
+        "kind": {
+          "const": "defense"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "description": {
+          "description": "What the defense is.",
+          "type": "string"
+        },
+        "assetIds": {
+          "description": "The assets it protects.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mitreMitigationIds": {
+          "description": "The ATT&CK mitigations it carries out, as supporting detail.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "Deployment": {
+      "description": "One build of the range, or of part of it, by one builder.",
+      "properties": {
+        "kind": {
+          "const": "deployment"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "builder": {
+          "description": "The builder, such as grayspace, ghosts or pandora.",
+          "type": "string"
+        },
+        "reference": {
+          "description": "What the builder calls the build, such as a GraySpace enclave's slug.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "version": {
+          "description": "The version of the build, in the builder's terms.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "state": {
+          "description": "Where the build stands.",
+          "$ref": "#/$defs/DeploymentState"
+        },
+        "at": {
+          "description": "When the build reached its state.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "builds": {
+          "description": "The World and Intent items the build was made from.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "builder",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "DeploymentState": {
+      "description": "Where a build stands.",
+      "enum": [
+        "planned",
+        "building",
+        "ready",
+        "failed",
+        "destroyed"
+      ]
+    },
+    "Device": {
+      "description": "A host, server, router or other device (the Cyber DEM's Device).",
+      "properties": {
+        "kind": {
+          "const": "device"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "deviceTypes": {
+          "description": "What kinds of device it is, such as ComputerNode or Networking.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-siso-ref-010": {
+            "uid": 683,
+            "table": "Cyber Device Type"
+          }
+        },
+        "isVirtual": {
+          "description": "Whether the device is virtual.",
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "role": {
+          "description": "The device's purpose, such as domain controller.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "deviceIdentifier": {
+          "description": "An identifier for the device, such as a serial or asset number.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "networkInterfaces": {
+          "description": "The device's connections to networks.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NetworkInterface"
+          }
+        },
+        "name": {
+          "description": "The object's name, in the Cyber DEM's sense for its class.",
+          "type": "string"
+        },
+        "description": {
+          "description": "What the object is.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relatedObjects": {
+          "description": "The other cyber objects this one is related to, and how.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RelatedObject"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Entry": {
+      "description": "One change to a Chronicle, and what apps publish. An entry adds, revises or retracts one item in one part, and says who did it, when and why. Entries are never changed or removed once stored.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The entry's id, chosen by the publisher; a UUID, version 7 recommended so ids sort by time.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "chronicleId": {
+          "description": "The Chronicle it changes.",
+          "type": "string"
+        },
+        "sequence": {
+          "description": "Its place in the Chronicle's history, from 1, assigned when it is stored. Absent on an entry not yet stored.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "recordedAt": {
+          "description": "When the author made the change.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "part": {
+          "description": "The part it changes.",
+          "$ref": "#/$defs/Part"
+        },
+        "kind": {
+          "description": "The item's kind, so a subscriber can route the entry without reading the item, a retraction included.",
+          "type": "string"
+        },
+        "op": {
+          "description": "What it does.",
+          "$ref": "#/$defs/Operation"
+        },
+        "itemId": {
+          "description": "The item's id.",
+          "type": "string"
+        },
+        "item": {
+          "description": "The item, in full: the new item for an add, its new version for a revise. Absent for a retract.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Item"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "revises": {
+          "description": "For a revise or a retract, the entry that wrote the version it replaces. A store refuses the entry if a later one has replaced that version, so two authors can't silently overwrite each other.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "author": {
+          "description": "Who made the change.",
+          "$ref": "#/$defs/Author"
+        },
+        "reason": {
+          "description": "Why, in words.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "chronicleId",
+        "recordedAt",
+        "part",
+        "kind",
+        "op",
+        "itemId",
+        "author"
+      ],
+      "additionalProperties": false
+    },
+    "EventKind": {
+      "description": "What kind of event a Chronicle records.",
+      "enum": [
+        "training",
+        "exercise",
+        "simulation"
+      ]
+    },
+    "Extension": {
+      "description": "An item this version of the schema has no kind for: an app's own data, or a kind proposed for a later version. Readers that don't know its type pass it on unchanged.",
+      "properties": {
+        "kind": {
+          "const": "extension"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "type": {
+          "description": "The extension's type, named by the app that owns it, such as ghosts.npcProfile.",
+          "type": "string"
+        },
+        "version": {
+          "description": "A version of the type, if its owner versions it.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "data": true,
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    "Fact": {
+      "description": "A statement about the world: background, a situation, the information environment, a name. Ground truth is a fact with excon visibility.",
+      "properties": {
+        "kind": {
+          "const": "fact"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "topic": {
+          "description": "What the fact is about, such as background, situation, informationEnvironment or groundTruth.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "text": {
+          "description": "The fact.",
+          "type": "string"
+        },
+        "about": {
+          "description": "The items the fact is about.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "Influence": {
+      "description": "Influence activity: a post, comment, reaction, share or direct message. The Cyber DEM has only PhishingAttack; these are the events the GHOSTS team proposes.",
+      "type": "object",
+      "properties": {
+        "action": {
+          "description": "What the persona does.",
+          "$ref": "#/$defs/InfluenceAction"
+        },
+        "actorId": {
+          "description": "The persona, or for planned activity a pool, that acts.",
+          "type": "string"
+        },
+        "serviceId": {
+          "description": "The service it happens on, such as a social media platform.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "contentId": {
+          "description": "The content it posts or sends, as an item, when the content is in the Chronicle.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "text": {
+          "description": "The content in words, when it isn't an item.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "inReplyTo": {
+          "description": "What it replies or reacts to.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "action",
+        "actorId"
+      ],
+      "additionalProperties": false
+    },
+    "InfluenceAction": {
+      "description": "What a persona does in the information environment.",
+      "enum": [
+        "post",
+        "comment",
+        "react",
+        "share",
+        "message"
+      ]
+    },
+    "InfluenceActivity": {
+      "description": "Influence activity that happened: a post, comment, reaction, share or message.",
+      "properties": {
+        "kind": {
+          "const": "influenceActivity"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "activity": {
+          "description": "The activity.",
+          "$ref": "#/$defs/Influence"
+        },
+        "at": {
+          "description": "When it happened, by the wall clock.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "plannedEventId": {
+          "description": "The planned event it carried out; absent when it wasn't planned.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "activity",
+        "at"
+      ],
+      "additionalProperties": false
+    },
+    "Inject": {
+      "description": "A message for people: an email, a call, a news report, a note handed over. The Cyber DEM doesn't cover these.",
+      "type": "object",
+      "properties": {
+        "channel": {
+          "description": "How it arrives, such as email, phone, chat, news, document or in person.",
+          "type": "string"
+        },
+        "from": {
+          "description": "Who it is from: a persona or organization in the world, or a description.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "to": {
+          "description": "Who it is for: sides, organizations or personas, or a description such as \"the SOC team\".",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "content": {
+          "description": "What it says.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "channel",
+        "content"
+      ],
+      "additionalProperties": false
+    },
+    "InjectDelivery": {
+      "description": "An inject that reached people.",
+      "properties": {
+        "kind": {
+          "const": "injectDelivery"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "to": {
+          "description": "Who it reached.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "note": {
+          "description": "How it went, such as delivered late or acknowledged.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "at": {
+          "description": "When it happened, by the wall clock.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "plannedEventId": {
+          "description": "The planned event it carried out; absent when it wasn't planned.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "at"
+      ],
+      "additionalProperties": false
+    },
+    "Item": {
+      "description": "One thing a Chronicle holds: a device, an objective, an inject delivered, a lesson. Every item has an id that is unique in its Chronicle, says who may see it, and says whether it was stated or proposed. Its kind says what it is; each kind belongs to one or more parts.",
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Side"
+        },
+        {
+          "$ref": "#/$defs/Organization"
+        },
+        {
+          "$ref": "#/$defs/Network"
+        },
+        {
+          "$ref": "#/$defs/NetworkLink"
+        },
+        {
+          "$ref": "#/$defs/Device"
+        },
+        {
+          "$ref": "#/$defs/OperatingSystem"
+        },
+        {
+          "$ref": "#/$defs/Service"
+        },
+        {
+          "$ref": "#/$defs/Application"
+        },
+        {
+          "$ref": "#/$defs/CyberSystem"
+        },
+        {
+          "$ref": "#/$defs/Data"
+        },
+        {
+          "$ref": "#/$defs/Persona"
+        },
+        {
+          "$ref": "#/$defs/PersonaPool"
+        },
+        {
+          "$ref": "#/$defs/Vulnerability"
+        },
+        {
+          "$ref": "#/$defs/Defense"
+        },
+        {
+          "$ref": "#/$defs/Fact"
+        },
+        {
+          "$ref": "#/$defs/Objective"
+        },
+        {
+          "$ref": "#/$defs/TeachingPoint"
+        },
+        {
+          "$ref": "#/$defs/Rule"
+        },
+        {
+          "$ref": "#/$defs/Term"
+        },
+        {
+          "$ref": "#/$defs/PlannedEvent"
+        },
+        {
+          "$ref": "#/$defs/Deployment"
+        },
+        {
+          "$ref": "#/$defs/Realization"
+        },
+        {
+          "$ref": "#/$defs/Content"
+        },
+        {
+          "$ref": "#/$defs/Milestone"
+        },
+        {
+          "$ref": "#/$defs/CyberActivity"
+        },
+        {
+          "$ref": "#/$defs/InfluenceActivity"
+        },
+        {
+          "$ref": "#/$defs/InjectDelivery"
+        },
+        {
+          "$ref": "#/$defs/ParticipantAction"
+        },
+        {
+          "$ref": "#/$defs/Observation"
+        },
+        {
+          "$ref": "#/$defs/Assessment"
+        },
+        {
+          "$ref": "#/$defs/Lesson"
+        },
+        {
+          "$ref": "#/$defs/Extension"
+        }
+      ]
+    },
+    "Lesson": {
+      "description": "Something learned, and what to do about it next time.",
+      "properties": {
+        "kind": {
+          "const": "lesson"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "text": {
+          "description": "What was learned.",
+          "type": "string"
+        },
+        "recommendation": {
+          "description": "What to do next time.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "for": {
+          "description": "Who should act on it: designers, exercise control, builders, participants' organization.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence": {
+          "description": "The items that show it.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "Location": {
+      "description": "A place, in WGS 84 as C2SIM's geodetic coordinates are, or by name alone.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The place's name, such as a city or a building.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "latitude": {
+          "description": "Latitude in decimal degrees.",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "longitude": {
+          "description": "Longitude in decimal degrees.",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "Milestone": {
+      "description": "A point in the event's life: start, pause, resume, end.",
+      "properties": {
+        "kind": {
+          "const": "milestone"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "type": {
+          "description": "The milestone.",
+          "$ref": "#/$defs/MilestoneType"
+        },
+        "note": {
+          "description": "Why, such as the reason for a pause.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "at": {
+          "description": "When it happened, by the wall clock.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "plannedEventId": {
+          "description": "The planned event it carried out; absent when it wasn't planned.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "at"
+      ],
+      "additionalProperties": false
+    },
+    "MilestoneType": {
+      "description": "A point in the event's life.",
+      "enum": [
+        "start",
+        "pause",
+        "resume",
+        "end"
+      ]
+    },
+    "Network": {
+      "description": "A network or segment (the Cyber DEM's Network).",
+      "properties": {
+        "kind": {
+          "const": "network"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "cidr": {
+          "description": "The network's address range in CIDR form, such as 10.1.20.0/24. The Cyber DEM records it as the Network's name and mask.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "protocol": {
+          "description": "The network protocol.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "x-siso-ref-010": {
+            "uid": 690,
+            "table": "Cyber Network Protocol Type"
+          }
+        },
+        "name": {
+          "description": "The object's name, in the Cyber DEM's sense for its class.",
+          "type": "string"
+        },
+        "description": {
+          "description": "What the object is.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relatedObjects": {
+          "description": "The other cyber objects this one is related to, and how.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RelatedObject"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "NetworkInterface": {
+      "description": "A device's connection to a network (the Cyber DEM's NetworkInterfaceStruct).",
+      "type": "object",
+      "properties": {
+        "relatedObjectId": {
+          "description": "The network or network link.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The device's hostname on that network.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "address": {
+          "description": "The device's IP address on that network.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "relatedObjectId"
+      ],
+      "additionalProperties": false
+    },
+    "NetworkLink": {
+      "description": "A link between devices, when an exercise needs its conditions (the Cyber DEM's NetworkLink).",
+      "properties": {
+        "kind": {
+          "const": "networkLink"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "dataLinkProtocol": {
+          "description": "The data link protocol.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "x-siso-ref-010": {
+            "uid": 680,
+            "table": "Cyber Data Link Protocol Type"
+          }
+        },
+        "physicalLayer": {
+          "description": "The physical layer.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "x-siso-ref-010": {
+            "uid": 693,
+            "table": "Cyber Physical Layer Type"
+          }
+        },
+        "bandwidth": {
+          "description": "Bandwidth, in bits per second.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "latency": {
+          "description": "Latency, in milliseconds.",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "jitter": {
+          "description": "Jitter, in milliseconds.",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "name": {
+          "description": "The object's name, in the Cyber DEM's sense for its class.",
+          "type": "string"
+        },
+        "description": {
+          "description": "What the object is.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relatedObjects": {
+          "description": "The other cyber objects this one is related to, and how.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RelatedObject"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Objective": {
+      "description": "Something the event must achieve.",
+      "properties": {
+        "kind": {
+          "const": "objective"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "text": {
+          "description": "The objective.",
+          "type": "string"
+        },
+        "measures": {
+          "description": "How achieving it is measured.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "parentId": {
+          "description": "The objective this one serves.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "Observation": {
+      "description": "Something a controller, evaluator or app noticed.",
+      "properties": {
+        "kind": {
+          "const": "observation"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "by": {
+          "description": "Who noticed it.",
+          "type": "string"
+        },
+        "text": {
+          "description": "What they noticed.",
+          "type": "string"
+        },
+        "objectiveIds": {
+          "description": "The objectives it bears on.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "about": {
+          "description": "The items it is about.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "at": {
+          "description": "When it happened, by the wall clock.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "plannedEventId": {
+          "description": "The planned event it carried out; absent when it wasn't planned.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "by",
+        "text",
+        "at"
+      ],
+      "additionalProperties": false
+    },
+    "OperatingSystem": {
+      "description": "An operating system, related to the device it runs on (the Cyber DEM's OperatingSystem).",
+      "properties": {
+        "kind": {
+          "const": "operatingSystem"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "osType": {
+          "description": "The operating system type, such as MicrosoftWindows or UNIX-Linux.",
+          "type": "string",
+          "x-siso-ref-010": {
+            "uid": 691,
+            "table": "Cyber Operating System Type"
+          }
+        },
+        "version": {
+          "description": "The version, such as Windows Server 2022 or Ubuntu 24.04.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "description": "The object's name, in the Cyber DEM's sense for its class.",
+          "type": "string"
+        },
+        "description": {
+          "description": "What the object is.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relatedObjects": {
+          "description": "The other cyber objects this one is related to, and how.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RelatedObject"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "osType",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Operation": {
+      "description": "What an entry does to an item.",
+      "enum": [
+        "add",
+        "revise",
+        "retract"
+      ]
+    },
+    "Organization": {
+      "description": "An organization: a bank, a ministry, a unit, a news outlet. The Cyber DEM has no organization; GHOSTS needs one for every persona's employer.",
+      "properties": {
+        "kind": {
+          "const": "organization"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "name": {
+          "description": "The organization's name.",
+          "type": "string"
+        },
+        "description": {
+          "description": "What the organization is and does.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sector": {
+          "description": "Its sector or type, such as banking, government or military unit.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sideId": {
+          "description": "The side it is on.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "parentId": {
+          "description": "The organization it is part of.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "location": {
+          "description": "Where it is.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Location"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Part": {
+      "description": "The five parts of a Chronicle, in the order an event fills them.",
+      "enum": [
+        "world",
+        "intent",
+        "asBuilt",
+        "asRun",
+        "lessons"
+      ]
+    },
+    "ParticipantAction": {
+      "description": "A decision or action by participants.",
+      "properties": {
+        "kind": {
+          "const": "participantAction"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "by": {
+          "description": "Who acted: a team, a role or a person, in the event's terms.",
+          "type": "string"
+        },
+        "text": {
+          "description": "What they decided or did.",
+          "type": "string"
+        },
+        "objectiveIds": {
+          "description": "The objectives it bears on.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "at": {
+          "description": "When it happened, by the wall clock.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "plannedEventId": {
+          "description": "The planned event it carried out; absent when it wasn't planned.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "by",
+        "text",
+        "at"
+      ],
+      "additionalProperties": false
+    },
+    "Persona": {
+      "description": "A person in cyberspace (the Cyber DEM's Persona), with what GHOSTS needs: an account on each service, an organization and role, where the persona came from, and its traits. A persona's devices and services are related objects with the Uses relationship.",
+      "properties": {
+        "kind": {
+          "const": "persona"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "accounts": {
+          "description": "The persona's accounts, one for each service it uses.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Account"
+          }
+        },
+        "organizationId": {
+          "description": "The organization the persona works for.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "role": {
+          "description": "The persona's role there.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "poolId": {
+          "description": "The pool the persona was generated from.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "origin": {
+          "description": "Where the persona came from, which tells a reviewer what to check.",
+          "$ref": "#/$defs/PersonaOrigin"
+        },
+        "traits": {
+          "description": "Optional traits, such as motivation or health. Sensitive ones carry their sensitivity.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Trait"
+          }
+        },
+        "name": {
+          "description": "The object's name, in the Cyber DEM's sense for its class.",
+          "type": "string"
+        },
+        "description": {
+          "description": "What the object is.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relatedObjects": {
+          "description": "The other cyber objects this one is related to, and how.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RelatedObject"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "origin",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "PersonaOrigin": {
+      "description": "Where a persona came from.",
+      "enum": [
+        "authored",
+        "generated",
+        "modelledOnRealPerson"
+      ]
+    },
+    "PersonaPool": {
+      "description": "Many people, described once: \"40 office staff on this segment\". Scenarios are authored as pools; GHOSTS generates the personas, and each names its pool.",
+      "properties": {
+        "kind": {
+          "const": "personaPool"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "name": {
+          "description": "The pool's name.",
+          "type": "string"
+        },
+        "description": {
+          "description": "Who the people are and how they behave.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "role": {
+          "description": "Their role.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "count": {
+          "description": "How many people.",
+          "type": "integer"
+        },
+        "organizationId": {
+          "description": "The organization they work for.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "uses": {
+          "description": "The networks, devices and services they use.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "count"
+      ],
+      "additionalProperties": false
+    },
+    "PlannedEvent": {
+      "description": "One planned event: a row of the master scenario events list. It happens at an offset from the start, or after other planned events, and carries an inject for people, a cyber event for simulations and the range, influence activity, or several of these.",
+      "properties": {
+        "kind": {
+          "const": "plannedEvent"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "title": {
+          "description": "A short title.",
+          "type": "string"
+        },
+        "offset": {
+          "description": "When it is planned, as an offset from the start of the event, such as 01:40:00.",
+          "$comment": "Represents a System.TimeSpan value.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$"
+        },
+        "after": {
+          "description": "The planned events it waits on (the Cyber DEM's SourceIDs, when they are cyber events).",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "condition": {
+          "description": "Any other condition it waits on, in words.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "objectiveIds": {
+          "description": "The objectives it serves.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "inject": {
+          "description": "The inject for people, if it has one.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Inject"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cyber": {
+          "description": "The cyber event, if it has one.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CyberEvent"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "influence": {
+          "description": "The influence activity, if it has one.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Influence"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expectedResponse": {
+          "description": "What the participants are expected to do.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "escalations": {
+          "description": "What exercise control may do if play goes off course.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "Rating": {
+      "description": "How well an objective was met.",
+      "enum": [
+        "met",
+        "partiallyMet",
+        "notMet",
+        "notAssessed"
+      ]
+    },
+    "Realization": {
+      "description": "What one planned item became on the range: the identifiers a builder gave it. A world device \"mail server\" becomes a VM with an id, a hostname and an address.",
+      "properties": {
+        "kind": {
+          "const": "realization"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "of": {
+          "description": "The planned item.",
+          "type": "string"
+        },
+        "deploymentId": {
+          "description": "The deployment that made it.",
+          "type": "string"
+        },
+        "identifiers": {
+          "description": "The builder's identifiers for it, such as vmId, hostname or address.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "deviation": {
+          "description": "How the built item differs from the plan, if it does.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "of",
+        "deploymentId"
+      ],
+      "additionalProperties": false
+    },
+    "RelatedObject": {
+      "description": "A relationship between two cyber objects (the Cyber DEM's RelatedObjects).",
+      "type": "object",
+      "properties": {
+        "objectId": {
+          "description": "The related object.",
+          "type": "string"
+        },
+        "relationship": {
+          "description": "How the two relate, such as Administers, ResidesOn or Provides.",
+          "type": "string",
+          "x-siso-ref-010": {
+            "uid": 695,
+            "table": "Cyber Relationship Type"
+          }
+        },
+        "privileges": {
+          "description": "What this object may do on the related one (the Cyber DEM's RelatedObjectPrivileges).",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "objectId",
+        "relationship"
+      ],
+      "additionalProperties": false
+    },
+    "Rule": {
+      "description": "A rule of play: scope, rules of engagement, safety, what is out of bounds.",
+      "properties": {
+        "kind": {
+          "const": "rule"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "text": {
+          "description": "The rule.",
+          "type": "string"
+        },
+        "category": {
+          "description": "What kind of rule, such as scope, engagement or safety.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "Service": {
+      "description": "A service: DNS, mail, a website, a database (the Cyber DEM's Service). A social media platform is a service.",
+      "properties": {
+        "kind": {
+          "const": "service"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "serviceType": {
+          "description": "The service type, such as DNS, Email, Web or Database.",
+          "type": "string",
+          "x-siso-ref-010": {
+            "uid": 697,
+            "table": "Cyber Service Type"
+          }
+        },
+        "address": {
+          "description": "Where the service is reached: a URL, a host and port, an address.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "description": "The object's name, in the Cyber DEM's sense for its class.",
+          "type": "string"
+        },
+        "description": {
+          "description": "What the object is.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relatedObjects": {
+          "description": "The other cyber objects this one is related to, and how.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RelatedObject"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "serviceType",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Side": {
+      "description": "A force side, as MSDL (SISO-STD-007-2008) and C2SIM (SISO-STD-019-2020) have them: blue, red, a neutral population, exercise control's own cell.",
+      "properties": {
+        "kind": {
+          "const": "side"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "name": {
+          "description": "The side's name.",
+          "type": "string"
+        },
+        "description": {
+          "description": "What the side is, in a sentence or two.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relations": {
+          "description": "How the side regards each other side.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SideRelation"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "SideRelation": {
+      "description": "How one side regards another, as MSDL's hostility codes do.",
+      "type": "object",
+      "properties": {
+        "sideId": {
+          "description": "The other side.",
+          "type": "string"
+        },
+        "stance": {
+          "description": "How this side regards it.",
+          "$ref": "#/$defs/Stance"
+        }
+      },
+      "required": [
+        "sideId",
+        "stance"
+      ],
+      "additionalProperties": false
+    },
+    "Stance": {
+      "description": "How one side regards another.",
+      "enum": [
+        "friendly",
+        "neutral",
+        "hostile",
+        "unknown"
+      ]
+    },
+    "Standing": {
+      "description": "Whether a person stated an item, or it was proposed (by an agent or an app) and not yet confirmed.",
+      "enum": [
+        "stated",
+        "proposed"
+      ]
+    },
+    "TeachingPoint": {
+      "description": "Something participants should take away.",
+      "properties": {
+        "kind": {
+          "const": "teachingPoint"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "text": {
+          "description": "The teaching point.",
+          "type": "string"
+        },
+        "objectiveIds": {
+          "description": "The objectives it serves.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "Term": {
+      "description": "A word or name the event's writing must use, or must avoid.",
+      "properties": {
+        "kind": {
+          "const": "term"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "text": {
+          "description": "The word or name.",
+          "type": "string"
+        },
+        "usage": {
+          "description": "Whether it must be used as written, or must not be used.",
+          "$ref": "#/$defs/TermUsage"
+        },
+        "note": {
+          "description": "What it means, or what to use instead.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "usage"
+      ],
+      "additionalProperties": false
+    },
+    "TermUsage": {
+      "description": "How a term is used.",
+      "enum": [
+        "fixed",
+        "banned"
+      ]
+    },
+    "Trait": {
+      "description": "One trait of a persona.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The trait's name, such as motivation or insiderThreat.",
+          "type": "string"
+        },
+        "value": true,
+        "sensitivity": {
+          "description": "How sensitive the trait is, such as PII; absent when it isn't.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "x-siso-ref-010": {
+            "uid": 696,
+            "table": "Cyber Sensitivity Type"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "Via": {
+      "description": "How an author acted: as a person, as a person's AI agent, or as an app on its own.",
+      "enum": [
+        "person",
+        "agent",
+        "app"
+      ]
+    },
+    "Vulnerability": {
+      "description": "A weakness planted or present in an asset. The Cyber DEM has no vulnerability object.",
+      "properties": {
+        "kind": {
+          "const": "vulnerability"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "assetId": {
+          "description": "The device, service, application or system that has it.",
+          "type": "string"
+        },
+        "description": {
+          "description": "What the weakness is.",
+          "type": "string"
+        },
+        "cve": {
+          "description": "Its CVE id, if it has one.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mitreTechniqueIds": {
+          "description": "The ATT&CK techniques that exploit it, as supporting detail.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "assetId",
+        "description"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

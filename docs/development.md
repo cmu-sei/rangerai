@@ -11,10 +11,21 @@ The repository includes a devcontainer and an [Aspire](https://aspire.dev) AppHo
 
 | Service | URL | What |
 |---|---|---|
+| `chronicle-api` | <http://localhost:5285> | Chronicle API: publish and subscribe to Chronicles (Swagger at `/swagger`) |
 | `scenario-builder-api` | <http://localhost:5280> | Scenario Builder .NET API |
 | `scenario-builder-ui` | <http://localhost:4310> | Scenario Builder Angular UI (proxies `/api` to :5280) |
 
 Ollama, LiteLLM and the stand-in `fake` model server (:5299) are started separately. See [Scenario Builder › Models](scenario-builder/index.md#models).
+
+## Tests
+
+```bash
+dotnet test src/RangerAI.slnx
+```
+
+The Chronicle tests also check that the generated JSON Schemas and the sample in `src/chronicle` are current. After
+changing a Chronicle type, regenerate them with `CHRONICLE_UPDATE=1 dotnet test src/chronicle/Chronicle.Tests` and
+review the diff.
 
 ## Adding a Project
 
