@@ -1,0 +1,10 @@
+{
+    "id": "opencode",
+    "version": "0.2.0",
+    "name": "OpenCode",
+    "description": "Installs the OpenCode 2 CLI via the official v2 installer script",
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ],
+    "postCreateCommand": "bash -l .devcontainer/features/opencode/postcreate.sh"
+}

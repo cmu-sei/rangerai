@@ -1,0 +1,14 @@
+{
+    "id": "agentcore",
+    "version": "0.1.0",
+    "name": "Amazon Bedrock AgentCore CLI",
+    "description": "Installs the AgentCore CLI (@aws/agentcore) via npm for creating, deploying, and managing remote agents on Amazon Bedrock AgentCore",
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/node:1"
+    ],
+    "containerEnv": {
+        "AGENTCORE_DISABLE_KEYCHAIN": "1"
+    },
+    "postCreateCommand": "bash -l .devcontainer/features/agentcore/postcreate.sh",
+    "postStartCommand": "bash -l .devcontainer/features/agentcore/poststart.sh"
+}

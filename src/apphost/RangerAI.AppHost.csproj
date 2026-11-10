@@ -1,0 +1,18 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.6.4">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>rangerai-apphost</UserSecretsId>
+    <!-- Dashboard and DCP come from NuGet, so F5 needs no Aspire CLI install. -->
+    <NoWarn>$(NoWarn);ASPIRE010</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Each project the AppHost runs. Add future .NET projects here and in AppHost.cs. -->
+    <ProjectReference Include="../scenario-builder/api/ScenarioBuilder.Api/ScenarioBuilder.Api.csproj" />
+  </ItemGroup>
+
+</Project>

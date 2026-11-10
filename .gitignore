@@ -336,3 +336,5 @@ __pycache__
 
 */*/configuration.Development.json
 */*/configuration.json
+.devcontainer/certs/*.crt
+.devcontainer/features/sei-certs/*.crt

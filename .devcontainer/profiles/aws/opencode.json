@@ -1,0 +1,58 @@
+{
+  "disabled_providers": ["opencode"],
+  "provider": {
+    "amazon-bedrock": {
+      "models": {
+        "us.openai.gpt-6-luna": {
+          "id": "us.openai.gpt-6-luna",
+          "name": "GPT-6 Luna (US)",
+          "family": "gpt",
+          "reasoning": true,
+          "attachment": true,
+          "temperature": false,
+          "tool_call": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 1050000,
+            "input": 922000,
+            "output": 128000
+          },
+          "cost": {
+            "input": 0.11,
+            "output": 0.55,
+            "cache_read": 0.011,
+            "cache_write": 0.1375
+          }
+        }
+      }
+    }
+  },
+  "providers": {
+    "amazon-bedrock": {
+      "models": {
+        "openai.gpt-5.4": { "disabled": true },
+        "openai.gpt-5.5": { "disabled": true },
+        "openai.gpt-5.6-sol": { "disabled": true },
+        "us.openai.gpt-5.6-sol": { "disabled": true },
+        "global.openai.gpt-5.6-sol": { "disabled": true },
+        "openai.gpt-5.6-luna": { "disabled": true },
+        "us.openai.gpt-5.6-luna": { "disabled": true },
+        "global.openai.gpt-5.6-luna": { "disabled": true },
+        "in.openai.gpt-5.6-luna": { "disabled": true },
+        "openai.gpt-5.6-terra": { "disabled": true },
+        "us.openai.gpt-5.6-terra": { "disabled": true },
+        "global.openai.gpt-5.6-terra": { "disabled": true },
+        "in.openai.gpt-5.6-terra": { "disabled": true },
+        "anthropic.claude-opus-5-5": { "disabled": true },
+        "anthropic.claude-opus-4-6-v1": { "disabled": true },
+        "anthropic.claude-sonnet-4-6": { "disabled": true },
+        "openai.gpt-6-sol": { "disabled": true },
+        "us.openai.gpt-6-sol": { "disabled": true },
+        "global.openai.gpt-6-sol": { "disabled": true }
+      }
+    }
+  }
+}

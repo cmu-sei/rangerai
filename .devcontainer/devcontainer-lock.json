@@ -1,0 +1,39 @@
+{
+  "features": {
+    "ghcr.io/devcontainers-extra/features/ripgrep:1": {
+      "version": "1.0.15",
+      "resolved": "ghcr.io/devcontainers-extra/features/ripgrep@sha256:0dfc0ac16f0d6aa754d006a138fd4cb4a62c245d308306edf8ad1b7a80b8fdf2",
+      "integrity": "sha256:0dfc0ac16f0d6aa754d006a138fd4cb4a62c245d308306edf8ad1b7a80b8fdf2"
+    },
+    "ghcr.io/devcontainers-extra/features/uv:1": {
+      "version": "1.0.2",
+      "resolved": "ghcr.io/devcontainers-extra/features/uv@sha256:1ac5b9f17a9e9e745933d0ac2ecf758e06ed3da4423cd22c94cce4d482fd2dd8",
+      "integrity": "sha256:1ac5b9f17a9e9e745933d0ac2ecf758e06ed3da4423cd22c94cce4d482fd2dd8"
+    },
+    "ghcr.io/devcontainers/features/aws-cli:1": {
+      "version": "1.2.0",
+      "resolved": "ghcr.io/devcontainers/features/aws-cli@sha256:d6dee5e399eaee4090b5847afb7516ae7b52a066a863cc29120f66bea9f2d580",
+      "integrity": "sha256:d6dee5e399eaee4090b5847afb7516ae7b52a066a863cc29120f66bea9f2d580"
+    },
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "version": "2.7.1",
+      "resolved": "ghcr.io/devcontainers/features/common-utils@sha256:e76a6a8a35d1ad824daad1540725e0ec9f8ed2dc00d2850e990a9830013c7d08",
+      "integrity": "sha256:e76a6a8a35d1ad824daad1540725e0ec9f8ed2dc00d2850e990a9830013c7d08"
+    },
+    "ghcr.io/devcontainers/features/dotnet:2": {
+      "version": "2.5.0",
+      "resolved": "ghcr.io/devcontainers/features/dotnet@sha256:0fc16547ed4db6d7ff2a9f5981d2b93eb314e568affb9958029ad794f1f9a093",
+      "integrity": "sha256:0fc16547ed4db6d7ff2a9f5981d2b93eb314e568affb9958029ad794f1f9a093"
+    },
+    "ghcr.io/devcontainers/features/node:2": {
+      "version": "2.1.2",
+      "resolved": "ghcr.io/devcontainers/features/node@sha256:20ac718cc67e7999a9d3fbb8387f1a3a5d53ecbd41fe7c075ebadb8e9b431b17",
+      "integrity": "sha256:20ac718cc67e7999a9d3fbb8387f1a3a5d53ecbd41fe7c075ebadb8e9b431b17"
+    },
+    "ghcr.io/jsburckhardt/devcontainer-features/fd:1": {
+      "version": "1.0.0",
+      "resolved": "ghcr.io/jsburckhardt/devcontainer-features/fd@sha256:ad1a09751358ab1528fb2d2796170c2279dc80aa69cbdd9826fb9678ed04c30f",
+      "integrity": "sha256:ad1a09751358ab1528fb2d2796170c2279dc80aa69cbdd9826fb9678ed04c30f"
+    }
+  }
+}

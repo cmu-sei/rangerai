@@ -1,0 +1,12 @@
+{
+    "id": "sei-certs",
+    "version": "0.1.0",
+    "name": "SEI Certificates",
+    "description": "Installs the SEI and ZScalar certificates",
+    "containerEnv": {
+        "NODE_EXTRA_CA_CERTS": "/etc/ssl/certs/ca-certificates.crt",
+        "REQUESTS_CA_BUNDLE": "/etc/ssl/certs/ca-certificates.crt",
+        "PIP_CERT": "/etc/ssl/certs/ca-certificates.crt",
+        "SSL_CERT_FILE": "/etc/ssl/certs/ca-certificates.crt"
+    }
+}

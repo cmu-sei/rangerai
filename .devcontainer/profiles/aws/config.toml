@@ -1,0 +1,38 @@
+# Codex CLI configuration for Amazon Bedrock (commercial AWS Regions).
+# Authentication uses the AWS SDK credential chain — the
+# AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY credentials exported by this
+# profile's profile.env are picked up automatically, and so is its
+# AWS_REGION (us-east-1), so no [model_providers.*] table is needed.
+#
+# The provider is amazon-bedrock-runtime, not amazon-bedrock (Bedrock
+# Mantle). The Runtime route is the regional OpenAI-compatible endpoint
+# https://bedrock-runtime.<region>.amazonaws.com/openai/v1, and it accepts
+# the `global.`/`us.` cross-region inference-profile ids — so GPT-6.1 Sol,
+# GPT-6 Luna, and Astra are reachable from one Region.
+# Sol and Luna also support Mantle in us-east-1; Astra needs us-west-2
+# on that route. Runtime keeps all of them on the profile's us-east-1.
+#
+# Mantle fallback, if the Runtime route ever regresses: set
+# model_provider = "amazon-bedrock", model = "openai.gpt-6.1-sol".
+# AWS_REGION=us-east-1 serves Sol and Luna there, but not Astra.
+#
+# The model id carries the `us.` prefix, not `global.`, to match the
+# us-only model catalog postcreate.sh generates (it strips the duplicate
+# `global.` entries from the picker). The default MUST stay in that
+# catalog: an id the catalog does not list falls back to generic metadata,
+# which re-breaks model_reasoning_summary below.
+model_provider = "amazon-bedrock-runtime"
+model = "us.openai.gpt-6.1-sol"
+model_reasoning_effort = "medium"
+sandbox_mode = "danger-full-access"
+
+# Bedrock's OpenAI models reject the Responses `reasoning.summary`
+# parameter outright — "Unsupported parameter: 'reasoning.summary' is not
+# supported with the '<model>' model" — for every id on both routes
+# (verified 0.155.0 on astra and gpt-5.6-sol). Codex's Bedrock catalog
+# entries say default_reasoning_summary = "none" and `codex exec` honours
+# that, but the TUI resolves "detailed" regardless, so every interactive
+# session failed on its first turn while exec worked. Pinning it here is
+# the fix and it must stay pinned; "auto" also happens to work today
+# (Codex omits the parameter) but "concise"/"detailed" both 400.
+model_reasoning_summary = "none"

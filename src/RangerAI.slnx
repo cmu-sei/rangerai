@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/scenario-builder/">
+    <Project Path="scenario-builder/api/ScenarioBuilder.Api/ScenarioBuilder.Api.csproj" />
+    <Project Path="scenario-builder/api/ScenarioBuilder.Api.Tests/ScenarioBuilder.Api.Tests.csproj" />
+  </Folder>
+  <Project Path="apphost/RangerAI.AppHost.csproj" />
+</Solution>

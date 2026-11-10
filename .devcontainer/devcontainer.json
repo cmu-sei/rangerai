@@ -1,0 +1,80 @@
+{
+    "name": "${localWorkspaceFolderBasename}",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "mounts": [
+        {
+            "type": "volume",
+            "source": "${localWorkspaceFolderBasename}-data",
+            "target": "/home/vscode/.data"
+        }
+    ],
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "configureZshAsDefaultShell": true,
+            "upgradePackages": false
+        },
+        "ghcr.io/devcontainers/features/node:2": {},
+        // .NET 10 SDK for src/apphost (F5 runs it). The Aspire CLI is installed in postcreate.sh.
+        "ghcr.io/devcontainers/features/dotnet:2": {
+            "version": "10.0"
+        },
+        "ghcr.io/devcontainers-extra/features/uv:1": {},
+        "ghcr.io/devcontainers-extra/features/ripgrep:1": {},
+        "ghcr.io/jsburckhardt/devcontainer-features/fd:1": {},
+        "./features/sei-certs": {},
+        "./features/bedrock": {},
+        "./features/claude": {},
+        //"./features/opencode": {},
+        //"./features/pi": {},
+        //"./features/codex": {},
+        //"./features/grok": {},
+        "./features/agentcore": {},
+        "./features/herdr": {},
+        // "./features/chat": {},
+        "./features/oh-my-logo": {},
+        "./features/pure-prompt": {}
+        // "./features/_template_": {}
+    },
+    "containerEnv": {
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "TERM": "xterm-256color",
+        "COLORTERM": "truecolor",
+        "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+        "ASPIRE_CLI_TELEMETRY_OPTOUT": "1",
+        // On Linux, `dotnet dev-certs https --trust` (which `aspire run` calls on every F5) only
+        // counts as trusted when its per-user dir is on SSL_CERT_DIR; without this it reports
+        // PartiallyFailedToTrustTheCertificate.
+        "SSL_CERT_DIR": "/home/vscode/.aspnet/dev-certs/trust:/etc/ssl/certs"
+    },
+    "remoteEnv": {
+        "PATH": "${containerEnv:PATH}:/home/vscode/.dotnet/tools"
+    },
+    "runArgs": [
+        "--name",
+        "${localWorkspaceFolderBasename}",
+        "--hostname",
+        "${localWorkspaceFolderBasename}",
+        "--env-file",
+        ".devcontainer/devcontainer.env"
+    ],
+    "initializeCommand": [
+        ".devcontainer/scripts/init"
+    ],
+    "postCreateCommand": "bash -l .devcontainer/scripts/postcreate.sh",
+    "postStartCommand": "bash -l .devcontainer/scripts/poststart.sh",
+    "customizations": {
+        "vscode": {
+            // Aspire supplies the 'aspire' debug type F5 uses; C# Dev Kit debugs the .NET projects it starts.
+            "extensions": [
+                "microsoft-aspire.aspire-vscode",
+                "ms-dotnettools.csdevkit"
+            ],
+            "settings": {
+                "chat.disableAIFeatures": true
+            }
+        }
+    }
+}

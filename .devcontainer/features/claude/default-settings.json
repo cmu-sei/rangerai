@@ -1,0 +1,13 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "env": {
+    "CLAUDE_CODE_SHELL": "/bin/bash"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "statusline"
+  }
+}
