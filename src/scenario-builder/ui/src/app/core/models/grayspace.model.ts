@@ -1,7 +1,7 @@
-// The builder API's GraySpace views (camelCase), and GraySpace's own JSON as its Terrain API 1.4.0 writes it (snake_case),
+// The builder API's GraySpace views (camelCase), and GraySpace's own JSON as its Terrain API 1.7.0 writes it (snake_case),
 // which the builder API passes through. Only the fields the Deploy to GraySpace page reads are typed.
 
-/** GET /api/grayspace. The token is never in it. */
+/** GET /api/grayspace. The token is never in it. The address is a deployment's base URL (http://host/deployments/abc). */
 export interface GraySpaceStatus {
   connected: boolean;
   url?: string;
@@ -38,7 +38,7 @@ export interface GsServer {
   hostname: string;
 }
 
-/** GET /server: this GraySpace, with or without a deployed base. */
+/** The server part of GET /capabilities: this GraySpace, with or without a deployed base. */
 export interface GsServerInfo {
   jobs: boolean;
   jobs_unavailable_reason?: string | null;
@@ -54,7 +54,7 @@ export interface GsServerInfo {
   base?: { name: string; scope: string } | null;
 }
 
-/** GET /capabilities: what the deployed base offers. Only its base parts are read; the rest come from /server. */
+/** GET /capabilities: what the deployed base offers. Only its base parts are read here; the rest are read as the server part. */
 export interface GsCapabilities {
   dns: { tlds: string[]; hosting: GsServer[]; resolvers: GsServer[] };
   cas: { hostname: string; name: string }[];
@@ -100,7 +100,7 @@ export interface GsSliceSummary {
 
 /** GET /api/grayspace/offers. A part GraySpace couldn't give is missing, with its reason under problems. */
 export interface GraySpaceOffers {
-  server: GsServerInfo;
+  server?: GsServerInfo;
   capabilities?: GsCapabilities;
   base?: GsBase;
   versions?: GsBaseVersion[];

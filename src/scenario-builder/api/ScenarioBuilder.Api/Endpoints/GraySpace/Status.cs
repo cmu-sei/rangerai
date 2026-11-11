@@ -5,7 +5,7 @@ using ScenarioBuilder.Api.Infrastructure;
 
 namespace ScenarioBuilder.Api.Endpoints.GraySpace;
 
-/// <summary>GET /grayspace — where GraySpace is connected, by whom and since when, and whether it answers GET /server now.</summary>
+/// <summary>GET /grayspace — where GraySpace is connected, by whom and since when, and whether its deployment answers now.</summary>
 public class StatusEndpoint : IEndpoint
 {
     public RouteHandlerBuilder Register(RouteGroupBuilder group, string tag) =>
@@ -15,7 +15,7 @@ public class StatusEndpoint : IEndpoint
                     return Results.Ok(GraySpaceView.From(null));
                 try
                 {
-                    await grayspace.Send(connection.Url, connection.Token, HttpMethod.Get, "server", null, ct);
+                    await grayspace.Check(connection.Url, connection.Token, ct);
                     return Results.Ok(GraySpaceView.From(connection, answering: true));
                 }
                 catch (GraySpaceException e)

@@ -52,7 +52,7 @@ export class GraySpacePageComponent {
   private readonly me = inject(MeService);
 
   protected readonly decisions: Decision[] = [
-    { id: 'connection', title: 'Connection', decides: 'Which GraySpace builds the range, and whether it can run jobs now.', api: ['GET /server'], answers: [] },
+    { id: 'connection', title: 'Connection', decides: 'Which GraySpace builds the range, and whether it can run jobs now.', api: ['GET /deployments/{id}', 'GET /capabilities'], answers: [] },
     {
       id: 'base', title: 'Base', decides: 'The simulated internet the enclave joins: its version and health. An admin deploys, configures or destroys it.',
       api: ['GET /base', 'GET /base/versions', 'GET /base/preflight', 'POST /base/deploy', 'POST /base/configure', 'DELETE /base', 'GET /jobs?target=base'], answers: []
@@ -67,9 +67,9 @@ export class GraySpacePageComponent {
     },
     {
       id: 'hosts', title: 'Hosts', decides: 'Each host’s segment, image, roles, size and count, and whether it gets a public address.',
-      api: ['GET /server'], answers: ['hosts', 'services', 'platforms', 'monitoring', 'telemetry', 'simulatedUsers', 'planted']
+      api: ['GET /capabilities'], answers: ['hosts', 'services', 'platforms', 'monitoring', 'telemetry', 'simulatedUsers', 'planted']
     },
-    { id: 'roles', title: 'Role Settings', decides: 'The values a role needs to be set up, given once for the enclave.', api: ['GET /server'], answers: ['identity'] },
+    { id: 'roles', title: 'Role Settings', decides: 'The values a role needs to be set up, given once for the enclave.', api: ['GET /capabilities'], answers: ['identity'] },
     { id: 'dns', title: 'DNS and Certificates', decides: 'The enclave’s domains and records, and the certificates its hosts serve.', api: ['GET /capabilities'], answers: [] },
     { id: 'conditions', title: 'Network Conditions', decides: 'Latency, jitter, loss and bandwidth on the base’s links while the instance runs.', api: ['GET /map'], answers: [] },
     {
@@ -126,6 +126,11 @@ export class GraySpacePageComponent {
     try {
       const url = new URL(saved);
       if (DOCKER_INTERNAL_HOSTS.has(url.hostname)) url.hostname = this.document.location.hostname;
+      // The map is GraySpace's UI at the server, not under the deployment's path (/deployments/{id}).
+      const at = url.pathname.toLowerCase().indexOf('/deployments/');
+      if (at >= 0) url.pathname = url.pathname.slice(0, at) || '/';
+      url.search = '';
+      url.hash = '';
       return url.toString();
     } catch {
       return null;

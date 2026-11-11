@@ -154,7 +154,7 @@ describe('GraySpacePageComponent', () => {
   it('sums up the connected GraySpace under the pill: its base, what it offers, capacity, and why it can’t run jobs', async () => {
     const reason = 'The base’s SSH key (.ssh/terraform_key) is missing; deploy the base first';
     const server = {
-      ...offers.server, jobs: false, jobs_unavailable_reason: reason,
+      ...offers.server!, jobs: false, jobs_unavailable_reason: reason,
       base: { name: 'grayspace/2026.10', scope: 'full' },
       capacity: { node: 'pve', cpus: 16, memory_free: 12 * 1024 ** 3, memory_total: 64 * 1024 ** 3 }
     };
@@ -172,7 +172,7 @@ describe('GraySpacePageComponent', () => {
   });
 
   it('says only that it can’t run jobs yet when GraySpace doesn’t say why', async () => {
-    const server = { ...offers.server, jobs: false, jobs_unavailable_reason: null };
+    const server = { ...offers.server!, jobs: false, jobs_unavailable_reason: null };
     const { root } = await render(undefined, undefined, { ...offers, server });
 
     expect(root.querySelector('[data-testid="jobs-reason"]')?.textContent?.trim()).toBe('Can’t run jobs yet');
@@ -183,6 +183,12 @@ describe('GraySpacePageComponent', () => {
 
     expect(root.querySelector('.pill')?.textContent).toContain('Connected to http://172.17.0.1:8080');
     expect(root.querySelector<HTMLAnchorElement>('a.map-link')!.getAttribute('href')).toBe(`http://${location.hostname}:8080/`);
+  });
+
+  it('links GraySpace’s map at the server, not under the saved deployment’s path', async () => {
+    const { root } = await render({ connected: true, answering: true, url: 'http://gs.local:8080/deployments/abc', connectedBy: 'dev', since: '2026-11-06T09:00:00Z' });
+
+    expect(root.querySelector<HTMLAnchorElement>('a.map-link')!.getAttribute('href')).toBe('http://gs.local:8080/');
   });
 
   it('says it’s checking GraySpace until the check answers', async () => {
@@ -391,7 +397,7 @@ describe('GraySpacePageComponent', () => {
 
   describe('Deploy everything', () => {
     const alpine = { name: 'alpine-3.22', type: 'lxc', os_family: 'alpine', cores: 1, memory: 256, disk: 4 };
-    const server = { ...offers.server, images: [...offers.server.images, alpine] };
+    const server = { ...offers.server!, images: [...offers.server!.images, alpine] };
     const nothing: GraySpaceOffers = {
       server, versions: [{ name: 'grayspace/2026.10', deployed: false }],
       base: { version: null, status: 'not_deployed', routers: { expected: 0 }, bgp: {} }, problems: {}

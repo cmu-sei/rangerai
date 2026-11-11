@@ -103,7 +103,7 @@
             }
             @if (admin()) {
               <form class="fields" (submit)="$event.preventDefault(); connect()">
-                <label>Address <input class="sb-field wide" type="url" placeholder="http://grayspace.local:8000" [value]="draftUrl()" (input)="draftUrl.set(value($event))" /></label>
+                <label>Address <input class="sb-field wide" type="url" placeholder="http://grayspace.local:8080/deployments/abc" [value]="draftUrl()" (input)="draftUrl.set(value($event))" /></label>
                 <label>Token <input class="sb-field" type="password" autocomplete="off" [placeholder]="saved() ? 'Saved; give it again to change' : 'GRAYSPACE_API_TOKEN'" [value]="draftToken()" (input)="draftToken.set(value($event))" /></label>
                 <span class="buttons end">
                   <button class="sb-button primary" type="submit" [disabled]="(!!busy() && !connectingTo()) || !draftUrl().trim() || !draftToken()">{{ saved() ? 'Reconnect' : 'Connect' }}</button>

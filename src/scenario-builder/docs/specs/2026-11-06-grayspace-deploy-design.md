@@ -5,11 +5,15 @@
 
 ## What It Does
 
-The Topology page's **Deploy to GraySpace** screen connects to one GraySpace (Terrain API 1.4.0), shows what that
+The Topology page's **Deploy to GraySpace** screen connects to one deployment of a GraySpace (Terrain API 1.7.0), shows what that
 GraySpace offers, lets a person build the scenario's enclave, and deploys it.
 
-- **Connection.** An admin gives GraySpace's address and its `GRAYSPACE_API_TOKEN`. The API saves them only once
-  GraySpace answers `GET /server` with that token, which it does with or without a deployed base. The token never
+- **Connection.** An admin gives GraySpace's address and its `GRAYSPACE_API_TOKEN`. One GraySpace runs several
+  deployments, each a base and its enclaves, so the address is a deployment's base URL
+  (`http://grayspace.local:8080/deployments/abc`); given the server's address alone, the API takes its default
+  deployment. The API saves them only once GraySpace answers `GET /deployments/{id}` with that token, which it does
+  with or without a deployed base. What the server offers (images, roles, jobs, capacity) is read from
+  `GET /capabilities`, asked for a shipped version when no base is deployed. The token never
   leaves the API. Everyone else sees where it is connected, by whom and since when.
 - **Live offers, read-only:** the base and its health; attachment points; images; roles, with the variables each needs;
   DNS and CAs; the base's links. Each part GraySpace fails to give shows its error in its own section.

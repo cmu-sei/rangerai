@@ -16,8 +16,10 @@ public sealed class GraySpaceException(int status, string code, string message, 
 }
 
 /// <summary>
-/// Calls the connected GraySpace's Terrain API 1.4.0 with its token as a bearer. Answers come back as GraySpace wrote
-/// them; a failed call throws <see cref="GraySpaceException"/>.
+/// Calls the connected GraySpace's Terrain API 1.7.0 with its token as a bearer. Answers come back as GraySpace wrote
+/// them; a failed call throws <see cref="GraySpaceException"/>. One GraySpace runs several deployments, each a base and
+/// its enclaves: the connection's address is one deployment's base URL (<c>http://host/deployments/abc</c>), which every
+/// call goes under.
 /// </summary>
 public sealed class GraySpaceClient(BuilderDb db, IHttpClientFactory clients)
 {
@@ -33,11 +35,39 @@ public sealed class GraySpaceClient(BuilderDb db, IHttpClientFactory clients)
 
     public async Task<string> Text(HttpMethod method, string path, JsonNode? body, CancellationToken ct)
     {
-        var connection = await db.GraySpaceConnections.FirstOrDefaultAsync(ct)
-                         ?? throw new GraySpaceException(StatusCodes.Status409Conflict, "NOT_CONNECTED",
-                             "GraySpace isn't connected. An admin connects it under Connection on the Deploy to GraySpace page.");
+        var connection = await Connection(ct);
         return await Send(connection.Url, connection.Token, method, path, body, ct);
     }
+
+    /// <summary>Whether the connected deployment answers now; throws when it doesn't.</summary>
+    public async Task Check(CancellationToken ct)
+    {
+        var connection = await Connection(ct);
+        await Check(connection.Url, connection.Token, ct);
+    }
+
+    /// <summary>
+    /// Whether the deployment at <paramref name="url"/> answers with <paramref name="token"/>, which it does with or
+    /// without a deployed base: GET /deployments/{id} at the server's root.
+    /// </summary>
+    public Task Check(string url, string token, CancellationToken ct)
+    {
+        var (server, deployment) = Split(url);
+        return Send(server, token, HttpMethod.Get, deployment is null ? "deployments" : $"deployments/{Uri.EscapeDataString(deployment)}", null, ct);
+    }
+
+    /// <summary>A deployment's base URL as the server's address and the deployment's ID; no ID when the address names none.</summary>
+    public static (string Server, string? Deployment) Split(string url)
+    {
+        var at = url.LastIndexOf("/deployments/", StringComparison.OrdinalIgnoreCase);
+        var id = at < 0 ? "" : url[(at + "/deployments/".Length)..];
+        return id.Length == 0 || id.Contains('/') ? (url, null) : (url[..at], Uri.UnescapeDataString(id));
+    }
+
+    private async Task<Domain.GraySpaceConnection> Connection(CancellationToken ct) =>
+        await db.GraySpaceConnections.FirstOrDefaultAsync(ct)
+        ?? throw new GraySpaceException(StatusCodes.Status409Conflict, "NOT_CONNECTED",
+            "GraySpace isn't connected. An admin connects it under Connection on the Deploy to GraySpace page.");
 
     /// <summary>One call to the GraySpace at <paramref name="url"/>: Connect tries an address and token with it before saving them.</summary>
     public async Task<string> Send(string url, string token, HttpMethod method, string path, JsonNode? body, CancellationToken ct)
