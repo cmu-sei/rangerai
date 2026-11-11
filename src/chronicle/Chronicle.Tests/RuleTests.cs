@@ -39,13 +39,54 @@ public class ProjectionTests
     }
 
     [Fact]
-    public void An_id_is_never_reused()
+    public void An_id_in_use_is_taken()
     {
-        var add = Entry.Add("t", Part.World, Fact("f1"), Me, At);
-        var r = Projection.Append(Empty(), add);
-        r = Projection.Append(r, Entry.Retract("t", Part.World, "fact", "f1", add.Id, Me, At));
+        var r = Projection.Append(Empty(), Entry.Add("t", Part.World, Fact("f1"), Me, At));
         var again = Entry.Add("t", Part.World, Fact("f1"), Me, At);
         Assert.Equal("ID_TAKEN", Assert.Throws<ChronicleException>(() => Projection.Append(r, again)).Code);
+    }
+
+    [Fact]
+    public void A_retracted_id_can_be_added_again_and_the_history_keeps_both()
+    {
+        var add = Entry.Add("t", Part.World, Fact("f1", "first"), Me, At);
+        var r = Projection.Append(Empty(), add);
+        r = Projection.Append(r, Entry.Retract("t", Part.World, "fact", "f1", add.Id, Me, At));
+
+        var again = Entry.Add("t", Part.World, Fact("f1", "second"), Me, At);
+        r = Projection.Append(r, again);
+        Assert.Equal("second", Assert.IsType<Fact>(Assert.Single(r.World)).Text);
+        Assert.Equal([Operation.Add, Operation.Retract, Operation.Add], r.History.Select(e => e.Op));
+        Assert.Empty(Validation.Check(r));
+
+        // The new item is revised from the entry that added it, not from the old one's.
+        var stale = Entry.Revise("t", Part.World, Fact("f1", "third"), add.Id, Me, At);
+        Assert.Equal("STALE", Assert.Throws<ChronicleException>(() => Projection.Append(r, stale)).Code);
+        r = Projection.Append(r, Entry.Revise("t", Part.World, Fact("f1", "third"), again.Id, Me, At));
+        Assert.Equal("third", Assert.IsType<Fact>(Assert.Single(r.World)).Text);
+    }
+
+    [Fact]
+    public void A_list_numbered_by_position_can_lose_its_first_item()
+    {
+        // Scenario Builder numbers objectives O1, O2, O3 by position. Deleting the first renumbers the rest.
+        var r = Empty();
+        var last = new Dictionary<string, Entry>();
+        void Publish(Entry e) { r = Projection.Append(r, e); last[e.ItemId] = e; }
+        Objective O(int n, string text) => new() { Id = $"O{n}", Text = text };
+
+        Publish(Entry.Add("t", Part.Intent, O(1, "a"), Me, At));
+        Publish(Entry.Add("t", Part.Intent, O(2, "b"), Me, At));
+        Publish(Entry.Add("t", Part.Intent, O(3, "c"), Me, At));
+
+        Publish(Entry.Revise("t", Part.Intent, O(1, "b"), last["O1"].Id, Me, At));
+        Publish(Entry.Revise("t", Part.Intent, O(2, "c"), last["O2"].Id, Me, At));
+        Publish(Entry.Retract("t", Part.Intent, "objective", "O3", last["O3"].Id, Me, At));
+        Assert.Equal(["b", "c"], r.Intent.Cast<Objective>().Select(o => o.Text));
+
+        Publish(Entry.Add("t", Part.Intent, O(3, "d"), Me, At));
+        Assert.Equal(["O1", "O2", "O3"], r.Intent.Select(i => i.Id));
+        Assert.Equal(7, r.History.Count);
     }
 
     [Theory]
@@ -137,6 +178,31 @@ public class ValidationTests
         var codes = Validation.Check(broken).Select(f => f.Code).ToList();
         Assert.Contains("DUPLICATE_ID", codes);
         Assert.Contains("UNRESOLVED_REFERENCE", codes);
+    }
+
+    [Fact]
+    public void A_reference_to_an_item_that_changed_since_is_a_warning_until_the_referrer_is_written_again()
+    {
+        var at = new DateTimeOffset(2026, 11, 10, 9, 0, 0, TimeSpan.Zero);
+        var me = new Author { App = "test", Via = Via.Person };
+        var objective = Entry.Add("t", Part.Intent, new Objective { Id = "O1", Text = "a" }, me, at);
+        var point = Entry.Add("t", Part.Intent, new TeachingPoint { Id = "tp", Text = "p", ObjectiveIds = ["O1"] }, me, at);
+        var r = Projection.Append(ChronicleRecord.Start("t", "Test", EventKind.Training, at), objective);
+        r = Projection.Append(r, point);
+        Assert.Empty(Validation.Check(r));
+
+        var revised = Entry.Revise("t", Part.Intent, new Objective { Id = "O1", Text = "b" }, objective.Id, me, at);
+        r = Projection.Append(r, revised);
+        var finding = Assert.Single(Validation.Check(r));
+        Assert.Equal(("REFERENCE_CHANGED", Severity.Warning, "tp"), (finding.Code, finding.Severity, finding.ItemId));
+
+        // Writing the referrer again says it has seen the change.
+        var seen = Projection.Append(r, Entry.Revise("t", Part.Intent, (TeachingPoint)point.Item!, point.Id, me, at));
+        Assert.Empty(Validation.Check(seen));
+
+        r = Projection.Append(r, Entry.Retract("t", Part.Intent, "objective", "O1", revised.Id, me, at));
+        finding = Assert.Single(Validation.Check(r));
+        Assert.Equal(("REFERENCE_RETRACTED", Severity.Warning, "tp"), (finding.Code, finding.Severity, finding.ItemId));
     }
 
     [Fact]

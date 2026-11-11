@@ -10,7 +10,7 @@ namespace Chronicle;
 public sealed record ChronicleRecord
 {
     /// <summary>The schema version this library writes and reads.</summary>
-    public const string CurrentSchemaVersion = "0.1.0";
+    public const string CurrentSchemaVersion = "0.2.0";
 
     /// <summary>The schema version the record follows, as semantic versioning: a change that alters an existing field's meaning is a major version.</summary>
     public required string SchemaVersion { get; init; }

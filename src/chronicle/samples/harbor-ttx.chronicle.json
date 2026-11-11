@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "0.1.0",
+  "schemaVersion": "0.2.0",
   "id": "harbor-ttx",
   "name": "Harbor Ransomware Tabletop",
   "kind": "exercise",
@@ -172,6 +172,14 @@
     }
   ],
   "intent": [
+    {
+      "kind": "summary",
+      "id": "summary",
+      "visibility": "excon",
+      "title": "Executive summary",
+      "text": "Ransomware reaches Bayport's cargo scheduling through a phished assistant. Leaders must decide when to escalate, with the harbor master away.",
+      "standing": "stated"
+    },
     {
       "kind": "objective",
       "id": "obj-escalate",
@@ -795,6 +803,30 @@
       "sequence": 14,
       "recordedAt": "2026-11-02T14:13:00+00:00",
       "part": "intent",
+      "kind": "summary",
+      "op": "add",
+      "itemId": "summary",
+      "item": {
+        "kind": "summary",
+        "id": "summary",
+        "visibility": "excon",
+        "title": "Executive summary",
+        "text": "Ransomware reaches Bayport's cargo scheduling through a phished assistant. Leaders must decide when to escalate, with the harbor master away.",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "designer@example.org",
+        "via": "agent"
+      },
+      "reason": "Drafted from the designer's answers."
+    },
+    {
+      "id": "0195f000-0000-7000-8000-000000000015",
+      "chronicleId": "harbor-ttx",
+      "sequence": 15,
+      "recordedAt": "2026-11-02T14:14:00+00:00",
+      "part": "intent",
       "kind": "objective",
       "op": "add",
       "itemId": "obj-escalate",
@@ -815,10 +847,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000015",
+      "id": "0195f000-0000-7000-8000-000000000016",
       "chronicleId": "harbor-ttx",
-      "sequence": 15,
-      "recordedAt": "2026-11-02T14:14:00+00:00",
+      "sequence": 16,
+      "recordedAt": "2026-11-02T14:15:00+00:00",
       "part": "intent",
       "kind": "teachingPoint",
       "op": "add",
@@ -840,10 +872,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000016",
+      "id": "0195f000-0000-7000-8000-000000000017",
       "chronicleId": "harbor-ttx",
-      "sequence": 16,
-      "recordedAt": "2026-11-02T14:15:00+00:00",
+      "sequence": 17,
+      "recordedAt": "2026-11-02T14:16:00+00:00",
       "part": "intent",
       "kind": "rule",
       "op": "add",
@@ -863,10 +895,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000017",
+      "id": "0195f000-0000-7000-8000-000000000018",
       "chronicleId": "harbor-ttx",
-      "sequence": 17,
-      "recordedAt": "2026-11-02T14:16:00+00:00",
+      "sequence": 18,
+      "recordedAt": "2026-11-02T14:17:00+00:00",
       "part": "intent",
       "kind": "term",
       "op": "add",
@@ -886,10 +918,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000018",
+      "id": "0195f000-0000-7000-8000-000000000019",
       "chronicleId": "harbor-ttx",
-      "sequence": 18,
-      "recordedAt": "2026-11-02T14:17:00+00:00",
+      "sequence": 19,
+      "recordedAt": "2026-11-02T14:18:00+00:00",
       "part": "intent",
       "kind": "plannedEvent",
       "op": "add",
@@ -933,10 +965,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000019",
+      "id": "0195f000-0000-7000-8000-000000000020",
       "chronicleId": "harbor-ttx",
-      "sequence": 19,
-      "recordedAt": "2026-11-02T14:18:00+00:00",
+      "sequence": 20,
+      "recordedAt": "2026-11-02T14:19:00+00:00",
       "part": "intent",
       "kind": "plannedEvent",
       "op": "add",
@@ -968,10 +1000,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000020",
+      "id": "0195f000-0000-7000-8000-000000000021",
       "chronicleId": "harbor-ttx",
-      "sequence": 20,
-      "recordedAt": "2026-11-02T14:19:00+00:00",
+      "sequence": 21,
+      "recordedAt": "2026-11-02T14:20:00+00:00",
       "part": "world",
       "kind": "fact",
       "op": "revise",
@@ -996,10 +1028,10 @@
       "reason": "The timeline needed the crew in place before the exercise starts."
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000021",
+      "id": "0195f000-0000-7000-8000-000000000022",
       "chronicleId": "harbor-ttx",
-      "sequence": 21,
-      "recordedAt": "2026-11-02T14:20:00+00:00",
+      "sequence": 22,
+      "recordedAt": "2026-11-02T14:21:00+00:00",
       "part": "intent",
       "kind": "rule",
       "op": "add",
@@ -1018,15 +1050,15 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000022",
+      "id": "0195f000-0000-7000-8000-000000000023",
       "chronicleId": "harbor-ttx",
-      "sequence": 22,
-      "recordedAt": "2026-11-02T14:21:00+00:00",
+      "sequence": 23,
+      "recordedAt": "2026-11-02T14:22:00+00:00",
       "part": "intent",
       "kind": "rule",
       "op": "retract",
       "itemId": "rule-press",
-      "revises": "0195f000-0000-7000-8000-000000000021",
+      "revises": "0195f000-0000-7000-8000-000000000022",
       "author": {
         "app": "scenario-builder",
         "actor": "designer@example.org",
@@ -1035,10 +1067,10 @@
       "reason": "Covered by the venue's rules."
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000023",
+      "id": "0195f000-0000-7000-8000-000000000024",
       "chronicleId": "harbor-ttx",
-      "sequence": 23,
-      "recordedAt": "2026-11-02T14:22:00+00:00",
+      "sequence": 24,
+      "recordedAt": "2026-11-02T14:23:00+00:00",
       "part": "asBuilt",
       "kind": "deployment",
       "op": "add",
@@ -1064,10 +1096,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000024",
+      "id": "0195f000-0000-7000-8000-000000000025",
       "chronicleId": "harbor-ttx",
-      "sequence": 24,
-      "recordedAt": "2026-11-02T14:23:00+00:00",
+      "sequence": 25,
+      "recordedAt": "2026-11-02T14:24:00+00:00",
       "part": "asBuilt",
       "kind": "realization",
       "op": "add",
@@ -1091,10 +1123,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000025",
+      "id": "0195f000-0000-7000-8000-000000000026",
       "chronicleId": "harbor-ttx",
-      "sequence": 25,
-      "recordedAt": "2026-11-02T14:24:00+00:00",
+      "sequence": 26,
+      "recordedAt": "2026-11-02T14:25:00+00:00",
       "part": "asBuilt",
       "kind": "persona",
       "op": "add",
@@ -1139,10 +1171,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000026",
+      "id": "0195f000-0000-7000-8000-000000000027",
       "chronicleId": "harbor-ttx",
-      "sequence": 26,
-      "recordedAt": "2026-11-02T14:25:00+00:00",
+      "sequence": 27,
+      "recordedAt": "2026-11-02T14:26:00+00:00",
       "part": "asBuilt",
       "kind": "content",
       "op": "add",
@@ -1164,10 +1196,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000027",
+      "id": "0195f000-0000-7000-8000-000000000028",
       "chronicleId": "harbor-ttx",
-      "sequence": 27,
-      "recordedAt": "2026-11-02T14:26:00+00:00",
+      "sequence": 28,
+      "recordedAt": "2026-11-02T14:27:00+00:00",
       "part": "asRun",
       "kind": "milestone",
       "op": "add",
@@ -1187,10 +1219,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000028",
+      "id": "0195f000-0000-7000-8000-000000000029",
       "chronicleId": "harbor-ttx",
-      "sequence": 28,
-      "recordedAt": "2026-11-02T14:27:00+00:00",
+      "sequence": 29,
+      "recordedAt": "2026-11-02T14:28:00+00:00",
       "part": "asRun",
       "kind": "cyberActivity",
       "op": "add",
@@ -1220,10 +1252,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000029",
+      "id": "0195f000-0000-7000-8000-000000000030",
       "chronicleId": "harbor-ttx",
-      "sequence": 29,
-      "recordedAt": "2026-11-02T14:28:00+00:00",
+      "sequence": 30,
+      "recordedAt": "2026-11-02T14:29:00+00:00",
       "part": "asRun",
       "kind": "injectDelivery",
       "op": "add",
@@ -1246,10 +1278,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000030",
+      "id": "0195f000-0000-7000-8000-000000000031",
       "chronicleId": "harbor-ttx",
-      "sequence": 30,
-      "recordedAt": "2026-11-02T14:29:00+00:00",
+      "sequence": 31,
+      "recordedAt": "2026-11-02T14:30:00+00:00",
       "part": "asRun",
       "kind": "participantAction",
       "op": "add",
@@ -1273,10 +1305,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000031",
+      "id": "0195f000-0000-7000-8000-000000000032",
       "chronicleId": "harbor-ttx",
-      "sequence": 31,
-      "recordedAt": "2026-11-02T14:30:00+00:00",
+      "sequence": 32,
+      "recordedAt": "2026-11-02T14:31:00+00:00",
       "part": "asRun",
       "kind": "observation",
       "op": "add",
@@ -1300,10 +1332,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000032",
+      "id": "0195f000-0000-7000-8000-000000000033",
       "chronicleId": "harbor-ttx",
-      "sequence": 32,
-      "recordedAt": "2026-11-02T14:31:00+00:00",
+      "sequence": 33,
+      "recordedAt": "2026-11-02T14:32:00+00:00",
       "part": "lessons",
       "kind": "assessment",
       "op": "add",
@@ -1328,10 +1360,10 @@
       }
     },
     {
-      "id": "0195f000-0000-7000-8000-000000000033",
+      "id": "0195f000-0000-7000-8000-000000000034",
       "chronicleId": "harbor-ttx",
-      "sequence": 33,
-      "recordedAt": "2026-11-02T14:32:00+00:00",
+      "sequence": 34,
+      "recordedAt": "2026-11-02T14:33:00+00:00",
       "part": "lessons",
       "kind": "lesson",
       "op": "add",
@@ -1356,6 +1388,7 @@
     }
   ],
   "items": [
+    {},
     {},
     {},
     {},

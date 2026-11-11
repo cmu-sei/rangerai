@@ -88,6 +88,9 @@ public static class HarborSample
         Add(Part.World, new Fact { Id = "harbor-master-away", Topic = "situation", KnownBy = ["office-staff"],
             Text = "The harbor master is on leave this week; staff know, participants must find out." }, Designer);
 
+        Add(Part.Intent, new Summary { Id = "summary", Title = "Executive summary",
+            Text = "Ransomware reaches Bayport's cargo scheduling through a phished assistant. Leaders must decide when to escalate, with the harbor master away." },
+            DesignerAgent, "Drafted from the designer's answers.");
         Add(Part.Intent, new Objective { Id = "obj-escalate", Visibility = Audience.Participant,
             Text = "Leaders decide when to escalate to the national CERT.", Measures = ["Escalation decided within 30 minutes of the ransom note."] }, Designer);
         Add(Part.Intent, new TeachingPoint { Id = "tp-plan", Visibility = Audience.Participant, ObjectiveIds = ["obj-escalate"],

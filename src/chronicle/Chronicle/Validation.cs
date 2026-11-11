@@ -25,6 +25,7 @@ public sealed record Finding(Severity Severity, string Code, string Message, str
 /// <summary>
 /// The rules the JSON Schema can't state: ids unique across parts, kinds in their parts, references that resolve, and
 /// parts that match the history. A record that passes the schema and has no error findings is a valid Chronicle.
+/// Warnings track what an app should look at again: an item that names one which has since changed or been retracted.
 /// </summary>
 public static partial class Validation
 {
@@ -63,12 +64,29 @@ public static partial class Validation
 
         if (!isView)
         {
-            foreach (var (_, item) in record.Items)
-                foreach (var missing in item.References().Where(r => !ids.Contains(r)).Distinct())
-                    Error("UNRESOLVED_REFERENCE", $"'{item.Id}' names '{missing}', which isn't in the Chronicle.", item.Id);
+            var written = new Dictionary<string, long>();   // each id's last entry
+            var changed = new Dictionary<string, long>();   // each id's last revise, retract, or add after a retract
+            if (record.History.Count > 0 && CheckHistory(record, Error))
+                foreach (var entry in record.History)
+                {
+                    if (entry.Op != Operation.Add || written.ContainsKey(entry.ItemId))
+                        changed[entry.ItemId] = entry.Sequence!.Value;
+                    written[entry.ItemId] = entry.Sequence!.Value;
+                }
 
-            if (record.History.Count > 0)
-                CheckHistory(record, Error);
+            foreach (var (_, item) in record.Items)
+                foreach (var named in item.References().Distinct())
+                {
+                    if (!ids.Contains(named))
+                    {
+                        if (changed.ContainsKey(named))
+                            Warn("REFERENCE_RETRACTED", $"'{item.Id}' names '{named}', which was retracted.", item.Id);
+                        else
+                            Error("UNRESOLVED_REFERENCE", $"'{item.Id}' names '{named}', which isn't in the Chronicle.", item.Id);
+                    }
+                    else if (changed.TryGetValue(named, out var at) && written.TryGetValue(item.Id, out var since) && at > since)
+                        Warn("REFERENCE_CHANGED", $"'{item.Id}' names '{named}', which changed after '{item.Id}' was last written (entry {at}).", item.Id);
+                }
         }
 
         return findings;
@@ -99,7 +117,8 @@ public static partial class Validation
             warn("UNKNOWN_EVENT_CLASS", $"'{cyber.Class}' isn't a Cyber DEM event class.", item.Id);
     }
 
-    private static void CheckHistory(ChronicleRecord record, Action<string, string, string?> error)
+    /// <summary>Whether the history replays; what it makes is compared with the parts either way.</summary>
+    private static bool CheckHistory(ChronicleRecord record, Action<string, string, string?> error)
     {
         ChronicleRecord rebuilt;
         try
@@ -109,7 +128,7 @@ public static partial class Validation
         catch (ChronicleException e)
         {
             error($"HISTORY_{e.Code}", e.Message, e.Entry?.ItemId);
-            return;
+            return false;
         }
 
         foreach (var part in Enum.GetValues<Part>())
@@ -119,6 +138,7 @@ public static partial class Validation
             if (want != have)
                 error("PARTS_DIFFER_FROM_HISTORY", $"The {part} part isn't what its history makes it.", null);
         }
+        return true;
     }
 
     private static string Major(string version) => version.Split('.')[0];

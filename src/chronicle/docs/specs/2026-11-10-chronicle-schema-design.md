@@ -1,4 +1,4 @@
-# The Chronicle Schema, Version 0.1
+# The Chronicle Schema, Version 0.2
 
 2026-11-10. Proposed; nothing here is settled until the architecture team agrees on it. Built from the
 [Chronicle concept brief](../../chronicle.html), the OIEX standards mapping and the GHOSTS persona brief
@@ -37,11 +37,19 @@ ChronicleRecord
 **The parts are a view of the history.** `Projection.Rebuild` replays the history into the parts; validation fails
 a record whose parts don't match. Every reader and store applies the same rules:
 
-- An add puts a new item at the end of its part. An id is never reused, even after a retract.
+- An add puts a new item at the end of its part. An id names one item at a time: an add under an id in use is
+  refused (`ID_TAKEN`), and once an item is retracted a new one may be added under its id. The history keeps both.
 - A revise replaces the item in full. It names the entry that wrote the version it replaces (`revises`); if a later
   entry has replaced that version, the store refuses it (`STALE`). Two authors can't silently overwrite each other.
 - A retract withdraws the item. It stays in the history.
-- An item never changes part or kind.
+- An item never changes part or kind while it is current.
+
+**Apps keep their own ids.** Scenario Builder numbers a list's items by position (`O1`, `O2`, `O3`). When the first
+is deleted it revises `O1` and `O2` and retracts `O3`, and a later objective is added as `O3` again. The Chronicle
+takes that as it comes. The cost is that a reference follows the id, not the meaning, so validation tracks it with
+two warnings: `REFERENCE_CHANGED` when an item names one that was revised, or added again, after the item itself was
+last written; and `REFERENCE_RETRACTED` when it names one that was retracted. Writing the referring item again
+clears the first. A reference to an id the Chronicle never held is still an error.
 
 **Every item has** a `kind`, an `id` unique across the whole Chronicle, a `visibility` and a `standing` (stated by a
 person, or proposed by an agent or app). Each kind belongs to fixed parts; a `fact` can't be filed under Lessons.
@@ -57,6 +65,7 @@ person, or proposed by an agent or app). Each kind belongs to fixed parts; a `fa
 | | `vulnerability`, `defense` | Ranger: the Cyber DEM has neither as an object |
 | | `fact` | Ranger: background, situation, information environment; ground truth is a fact at excon |
 | Intent | `objective`, `teachingPoint`, `rule`, `term` | Scenario Builder's exercise document |
+| | `summary` | The event in a few paragraphs, such as Scenario Builder's executive summary; one per audience it is written for |
 | | `plannedEvent` | The master scenario events list. It carries an `inject` for people, a `cyber` event in Cyber DEM terms, an `influence` activity, or several |
 | As Built | `deployment`, `realization` | What a builder made, and what each planned item became (vm id, hostname, address) |
 | | cyber objects, `persona`, `content` | What builders add: a jump box, generated NPCs, Pandora's articles |
@@ -141,5 +150,6 @@ yet in the schema travels as an `extension`.
 6. **Durations are .NET's `[d.]hh:mm:ss` form** (`01:40:00`), which is easy for any language to parse.
    ISO 8601 durations (`PT1H40M`) are the other choice, and closer to C2SIM.
 7. **The header (name, description) has no history.** A rename could become an entry against the record itself.
+   Longer text that needs a history, such as an executive summary, is a `summary` item.
 8. **A C2SIM form.** The mapping's decision 6 still stands. This draft is the JSON form; an OWL extension, if OIEX
    becomes one, would map to it.

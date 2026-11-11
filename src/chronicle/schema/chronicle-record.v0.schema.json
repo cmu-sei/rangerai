@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:ranger:chronicle:record:v0",
-  "title": "Chronicle record, schema 0.1.0",
+  "title": "Chronicle record, schema 0.2.0",
   "type": "object",
   "properties": {
     "schemaVersion": {
@@ -1331,6 +1331,9 @@
           "$ref": "#/$defs/PlannedEvent"
         },
         {
+          "$ref": "#/$defs/Summary"
+        },
+        {
           "$ref": "#/$defs/Deployment"
         },
         {
@@ -2612,6 +2615,49 @@
         "stated",
         "proposed"
       ]
+    },
+    "Summary": {
+      "description": "The event in a few paragraphs, such as an executive summary. Its visibility says who it is written for, so an event can hold one for exercise control and another for participants.",
+      "properties": {
+        "kind": {
+          "const": "summary"
+        },
+        "id": {
+          "description": "Unique in the Chronicle, across every part. Letters, digits, '.', '_', ':' and '-'; it never changes.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "The lowest audience that may see the item. Absent means excon: an item nobody marked stays with exercise control, so ground truth fails closed.",
+          "$ref": "#/$defs/Audience"
+        },
+        "title": {
+          "description": "What it is called, such as Executive summary.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "text": {
+          "description": "The summary.",
+          "type": "string"
+        },
+        "knownBy": {
+          "description": "Personas, persona pools, sides or organizations that also know this item, whatever its visibility: what a simulated bank clerk knows about their own bank, for example.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "standing": {
+          "description": "Stated by a person, or proposed and not yet confirmed. Absent means stated.",
+          "$ref": "#/$defs/Standing"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
     },
     "TeachingPoint": {
       "description": "Something participants should take away.",

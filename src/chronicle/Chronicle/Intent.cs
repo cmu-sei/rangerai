@@ -62,6 +62,20 @@ public sealed record Term : Item
     public string? Note { get; init; }
 }
 
+/// <summary>
+/// The event in a few paragraphs, such as an executive summary. Its visibility says who it is written for, so an
+/// event can hold one for exercise control and another for participants.
+/// </summary>
+[Parts(Part.Intent)]
+public sealed record Summary : Item
+{
+    /// <summary>What it is called, such as Executive summary.</summary>
+    public string? Title { get; init; }
+
+    /// <summary>The summary.</summary>
+    public required string Text { get; init; }
+}
+
 /// <summary>How a term is used.</summary>
 public enum TermUsage { Fixed, Banned }
 

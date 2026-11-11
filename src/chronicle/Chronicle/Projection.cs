@@ -14,8 +14,9 @@ public sealed class ChronicleException(string code, string message, Entry? entry
 
 /// <summary>
 /// How entries make the parts: the rules every store and every reader applies the same way. An add puts a new item at
-/// the end of its part; a revise replaces it where it is; a retract removes it. An id is never reused, even after a
-/// retract, and an item never moves part or changes kind.
+/// the end of its part; a revise replaces it where it is; a retract removes it. An id names one item at a time: once
+/// its item is retracted, a new item may be added under it, and the history keeps both. While an item is current it
+/// never moves part or changes kind.
 /// </summary>
 public static class Projection
 {
@@ -77,8 +78,9 @@ public static class Projection
             if (e.Op == Operation.Add)
             {
                 CheckItem(e);
-                if (track is not null)
-                    Fail("ID_TAKEN", $"'{e.ItemId}' is already used; ids are never reused.", e);
+                // A retracted id is free again: an app that numbers its items by position can keep its own ids.
+                if (track?.Current is not null)
+                    Fail("ID_TAKEN", $"'{e.ItemId}' is already used by a current {track.Current.Kind}; revise it, or retract it first.", e);
                 if (e.Revises is not null)
                     Fail("REVISES_ON_ADD", "An add revises nothing.", e);
             }

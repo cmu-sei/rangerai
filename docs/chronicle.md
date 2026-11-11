@@ -31,7 +31,7 @@ A Chronicle has five parts, filled in the order the event fills them:
 | Part | What it holds | Written by |
 |---|---|---|
 | **World** | Sides, organizations, networks, devices, services, personas and pools, vulnerabilities, facts | Scenario Builder |
-| **Intent** | Objectives, teaching points, rules of play, vocabulary, the planned events | Scenario Builder |
+| **Intent** | Objectives, teaching points, rules of play, vocabulary, summaries, the planned events | Scenario Builder |
 | **As Built** | Deployments, what each planned item became, generated personas and content | GraySpace, GHOSTS, Pandora |
 | **As Run** | Milestones, cyber and influence activity, injects delivered, participant actions, observations | GHOSTS, the exercise apps, exercise control |
 | **Lessons** | Assessments against the objectives, lessons for the next event | After-action review |

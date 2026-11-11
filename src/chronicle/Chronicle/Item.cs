@@ -33,6 +33,7 @@ namespace Chronicle;
 [JsonDerivedType(typeof(Rule), "rule")]
 [JsonDerivedType(typeof(Term), "term")]
 [JsonDerivedType(typeof(PlannedEvent), "plannedEvent")]
+[JsonDerivedType(typeof(Summary), "summary")]
 // As Built
 [JsonDerivedType(typeof(Deployment), "deployment")]
 [JsonDerivedType(typeof(Realization), "realization")]
