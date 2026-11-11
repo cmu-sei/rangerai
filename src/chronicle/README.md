@@ -67,6 +67,25 @@ organization ids, matched against `knownBy`); entry reads also take `parts`, `ki
 for several values: `?parts=world&parts=intent`. **There is no authentication yet:** the audience is taken on trust,
 so don't expose the API beyond a development range.
 
+## The UI
+
+`ui/` is a small Angular app named Chronicle: a short explanation, then a grid of events (name, kind, entries, created). Each event opens a page with its five parts, viewable as participant, exercise control or designer, and its latest entries. It runs in Aspire as
+`chronicle-ui` on http://localhost:4320 and proxies `/api` to the API on :5285. By hand: `cd ui && npm start`.
+`npm install` can fail with `ENOTDIR` on the devcontainer's mount; install in `/tmp` and copy `node_modules` back, as the
+[Scenario Builder README](../scenario-builder/README.md) shows.
+
+### Mock Chronicles from the Scenario Builder
+
+`tools/mock-from-scenario-builder.py` turns each scenario in the Scenario Builder (:5280) into a Chronicle: its
+answers become World and Intent items, a GraySpace deployment becomes As Built, and each item gets one entry carrying
+the decision behind it (time, person or agent, proposed or stated, reason). Files go to `samples/scenario-builder/`,
+which the seeder doesn't read; `--post` imports them into the API (:5285). The mapping is a first guess, not the
+Scenario Builder's publisher.
+
+```bash
+python3 src/chronicle/tools/mock-from-scenario-builder.py --post
+```
+
 ## Working on It
 
 ```bash

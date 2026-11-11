@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:ranger:chronicle:entry:v0",
-  "title": "Chronicle entry, schema 0.2.0",
+  "title": "Chronicle entry, schema 0.3.0",
   "type": "object",
   "properties": {
     "id": {

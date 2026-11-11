@@ -1,0 +1,97 @@
+// Chronicle: the Scenario Builder's layout (thin bar, one sheet, a quiet grid) in the concept brief's
+// palette. Slate for ink, coral for the one accent, Newsreader for the title, Inter for text and Plex Mono
+// for small labels.
+:root {
+  --ch-canvas: #f8fafc;
+  --ch-surface: #ffffff;
+  --ch-ink: #0f172a;
+  --ch-slate: #334155;
+  --ch-muted: #64748b;
+  --ch-faint: #94a3b8;
+  --ch-line: #e2e8f0;
+  --ch-line-strong: #cbd5e1;
+  --ch-coral: #f0524d;
+  --ch-coral-soft: #fef0ef;
+
+  --ch-serif: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
+  --ch-font: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --ch-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --ch-text: 13px;
+  --ch-small: 12px;
+  --ch-radius: 8px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font: 400 var(--ch-text) / 1.5 var(--ch-font);
+  font-variant-numeric: tabular-nums;
+  background: var(--ch-canvas);
+  color: var(--ch-slate);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ch-ink);
+}
+
+a {
+  color: var(--ch-coral);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ch-coral);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Small mono caps, as the brief labels things.
+.ch-label {
+  font: 500 10px / 1 var(--ch-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ch-field {
+  box-sizing: border-box;
+  width: 100%;
+  font: 400 var(--ch-text) / 1.45 var(--ch-font);
+  color: var(--ch-ink);
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-line-strong);
+  border-radius: var(--ch-radius);
+  padding: 6px 10px;
+
+  &:focus {
+    outline: none;
+    border-color: var(--ch-coral);
+    box-shadow: 0 0 0 3px var(--ch-coral-soft);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

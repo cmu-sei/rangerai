@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "0.3.0",
+  "id": "cyber-big-chungus",
+  "name": "CYBER BIG CHUNGUS",
+  "kind": "exercise",
+  "scenarioType": {
+    "id": "small-unit-team-exercise",
+    "version": "0.3.0"
+  },
+  "created": "2026-11-11T19:44:30.6470106Z",
+  "world": [],
+  "intent": [],
+  "asBuilt": [
+    {
+      "kind": "deployment",
+      "id": "dep-grayspace-cyber-big-chungus",
+      "builder": "grayspace",
+      "reference": "cyber-big-chungus",
+      "version": "sha256:37bb8b865707a8872eb2cc5c817ef40a091cac010b31992645a1093aa5bfd17f",
+      "state": "ready",
+      "visibility": "excon",
+      "standing": "stated"
+    }
+  ],
+  "asRun": [],
+  "lessons": [],
+  "history": [
+    {
+      "id": "e7e3719c-9a28-5782-9e1f-a7e105d8e5bd",
+      "chronicleId": "cyber-big-chungus",
+      "sequence": 1,
+      "recordedAt": "2026-11-11T19:44:30.6470106Z",
+      "part": "asBuilt",
+      "kind": "deployment",
+      "op": "add",
+      "itemId": "dep-grayspace-cyber-big-chungus",
+      "item": {
+        "kind": "deployment",
+        "id": "dep-grayspace-cyber-big-chungus",
+        "builder": "grayspace",
+        "reference": "cyber-big-chungus",
+        "version": "sha256:37bb8b865707a8872eb2cc5c817ef40a091cac010b31992645a1093aa5bfd17f",
+        "state": "ready",
+        "visibility": "excon",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "grayspace",
+        "via": "app"
+      }
+    }
+  ]
+}

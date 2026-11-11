@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "0.3.0",
+  "id": "hackrack-abendigo",
+  "name": "BRACKISH CABLE",
+  "kind": "exercise",
+  "scenarioType": {
+    "id": "crucible-tabletop",
+    "version": "0.3.0"
+  },
+  "created": "2026-11-09T19:17:45.8569743Z",
+  "world": [],
+  "intent": [],
+  "asBuilt": [],
+  "asRun": [],
+  "lessons": [],
+  "history": []
+}

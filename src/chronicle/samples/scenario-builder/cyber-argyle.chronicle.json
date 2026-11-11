@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "0.3.0",
+  "id": "cyber-argyle",
+  "name": "CYBER ARGYLE",
+  "kind": "exercise",
+  "scenarioType": {
+    "id": "small-unit-team-exercise",
+    "version": "0.3.0"
+  },
+  "created": "2026-11-11T17:59:59.49277Z",
+  "world": [],
+  "intent": [],
+  "asBuilt": [
+    {
+      "kind": "deployment",
+      "id": "dep-grayspace-cyber-antigen2",
+      "builder": "grayspace",
+      "reference": "cyber-antigen2",
+      "version": "sha256:23d40c77e1a0ca5f90aa55f17083e3f27645c5b739841d7e927afe4c811b4bf2",
+      "state": "ready",
+      "visibility": "excon",
+      "standing": "stated"
+    }
+  ],
+  "asRun": [],
+  "lessons": [],
+  "history": [
+    {
+      "id": "a74a7680-8941-5c5e-b71a-01fc5111c512",
+      "chronicleId": "cyber-argyle",
+      "sequence": 1,
+      "recordedAt": "2026-11-11T17:59:59.49277Z",
+      "part": "asBuilt",
+      "kind": "deployment",
+      "op": "add",
+      "itemId": "dep-grayspace-cyber-antigen2",
+      "item": {
+        "kind": "deployment",
+        "id": "dep-grayspace-cyber-antigen2",
+        "builder": "grayspace",
+        "reference": "cyber-antigen2",
+        "version": "sha256:23d40c77e1a0ca5f90aa55f17083e3f27645c5b739841d7e927afe4c811b4bf2",
+        "state": "ready",
+        "visibility": "excon",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "grayspace",
+        "via": "app"
+      }
+    }
+  ]
+}

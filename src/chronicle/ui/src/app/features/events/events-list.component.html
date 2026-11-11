@@ -1,0 +1,77 @@
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-inner">
+    <h1 id="hero-title">Chronicle</h1>
+    <p class="deck">One living record of an event, <em>from the first idea to the last lesson.</em></p>
+    <p class="lede">
+      Today an exercise lives in pieces: a scenario document, a network build, injects in a spreadsheet, activity in
+      logs, lessons in someone's notes. <strong>Chronicle keeps one record for the whole event</strong>, whether
+      training, exercise or simulation. Apps publish what they built, did and saw, and subscribe to the parts they need.
+      When the event ends, the record <em>is</em> the event: complete, attributable, and ready to seed the next one.
+    </p>
+    <ol class="stages">
+      @for (stage of stages; track stage.n) {
+        <li>
+          <span class="n ch-label">{{ stage.n }} <span>{{ stage.name }}</span></span>
+          <span class="adds">+ {{ stage.adds }}</span>
+          <span class="by">{{ stage.by }}</span>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<section class="sheet" aria-labelledby="events-title">
+  <header class="head">
+    <h2 id="events-title">Events</h2>
+    <p class="sub">Each event has one Chronicle. Open one to see its five parts and the history that made them.</p>
+  </header>
+
+  <div class="tools">
+    <input class="ch-field search" type="search" placeholder="Search by name, id or scenario type" aria-label="Search events"
+      [value]="query()" (input)="searched($event)" />
+    <span class="count ch-label">{{ rows().length }} of {{ events().length }}</span>
+  </div>
+
+  @if (error(); as error) {
+    <p class="error" role="alert">{{ error }}</p>
+  }
+
+  <div class="grid">
+    <table>
+      <thead>
+        <tr>
+          @for (column of columns; track column.key) {
+            <th scope="col" [attr.aria-sort]="ariaSort(column.key)" [class]="column.key">
+              <button class="sort" type="button" (click)="sortBy(column.key)">{{ column.label }}</button>
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (event of rows(); track event.id) {
+          <tr class="row" (click)="open(event)">
+            <td class="name">
+              <a class="title" [routerLink]="['/events', event.id]" (click)="$event.stopPropagation()">{{ event.name }}</a>
+              <span class="id">{{ event.id }}</span>
+            </td>
+            <td class="meta">{{ event.scenarioType?.id ?? '—' }}</td>
+            <td class="meta">{{ event.entries }}</td>
+            <td class="meta">{{ event.created | date: 'MMM d, y, HH:mm' }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td class="empty" colspan="4">
+              @if (!loaded()) {
+                Loading…
+              } @else if (events().length) {
+                No event matches. Clear the search.
+              } @else {
+                No events yet.
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

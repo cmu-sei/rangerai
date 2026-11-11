@@ -2,6 +2,16 @@
 
 namespace Chronicle;
 
+/// <summary>A scenario type, by the id and version the Scenario Builder gives it, such as crucible-tabletop 0.3.0.</summary>
+public sealed record ScenarioTypeRef
+{
+    /// <summary>The scenario type's id.</summary>
+    public required string Id { get; init; }
+
+    /// <summary>The version of the scenario type the scenario was built from.</summary>
+    public string? Version { get; init; }
+}
+
 /// <summary>
 /// One Chronicle: the whole record of one event. Its parts are what is true now; its history is every entry that
 /// made them so, in order. The parts can always be rebuilt from the history, so the history is the record and the parts
@@ -10,7 +20,7 @@ namespace Chronicle;
 public sealed record ChronicleRecord
 {
     /// <summary>The schema version this library writes and reads.</summary>
-    public const string CurrentSchemaVersion = "0.2.0";
+    public const string CurrentSchemaVersion = "0.3.0";
 
     /// <summary>The schema version the record follows, as semantic versioning: a change that alters an existing field's meaning is a major version.</summary>
     public required string SchemaVersion { get; init; }
@@ -23,6 +33,9 @@ public sealed record ChronicleRecord
 
     /// <summary>What kind of event it is.</summary>
     public required EventKind Kind { get; init; }
+
+    /// <summary>The scenario type the event was designed from, as the Scenario Builder names it. Absent if it had none.</summary>
+    public ScenarioTypeRef? ScenarioType { get; init; }
 
     /// <summary>The event in a sentence or two.</summary>
     public string? Description { get; init; }

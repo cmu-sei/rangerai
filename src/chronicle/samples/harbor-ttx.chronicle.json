@@ -1,8 +1,12 @@
 {
-  "schemaVersion": "0.2.0",
+  "schemaVersion": "0.3.0",
   "id": "harbor-ttx",
   "name": "Harbor Ransomware Tabletop",
   "kind": "exercise",
+  "scenarioType": {
+    "id": "crucible-tabletop",
+    "version": "0.3.0"
+  },
   "description": "Port authority leaders respond to ransomware that reaches the cargo scheduling system.",
   "created": "2026-11-02T14:00:00+00:00",
   "world": [

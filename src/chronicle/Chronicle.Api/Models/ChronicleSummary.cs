@@ -3,8 +3,8 @@
 namespace Chronicle.Api.Models;
 
 /// <summary>What a list of Chronicles shows for each.</summary>
-public sealed record ChronicleSummary(string Id, string Name, EventKind Kind, DateTimeOffset Created, long Entries)
+public sealed record ChronicleSummary(string Id, string Name, EventKind Kind, ScenarioTypeRef? ScenarioType, DateTimeOffset Created, long Entries)
 {
     public static ChronicleSummary From(ChronicleRecord record) =>
-        new(record.Id, record.Name, record.Kind, record.Created, record.History.Count);
+        new(record.Id, record.Name, record.Kind, record.ScenarioType, record.Created, record.History.Count);
 }

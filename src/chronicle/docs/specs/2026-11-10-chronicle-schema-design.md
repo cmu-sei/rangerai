@@ -21,7 +21,7 @@ committed schema is out of date.
 
 ```text
 ChronicleRecord
-  schemaVersion, id, name, kind (training | exercise | simulation), created, seededFrom
+  schemaVersion, id, name, kind (training | exercise | simulation), scenarioType (id, version; optional), created, seededFrom
   world     [Item]   what the world looks like
   intent    [Item]   what the event must achieve, and how it is planned to unfold
   asBuilt   [Item]   what was built

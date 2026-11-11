@@ -11,6 +11,18 @@ var chronicleApi = builder.AddProject<Projects.Chronicle_Api>("chronicle-api", l
     .WithHttpHealthCheck("/health")
     .WithUrl("/swagger", "Swagger UI");
 
+// Angular UI listing the Chronicles, via `npm start`. Its proxy.conf.json sends /api to the
+// API's :5285, so the port stays 4320. node_modules is installed as the scenario builder
+// README describes (npm install fails with ENOTDIR on this devcontainer's mount).
+builder.AddExecutable("chronicle-ui", "npm", "../chronicle/ui",
+        "start", "--", "--host", "0.0.0.0")
+    .WithEnvironment("NG_CLI_ANALYTICS", "false")
+    .WithEnvironment("NG_FORCE_AUTOCOMPLETE", "false")
+    .WithHttpEndpoint(port: 4320, isProxied: false)
+    .WithExternalHttpEndpoints()
+    .WithReference(chronicleApi)
+    .WaitFor(chronicleApi);
+
 // ---- Scenario Builder (src/scenario-builder) ----
 // Ports stay the ones in its README, since the UI's proxy.conf.json and the API's
 // appsettings.json hard-code them: API :5280, UI :4310, fake model :5299.

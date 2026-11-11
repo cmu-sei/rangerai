@@ -25,7 +25,8 @@ public static class HarborSample
     {
         var record = ChronicleRecord.Start(Id, "Harbor Ransomware Tabletop", EventKind.Exercise, T0) with
         {
-            Description = "Port authority leaders respond to ransomware that reaches the cargo scheduling system."
+            Description = "Port authority leaders respond to ransomware that reaches the cargo scheduling system.",
+            ScenarioType = new ScenarioTypeRef { Id = "crucible-tabletop", Version = "0.3.0" }
         };
         var n = 0;
         var minutes = 0;

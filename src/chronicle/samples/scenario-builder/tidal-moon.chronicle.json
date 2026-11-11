@@ -1,0 +1,1472 @@
+{
+  "schemaVersion": "0.3.0",
+  "id": "tidal-moon",
+  "name": "TIDAL MOON",
+  "kind": "exercise",
+  "scenarioType": {
+    "id": "crucible-tabletop",
+    "version": "0.3.0"
+  },
+  "description": "During the peak of the year-end holidays, intermittent cross-border QR payment failures are reported across the ASEAN region. As banks and telecom providers provide varying explanations, national CERT leaders must coordinate to assess the true cause and severity and establish a unified regional response.",
+  "created": "2026-11-09T15:16:58.1116592Z",
+  "world": [
+    {
+      "kind": "fact",
+      "id": "audience",
+      "topic": "audience",
+      "text": "National CERT leaders",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "audience-2",
+      "topic": "audience",
+      "text": "5 teams of 5 members each",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "audience-3",
+      "topic": "audience",
+      "text": "High (National CERT leaders)",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "situation",
+      "topic": "situation",
+      "text": "The ASEAN region during the year-end holiday season, specifically Tuesday, 29 December 2026.",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "red-herring-2",
+      "topic": "redHerring",
+      "text": "The obvious explanation is that monsoon rains have caused power outages at cable landing stations, affecting telecommunications. The reality is a cyber attack on payment processing systems.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "gt-gt1",
+      "topic": "groundTruth",
+      "text": "The payment failures are caused by a cyber attack on the payment processing infrastructure.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "gt-gt2",
+      "topic": "groundTruth",
+      "text": "The monsoon rains causing cable delays are a coincidental event that complicates the assessment.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "ground-truth-2",
+      "topic": "groundTruth",
+      "text": "Financial gain through the disruption of cross-border payment services.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "ground-truth",
+      "topic": "groundTruth",
+      "text": "Exploitation of vulnerabilities in the communication protocols between regional banks and payment terminal providers.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "attack-technique",
+      "topic": "attackTechnique",
+      "text": "T1566 Phishing",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "attack-technique-2",
+      "topic": "attackTechnique",
+      "text": "T1059 Command and Scripting Interpreter",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "red-herring",
+      "topic": "redHerring",
+      "text": "The monsoon rains causing telecommunications and cable landing station issues.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "information-environment",
+      "topic": "informationEnvironment",
+      "text": "Regional news (Regional Business Daily), the general public (holiday shoppers), and the Regional Coordination Desk.",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "information-environment-2",
+      "topic": "informationEnvironment",
+      "text": "News via Regional Business Daily, social media reports, and emails from the Regional Coordination Desk.",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "network",
+      "topic": "network",
+      "text": "Cross-border QR payment networks, banking API layers, and telecommunications infrastructure.",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "organization",
+      "id": "org-regional-business-daily",
+      "name": "Regional Business Daily",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "organization",
+      "id": "org-regional-coordination-desk",
+      "name": "Regional Coordination Desk",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "organization",
+      "id": "org-seabridge-telecom",
+      "name": "Seabridge Telecom",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "organization",
+      "id": "org-bluepoint",
+      "name": "BluePoint",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "organization",
+      "id": "org-atlas-regional-bank",
+      "name": "Atlas Regional Bank",
+      "visibility": "participant",
+      "standing": "proposed"
+    }
+  ],
+  "intent": [
+    {
+      "kind": "objective",
+      "id": "obj-o1",
+      "text": "Assess the impact, cause, and severity of a cyber incident.",
+      "measures": [
+        "A consensus is reached on the impact, cause, and severity of the incident."
+      ],
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "objective",
+      "id": "obj-o2",
+      "text": "Identify key contacts and information needs.",
+      "measures": [
+        "The team identifies the primary contacts and necessary information to proceed."
+      ],
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "objective",
+      "id": "obj-o3",
+      "text": "Coordinate information sharing and cooperation across Member States.",
+      "measures": [
+        "A coordinated cooperation and sharing plan is agreed upon."
+      ],
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "objective",
+      "id": "obj-o4",
+      "text": "Develop a public communication/disclosure strategy.",
+      "measures": [
+        "A consistent public line/disclosure strategy is established."
+      ],
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "teachingPoint",
+      "id": "tp-the-challenge-of-achieving-con",
+      "text": "The challenge of achieving consensus among diverse, self-interested Member States.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "teachingPoint",
+      "id": "tp-the-critical-role-of-accurate",
+      "text": "The critical role of accurate information in making urgent, high-stakes decisions.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "rule",
+      "id": "rule-conduct",
+      "text": "Participants represent their respective national CERTs and must use the Team Lead to facilitate discussion and record consensus-based decisions.",
+      "category": "conduct",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "rule",
+      "id": "rule-timing",
+      "text": "Decisions must be reached within the timeframes presented in each 'move' of the exercise.",
+      "category": "timing",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "rule",
+      "id": "rule-scope",
+      "text": "The incident will never result in a total outage, physical harm, data theft, or state-level attribution.",
+      "category": "scope",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "plannedEvent",
+      "id": "pe-e1",
+      "title": "Move 1 (Day 1, 15:30): News of payment failures. Response: Assess initial impact and possible causes.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "plannedEvent",
+      "id": "pe-e2",
+      "title": "Move 2 (Day 1 evening): Increased information/uncertainty. Response: Refine assessment of severity and cause.",
+      "visibility": "excon",
+      "after": [
+        "pe-e1"
+      ],
+      "standing": "proposed"
+    },
+    {
+      "kind": "plannedEvent",
+      "id": "pe-e3",
+      "title": "Move 3 (Day 2, 06:00): Error rates stabilize. Response: Decide if the incident is over and plan communication.",
+      "visibility": "excon",
+      "after": [
+        "pe-e2"
+      ],
+      "standing": "proposed"
+    },
+    {
+      "kind": "plannedEvent",
+      "id": "pe-e4",
+      "title": "Move 4 (Day 2): Final coordination. Response: Finalize regional cooperation and public messaging.",
+      "visibility": "excon",
+      "after": [
+        "pe-e3"
+      ],
+      "standing": "proposed"
+    },
+    {
+      "kind": "summary",
+      "id": "dp-d1",
+      "title": "Decision point D1",
+      "text": "Deciding whether the stabilization of error rates signifies the end of the incident.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "summary",
+      "id": "dp-d2",
+      "title": "Decision point D2",
+      "text": "Deciding on the content of public messaging and disclosures.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "summary",
+      "id": "dp-d3",
+      "title": "Decision point D3",
+      "text": "Deciding the extent of regional cooperation and information sharing.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "summary",
+      "id": "esc-1",
+      "title": "Escalation step 1",
+      "text": "Heightened uncertainty regarding the distinction between weather-related issues and cyber activity.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "summary",
+      "id": "esc-2",
+      "title": "Escalation step 2",
+      "text": "Increasing pressure from media and the public for definitive explanations.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "summary",
+      "id": "esc-3",
+      "title": "Escalation step 3",
+      "text": "Increasing complexity in reaching a multi-national consensus on regional response.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "term",
+      "id": "term-clean-update",
+      "text": "clean update",
+      "usage": "fixed",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "term",
+      "id": "term-tlp-amber",
+      "text": "TLP:AMBER",
+      "usage": "fixed",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "term",
+      "id": "term-tlp-red",
+      "text": "TLP:RED",
+      "usage": "fixed",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "term",
+      "id": "term-tlp-green",
+      "text": "TLP:GREEN",
+      "usage": "fixed",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "term",
+      "id": "term-tlp-white",
+      "text": "TLP:WHITE",
+      "usage": "fixed",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "summary",
+      "id": "executive-summary",
+      "title": "Executive summary",
+      "text": "Exercise Tidal Moon is a rehearsal tabletop exercise designed for national CERT leaders in the ASEAN region. Set during the 2026 holiday season, the scenario involves a regional cyber incident causing intermittent cross-border QR payment failures. Participants must work together to assess the incident's impact, cause, and severity, while navigating various information streams, including a potential red herring involving monsoon-related telecommunications issues. The primary goal is to achieve regional consensus on a coordinated response and public communication strategy. The exercise is designed to be discussion-based, focusing on decision-making and cooperation rather than technical tasks.",
+      "visibility": "participant",
+      "standing": "stated"
+    }
+  ],
+  "asBuilt": [],
+  "asRun": [],
+  "lessons": [],
+  "history": [
+    {
+      "id": "ee33859e-5fce-5b43-902a-220ac4e95a50",
+      "chronicleId": "tidal-moon",
+      "sequence": 1,
+      "recordedAt": "2026-11-09T17:03:52.1065847Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "audience",
+      "item": {
+        "kind": "fact",
+        "id": "audience",
+        "topic": "audience",
+        "text": "National CERT leaders",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source explicitly states that every team plays national CERT leaders."
+    },
+    {
+      "id": "1791df01-5ce7-54df-bb57-0e7ca0468ef6",
+      "chronicleId": "tidal-moon",
+      "sequence": 2,
+      "recordedAt": "2026-11-09T17:03:52.2504745Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "audience-2",
+      "item": {
+        "kind": "fact",
+        "id": "audience-2",
+        "topic": "audience",
+        "text": "5 teams of 5 members each",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The document specifies 5 mixed-nation teams with five members per team."
+    },
+    {
+      "id": "678357df-6595-5507-9f9f-548d3fbd1418",
+      "chronicleId": "tidal-moon",
+      "sequence": 3,
+      "recordedAt": "2026-11-09T17:03:52.3985187Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "audience-3",
+      "item": {
+        "kind": "fact",
+        "id": "audience-3",
+        "topic": "audience",
+        "text": "High (National CERT leaders)",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Since the participants are national CERT leaders, they are expected to be highly experienced."
+    },
+    {
+      "id": "1f3b5d30-3471-5c5e-b0ce-64884b4f14fc",
+      "chronicleId": "tidal-moon",
+      "sequence": 4,
+      "recordedAt": "2026-11-09T17:04:36.078329Z",
+      "part": "intent",
+      "kind": "objective",
+      "op": "add",
+      "itemId": "obj-o1",
+      "item": {
+        "kind": "objective",
+        "id": "obj-o1",
+        "text": "Assess the impact, cause, and severity of a cyber incident.",
+        "measures": [
+          "A consensus is reached on the impact, cause, and severity of the incident."
+        ],
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The tasks in the source document involve assessing cause, severity, and deciding on cooperation and communication."
+    },
+    {
+      "id": "386f25b4-62c1-5bf8-be43-c96f7b99f66a",
+      "chronicleId": "tidal-moon",
+      "sequence": 5,
+      "recordedAt": "2026-11-09T17:04:36.078329Z",
+      "part": "intent",
+      "kind": "objective",
+      "op": "add",
+      "itemId": "obj-o2",
+      "item": {
+        "kind": "objective",
+        "id": "obj-o2",
+        "text": "Identify key contacts and information needs.",
+        "measures": [
+          "The team identifies the primary contacts and necessary information to proceed."
+        ],
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The tasks in the source document involve assessing cause, severity, and deciding on cooperation and communication."
+    },
+    {
+      "id": "7b705f05-d9d1-5911-a089-e57e55b8ed5c",
+      "chronicleId": "tidal-moon",
+      "sequence": 6,
+      "recordedAt": "2026-11-09T17:04:36.078329Z",
+      "part": "intent",
+      "kind": "objective",
+      "op": "add",
+      "itemId": "obj-o3",
+      "item": {
+        "kind": "objective",
+        "id": "obj-o3",
+        "text": "Coordinate information sharing and cooperation across Member States.",
+        "measures": [
+          "A coordinated cooperation and sharing plan is agreed upon."
+        ],
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The tasks in the source document involve assessing cause, severity, and deciding on cooperation and communication."
+    },
+    {
+      "id": "b1076e2c-151d-5e86-8684-9c208a2eb8ef",
+      "chronicleId": "tidal-moon",
+      "sequence": 7,
+      "recordedAt": "2026-11-09T17:04:36.078329Z",
+      "part": "intent",
+      "kind": "objective",
+      "op": "add",
+      "itemId": "obj-o4",
+      "item": {
+        "kind": "objective",
+        "id": "obj-o4",
+        "text": "Develop a public communication/disclosure strategy.",
+        "measures": [
+          "A consistent public line/disclosure strategy is established."
+        ],
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The tasks in the source document involve assessing cause, severity, and deciding on cooperation and communication."
+    },
+    {
+      "id": "c0cb3125-8ff5-5307-a1aa-90caedee9e66",
+      "chronicleId": "tidal-moon",
+      "sequence": 8,
+      "recordedAt": "2026-11-09T17:04:36.5199036Z",
+      "part": "intent",
+      "kind": "teachingPoint",
+      "op": "add",
+      "itemId": "tp-the-challenge-of-achieving-con",
+      "item": {
+        "kind": "teachingPoint",
+        "id": "tp-the-challenge-of-achieving-con",
+        "text": "The challenge of achieving consensus among diverse, self-interested Member States.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The task structure emphasizes the difficulty of consensus and information gathering in a regional context."
+    },
+    {
+      "id": "ddb8146e-c3c6-555c-bdb6-5b263493c426",
+      "chronicleId": "tidal-moon",
+      "sequence": 9,
+      "recordedAt": "2026-11-09T17:04:36.5199036Z",
+      "part": "intent",
+      "kind": "teachingPoint",
+      "op": "add",
+      "itemId": "tp-the-critical-role-of-accurate",
+      "item": {
+        "kind": "teachingPoint",
+        "id": "tp-the-critical-role-of-accurate",
+        "text": "The critical role of accurate information in making urgent, high-stakes decisions.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The task structure emphasizes the difficulty of consensus and information gathering in a regional context."
+    },
+    {
+      "id": "79e2ed42-8301-5302-92e2-71670e76da7f",
+      "chronicleId": "tidal-moon",
+      "sequence": 10,
+      "recordedAt": "2026-11-09T17:04:37.0685169Z",
+      "part": "intent",
+      "kind": "rule",
+      "op": "add",
+      "itemId": "rule-conduct",
+      "item": {
+        "kind": "rule",
+        "id": "rule-conduct",
+        "text": "Participants represent their respective national CERTs and must use the Team Lead to facilitate discussion and record consensus-based decisions.",
+        "category": "conduct",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The context implies a role-play environment where consensus is the primary mechanism of action."
+    },
+    {
+      "id": "96cf3a5b-568e-5d2b-acf9-f6eef182b995",
+      "chronicleId": "tidal-moon",
+      "sequence": 11,
+      "recordedAt": "2026-11-09T17:04:37.204731Z",
+      "part": "intent",
+      "kind": "rule",
+      "op": "add",
+      "itemId": "rule-timing",
+      "item": {
+        "kind": "rule",
+        "id": "rule-timing",
+        "text": "Decisions must be reached within the timeframes presented in each 'move' of the exercise.",
+        "category": "timing",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The scenario uses time-bound moves to drive the decision-making process."
+    },
+    {
+      "id": "b43c3892-ccb8-5966-8316-c913d3c06fec",
+      "chronicleId": "tidal-moon",
+      "sequence": 12,
+      "recordedAt": "2026-11-09T17:05:40.759382Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "situation",
+      "item": {
+        "kind": "fact",
+        "id": "situation",
+        "topic": "situation",
+        "text": "The ASEAN region during the year-end holiday season, specifically Tuesday, 29 December 2026.",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source specifies the ASEAN region and the date Tuesday, 29 December 2026."
+    },
+    {
+      "id": "dc57f8d9-fd80-5871-be28-cc20c75004d4",
+      "chronicleId": "tidal-moon",
+      "sequence": 13,
+      "recordedAt": "2026-11-09T17:05:40.9044676Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "red-herring-2",
+      "item": {
+        "kind": "fact",
+        "id": "red-herring-2",
+        "topic": "redHerring",
+        "text": "The obvious explanation is that monsoon rains have caused power outages at cable landing stations, affecting telecommunications. The reality is a cyber attack on payment processing systems.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source mentions monsoon rains as a possible cause for the delays."
+    },
+    {
+      "id": "06587160-bb34-51a4-8266-d23f5178ed06",
+      "chronicleId": "tidal-moon",
+      "sequence": 14,
+      "recordedAt": "2026-11-09T17:05:41.0516124Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "gt-gt1",
+      "item": {
+        "kind": "fact",
+        "id": "gt-gt1",
+        "topic": "groundTruth",
+        "text": "The payment failures are caused by a cyber attack on the payment processing infrastructure.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The exercise is built around a cyber attack, with the weather being a distraction."
+    },
+    {
+      "id": "f3eac703-3c3c-5498-bc78-fbdc215a705c",
+      "chronicleId": "tidal-moon",
+      "sequence": 15,
+      "recordedAt": "2026-11-09T17:05:41.0516124Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "gt-gt2",
+      "item": {
+        "kind": "fact",
+        "id": "gt-gt2",
+        "topic": "groundTruth",
+        "text": "The monsoon rains causing cable delays are a coincidental event that complicates the assessment.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The exercise is built around a cyber attack, with the weather being a distraction."
+    },
+    {
+      "id": "146a780a-1862-5532-8d65-67dcdb22f2c8",
+      "chronicleId": "tidal-moon",
+      "sequence": 16,
+      "recordedAt": "2026-11-09T17:05:41.4652503Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "ground-truth-2",
+      "item": {
+        "kind": "fact",
+        "id": "ground-truth-2",
+        "topic": "groundTruth",
+        "text": "Financial gain through the disruption of cross-border payment services.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The attack targets financial transactions."
+    },
+    {
+      "id": "3c9ba447-1a0c-58b2-96ad-1980edcc1dc5",
+      "chronicleId": "tidal-moon",
+      "sequence": 17,
+      "recordedAt": "2026-11-09T17:05:41.5976735Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "ground-truth",
+      "item": {
+        "kind": "fact",
+        "id": "ground-truth",
+        "topic": "groundTruth",
+        "text": "Exploitation of vulnerabilities in the communication protocols between regional banks and payment terminal providers.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The attack targets the links between banks and payment providers."
+    },
+    {
+      "id": "0c3d7f84-ed1f-5a75-a07b-68ce20ccfeae",
+      "chronicleId": "tidal-moon",
+      "sequence": 18,
+      "recordedAt": "2026-11-09T17:05:41.7315797Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "attack-technique",
+      "item": {
+        "kind": "fact",
+        "id": "attack-technique",
+        "topic": "attackTechnique",
+        "text": "T1566 Phishing",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Selecting techniques that would logically affect financial API communications."
+    },
+    {
+      "id": "aa8800d9-c0dd-58ec-b10a-f9b612463532",
+      "chronicleId": "tidal-moon",
+      "sequence": 19,
+      "recordedAt": "2026-11-09T17:05:41.7315797Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "attack-technique-2",
+      "item": {
+        "kind": "fact",
+        "id": "attack-technique-2",
+        "topic": "attackTechnique",
+        "text": "T1059 Command and Scripting Interpreter",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Selecting techniques that would logically affect financial API communications."
+    },
+    {
+      "id": "db87a9e6-3f7e-5fce-a8ce-c1db0d210cd9",
+      "chronicleId": "tidal-moon",
+      "sequence": 20,
+      "recordedAt": "2026-11-09T17:05:41.8675463Z",
+      "part": "intent",
+      "kind": "rule",
+      "op": "add",
+      "itemId": "rule-scope",
+      "item": {
+        "kind": "rule",
+        "id": "rule-scope",
+        "text": "The incident will never result in a total outage, physical harm, data theft, or state-level attribution.",
+        "category": "scope",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Following the recommended answer to keep the exercise manageable."
+    },
+    {
+      "id": "8d3271e3-ded2-5d8d-a1e1-ea5876cc1ce6",
+      "chronicleId": "tidal-moon",
+      "sequence": 21,
+      "recordedAt": "2026-11-09T17:05:42.2782817Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "red-herring",
+      "item": {
+        "kind": "fact",
+        "id": "red-herring",
+        "topic": "redHerring",
+        "text": "The monsoon rains causing telecommunications and cable landing station issues.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The monsoon rains serve as the perfect distraction for assessment."
+    },
+    {
+      "id": "112837fc-ede2-5985-a7e3-34347c917242",
+      "chronicleId": "tidal-moon",
+      "sequence": 22,
+      "recordedAt": "2026-11-09T17:05:42.5541003Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "information-environment",
+      "item": {
+        "kind": "fact",
+        "id": "information-environment",
+        "topic": "informationEnvironment",
+        "text": "Regional news (Regional Business Daily), the general public (holiday shoppers), and the Regional Coordination Desk.",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The scenario includes news, the public, and a coordination desk."
+    },
+    {
+      "id": "bb251fa3-faf0-596e-aa3c-cc205c5b3fad",
+      "chronicleId": "tidal-moon",
+      "sequence": 23,
+      "recordedAt": "2026-11-09T17:05:42.6904791Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "information-environment-2",
+      "item": {
+        "kind": "fact",
+        "id": "information-environment-2",
+        "topic": "informationEnvironment",
+        "text": "News via Regional Business Daily, social media reports, and emails from the Regional Coordination Desk.",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source mentions news, social media, and email."
+    },
+    {
+      "id": "27331213-74f4-5cae-a2c9-52e2e455217e",
+      "chronicleId": "tidal-moon",
+      "sequence": 24,
+      "recordedAt": "2026-11-09T17:05:42.8333899Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "network",
+      "item": {
+        "kind": "fact",
+        "id": "network",
+        "topic": "network",
+        "text": "Cross-border QR payment networks, banking API layers, and telecommunications infrastructure.",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The story involves payment systems and telecoms."
+    },
+    {
+      "id": "cda66c0f-a630-580d-b7d6-30efd76d7f87",
+      "chronicleId": "tidal-moon",
+      "sequence": 25,
+      "recordedAt": "2026-11-09T17:06:55.1225802Z",
+      "part": "intent",
+      "kind": "plannedEvent",
+      "op": "add",
+      "itemId": "pe-e1",
+      "item": {
+        "kind": "plannedEvent",
+        "id": "pe-e1",
+        "title": "Move 1 (Day 1, 15:30): News of payment failures. Response: Assess initial impact and possible causes.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source describes a four-move structure with specific timing and themes."
+    },
+    {
+      "id": "f69405e4-2455-55cf-ae67-1fd306714a2a",
+      "chronicleId": "tidal-moon",
+      "sequence": 26,
+      "recordedAt": "2026-11-09T17:06:55.1225802Z",
+      "part": "intent",
+      "kind": "plannedEvent",
+      "op": "add",
+      "itemId": "pe-e2",
+      "item": {
+        "kind": "plannedEvent",
+        "id": "pe-e2",
+        "title": "Move 2 (Day 1 evening): Increased information/uncertainty. Response: Refine assessment of severity and cause.",
+        "visibility": "excon",
+        "after": [
+          "pe-e1"
+        ],
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source describes a four-move structure with specific timing and themes."
+    },
+    {
+      "id": "52b7799b-1eae-5216-a785-290df8074d76",
+      "chronicleId": "tidal-moon",
+      "sequence": 27,
+      "recordedAt": "2026-11-09T17:06:55.1225802Z",
+      "part": "intent",
+      "kind": "plannedEvent",
+      "op": "add",
+      "itemId": "pe-e3",
+      "item": {
+        "kind": "plannedEvent",
+        "id": "pe-e3",
+        "title": "Move 3 (Day 2, 06:00): Error rates stabilize. Response: Decide if the incident is over and plan communication.",
+        "visibility": "excon",
+        "after": [
+          "pe-e2"
+        ],
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source describes a four-move structure with specific timing and themes."
+    },
+    {
+      "id": "1892ef69-c755-5298-a578-63b62a1d11b7",
+      "chronicleId": "tidal-moon",
+      "sequence": 28,
+      "recordedAt": "2026-11-09T17:06:55.1225802Z",
+      "part": "intent",
+      "kind": "plannedEvent",
+      "op": "add",
+      "itemId": "pe-e4",
+      "item": {
+        "kind": "plannedEvent",
+        "id": "pe-e4",
+        "title": "Move 4 (Day 2): Final coordination. Response: Finalize regional cooperation and public messaging.",
+        "visibility": "excon",
+        "after": [
+          "pe-e3"
+        ],
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source describes a four-move structure with specific timing and themes."
+    },
+    {
+      "id": "389e2ca7-d700-57e7-86de-fe01d6d56fa7",
+      "chronicleId": "tidal-moon",
+      "sequence": 29,
+      "recordedAt": "2026-11-09T17:06:55.267056Z",
+      "part": "intent",
+      "kind": "summary",
+      "op": "add",
+      "itemId": "dp-d1",
+      "item": {
+        "kind": "summary",
+        "id": "dp-d1",
+        "title": "Decision point D1",
+        "text": "Deciding whether the stabilization of error rates signifies the end of the incident.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The objectives and moves center on key decision thresholds."
+    },
+    {
+      "id": "ac23854c-80b2-5097-b704-894f329d70e3",
+      "chronicleId": "tidal-moon",
+      "sequence": 30,
+      "recordedAt": "2026-11-09T17:06:55.267056Z",
+      "part": "intent",
+      "kind": "summary",
+      "op": "add",
+      "itemId": "dp-d2",
+      "item": {
+        "kind": "summary",
+        "id": "dp-d2",
+        "title": "Decision point D2",
+        "text": "Deciding on the content of public messaging and disclosures.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The objectives and moves center on key decision thresholds."
+    },
+    {
+      "id": "dfac5cba-ae7a-5dbc-9622-73cc3a858e4c",
+      "chronicleId": "tidal-moon",
+      "sequence": 31,
+      "recordedAt": "2026-11-09T17:06:55.267056Z",
+      "part": "intent",
+      "kind": "summary",
+      "op": "add",
+      "itemId": "dp-d3",
+      "item": {
+        "kind": "summary",
+        "id": "dp-d3",
+        "title": "Decision point D3",
+        "text": "Deciding the extent of regional cooperation and information sharing.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The objectives and moves center on key decision thresholds."
+    },
+    {
+      "id": "b17e6ed4-5bde-5f6c-a305-823ec4e7791a",
+      "chronicleId": "tidal-moon",
+      "sequence": 32,
+      "recordedAt": "2026-11-09T17:06:55.5335467Z",
+      "part": "intent",
+      "kind": "summary",
+      "op": "add",
+      "itemId": "esc-1",
+      "item": {
+        "kind": "summary",
+        "id": "esc-1",
+        "title": "Escalation step 1",
+        "text": "Heightened uncertainty regarding the distinction between weather-related issues and cyber activity.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Escalation is driven by information uncertainty and public/media pressure."
+    },
+    {
+      "id": "61682e29-5829-5a34-97c1-204c012adc55",
+      "chronicleId": "tidal-moon",
+      "sequence": 33,
+      "recordedAt": "2026-11-09T17:06:55.5335467Z",
+      "part": "intent",
+      "kind": "summary",
+      "op": "add",
+      "itemId": "esc-2",
+      "item": {
+        "kind": "summary",
+        "id": "esc-2",
+        "title": "Escalation step 2",
+        "text": "Increasing pressure from media and the public for definitive explanations.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Escalation is driven by information uncertainty and public/media pressure."
+    },
+    {
+      "id": "d6ae4227-c770-59aa-a211-598b32ada01d",
+      "chronicleId": "tidal-moon",
+      "sequence": 34,
+      "recordedAt": "2026-11-09T17:06:55.5335467Z",
+      "part": "intent",
+      "kind": "summary",
+      "op": "add",
+      "itemId": "esc-3",
+      "item": {
+        "kind": "summary",
+        "id": "esc-3",
+        "title": "Escalation step 3",
+        "text": "Increasing complexity in reaching a multi-national consensus on regional response.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Escalation is driven by information uncertainty and public/media pressure."
+    },
+    {
+      "id": "129cd9ff-c279-5274-b768-71e56368e130",
+      "chronicleId": "tidal-moon",
+      "sequence": 35,
+      "recordedAt": "2026-11-09T17:07:46.0885843Z",
+      "part": "world",
+      "kind": "organization",
+      "op": "add",
+      "itemId": "org-regional-business-daily",
+      "item": {
+        "kind": "organization",
+        "id": "org-regional-business-daily",
+        "name": "Regional Business Daily",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The document names these specific organizations as part of the scenario."
+    },
+    {
+      "id": "e96a3161-770a-5f4c-acbe-79ae117850b6",
+      "chronicleId": "tidal-moon",
+      "sequence": 36,
+      "recordedAt": "2026-11-09T17:07:46.0885843Z",
+      "part": "world",
+      "kind": "organization",
+      "op": "add",
+      "itemId": "org-regional-coordination-desk",
+      "item": {
+        "kind": "organization",
+        "id": "org-regional-coordination-desk",
+        "name": "Regional Coordination Desk",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The document names these specific organizations as part of the scenario."
+    },
+    {
+      "id": "0353d051-ec45-5dd5-b2e7-9f30653e4c82",
+      "chronicleId": "tidal-moon",
+      "sequence": 37,
+      "recordedAt": "2026-11-09T17:07:46.0885843Z",
+      "part": "world",
+      "kind": "organization",
+      "op": "add",
+      "itemId": "org-seabridge-telecom",
+      "item": {
+        "kind": "organization",
+        "id": "org-seabridge-telecom",
+        "name": "Seabridge Telecom",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The document names these specific organizations as part of the scenario."
+    },
+    {
+      "id": "0a32c11d-751b-5615-a843-54cc05bf1831",
+      "chronicleId": "tidal-moon",
+      "sequence": 38,
+      "recordedAt": "2026-11-09T17:07:46.0885843Z",
+      "part": "world",
+      "kind": "organization",
+      "op": "add",
+      "itemId": "org-bluepoint",
+      "item": {
+        "kind": "organization",
+        "id": "org-bluepoint",
+        "name": "BluePoint",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The document names these specific organizations as part of the scenario."
+    },
+    {
+      "id": "bf929d67-c578-5809-bb15-745943421c5c",
+      "chronicleId": "tidal-moon",
+      "sequence": 39,
+      "recordedAt": "2026-11-09T17:07:46.0885843Z",
+      "part": "world",
+      "kind": "organization",
+      "op": "add",
+      "itemId": "org-atlas-regional-bank",
+      "item": {
+        "kind": "organization",
+        "id": "org-atlas-regional-bank",
+        "name": "Atlas Regional Bank",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The document names these specific organizations as part of the scenario."
+    },
+    {
+      "id": "3551dcd9-f5fa-5537-898b-c97c20de12ea",
+      "chronicleId": "tidal-moon",
+      "sequence": 40,
+      "recordedAt": "2026-11-09T17:07:46.5322841Z",
+      "part": "intent",
+      "kind": "term",
+      "op": "add",
+      "itemId": "term-clean-update",
+      "item": {
+        "kind": "term",
+        "id": "term-clean-update",
+        "text": "clean update",
+        "usage": "fixed",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The terms 'clean update' and TLP levels are prominent in the source text."
+    },
+    {
+      "id": "310ba253-b8c2-58db-b26a-d8a37d4b5f15",
+      "chronicleId": "tidal-moon",
+      "sequence": 41,
+      "recordedAt": "2026-11-09T17:07:46.5322841Z",
+      "part": "intent",
+      "kind": "term",
+      "op": "add",
+      "itemId": "term-tlp-amber",
+      "item": {
+        "kind": "term",
+        "id": "term-tlp-amber",
+        "text": "TLP:AMBER",
+        "usage": "fixed",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The terms 'clean update' and TLP levels are prominent in the source text."
+    },
+    {
+      "id": "a16c54af-20ca-5e9c-8fcf-605a890240e5",
+      "chronicleId": "tidal-moon",
+      "sequence": 42,
+      "recordedAt": "2026-11-09T17:07:46.5322841Z",
+      "part": "intent",
+      "kind": "term",
+      "op": "add",
+      "itemId": "term-tlp-red",
+      "item": {
+        "kind": "term",
+        "id": "term-tlp-red",
+        "text": "TLP:RED",
+        "usage": "fixed",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The terms 'clean update' and TLP levels are prominent in the source text."
+    },
+    {
+      "id": "ca2d02db-68e3-5fd4-8efd-4ccfc03b2cf2",
+      "chronicleId": "tidal-moon",
+      "sequence": 43,
+      "recordedAt": "2026-11-09T17:07:46.5322841Z",
+      "part": "intent",
+      "kind": "term",
+      "op": "add",
+      "itemId": "term-tlp-green",
+      "item": {
+        "kind": "term",
+        "id": "term-tlp-green",
+        "text": "TLP:GREEN",
+        "usage": "fixed",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The terms 'clean update' and TLP levels are prominent in the source text."
+    },
+    {
+      "id": "83760fee-2a9c-5f03-a519-24fd09890949",
+      "chronicleId": "tidal-moon",
+      "sequence": 44,
+      "recordedAt": "2026-11-09T17:07:46.5322841Z",
+      "part": "intent",
+      "kind": "term",
+      "op": "add",
+      "itemId": "term-tlp-white",
+      "item": {
+        "kind": "term",
+        "id": "term-tlp-white",
+        "text": "TLP:WHITE",
+        "usage": "fixed",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The terms 'clean update' and TLP levels are prominent in the source text."
+    },
+    {
+      "id": "1e9c249e-008f-59fb-9adc-a59fefd0a939",
+      "chronicleId": "tidal-moon",
+      "sequence": 45,
+      "recordedAt": "2026-11-09T17:08:06.3946965Z",
+      "part": "intent",
+      "kind": "summary",
+      "op": "add",
+      "itemId": "executive-summary",
+      "item": {
+        "kind": "summary",
+        "id": "executive-summary",
+        "title": "Executive summary",
+        "text": "Exercise Tidal Moon is a rehearsal tabletop exercise designed for national CERT leaders in the ASEAN region. Set during the 2026 holiday season, the scenario involves a regional cyber incident causing intermittent cross-border QR payment failures. Participants must work together to assess the incident's impact, cause, and severity, while navigating various information streams, including a potential red herring involving monsoon-related telecommunications issues. The primary goal is to achieve regional consensus on a coordinated response and public communication strategy. The exercise is designed to be discussion-based, focusing on decision-making and cooperation rather than technical tasks.",
+        "visibility": "participant",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "app"
+      }
+    }
+  ]
+}

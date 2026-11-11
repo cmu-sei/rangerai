@@ -1,0 +1,1703 @@
+{
+  "schemaVersion": "0.3.0",
+  "id": "cyber-antigen",
+  "name": "CYBER ANTIGEN",
+  "kind": "exercise",
+  "scenarioType": {
+    "id": "small-unit-team-exercise",
+    "version": "0.3.0"
+  },
+  "description": "Blue Team SOC Analysts are tasked with detecting and responding to a ransomware attack targeting a finance department workstation. The exercise requires them to triage alerts, implement containment, and maintain communication under challenging conditions, including a high volume of false positives and reduced staffing.",
+  "created": "2026-11-06T18:36:30.9307319Z",
+  "world": [
+    {
+      "kind": "fact",
+      "id": "audience",
+      "topic": "audience",
+      "text": "Blue Team SOC Analysts",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "audience-2",
+      "topic": "audience",
+      "text": "6 participants: 4 SOC Analysts, 1 Incident Manager, and 1 Observer",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "audience-3",
+      "topic": "audience",
+      "text": "Intermediate",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "situation",
+      "topic": "situation",
+      "text": "On a cyber range; 4-hour exercise window.",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "gt-gt1",
+      "topic": "groundTruth",
+      "text": "An attacker is using ransomware to target the finance department.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "gt-gt2",
+      "topic": "groundTruth",
+      "text": "The initial entry point is a workstation in the finance department.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "gt-gt3",
+      "topic": "groundTruth",
+      "text": "The attacker will attempt lateral movement to the Domain Controller.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "ground-truth",
+      "topic": "groundTruth",
+      "text": "A ransomware-focused threat actor targeting the infrastructure of FinTech Global and Nebula Group.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "attack-technique",
+      "topic": "attackTechnique",
+      "text": "T1059 Command and Scripting Interpreter",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "attack-technique-2",
+      "topic": "attackTechnique",
+      "text": "T1021 Remote Services",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "attack-technique-3",
+      "topic": "attackTechnique",
+      "text": "T1486 Data Encrypted for Impact",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "network",
+      "id": "net-corporate-network",
+      "name": "Corporate Network",
+      "description": "Finance Workstation and Domain Controller",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "network",
+      "id": "net-security-network",
+      "name": "Security Network",
+      "description": "SIEM and Firewall",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "device",
+      "id": "host-finance-workstation",
+      "name": "Finance Workstation",
+      "deviceTypes": [
+        "ComputerNode"
+      ],
+      "isVirtual": true,
+      "role": "Windows 10",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "device",
+      "id": "host-corporate-domain-controller",
+      "name": "Corporate Domain Controller",
+      "deviceTypes": [
+        "ComputerNode"
+      ],
+      "isVirtual": true,
+      "role": "Windows Server 2019",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "device",
+      "id": "host-siem-platform",
+      "name": "SIEM Platform",
+      "deviceTypes": [
+        "ComputerNode"
+      ],
+      "isVirtual": true,
+      "role": "Linux",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "device",
+      "id": "host-internal-network-firewall",
+      "name": "Internal Network Firewall",
+      "deviceTypes": [
+        "ComputerNode"
+      ],
+      "isVirtual": true,
+      "role": "Network Appliance",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "simulated-users",
+      "topic": "simulatedUsers",
+      "text": "2 users: 1 Finance Clerk performing routine tasks, 1 IT Administrator performing maintenance.",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "planted",
+      "topic": "planted",
+      "text": "Ransomware binary",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "planted-2",
+      "topic": "planted",
+      "text": "Malicious registry keys",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "planted-3",
+      "topic": "planted",
+      "text": "Unauthorized user account",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "fact",
+      "id": "planted-4",
+      "topic": "planted",
+      "text": "Suspicious file activity logs",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "side",
+      "id": "blue",
+      "name": "Friendly",
+      "visibility": "participant",
+      "standing": "proposed",
+      "relations": [
+        {
+          "sideId": "red",
+          "stance": "hostile"
+        }
+      ]
+    },
+    {
+      "kind": "organization",
+      "id": "org-fintech-global",
+      "name": "FinTech Global",
+      "sideId": "blue",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "side",
+      "id": "red",
+      "name": "Adversary",
+      "visibility": "excon",
+      "standing": "proposed",
+      "relations": [
+        {
+          "sideId": "blue",
+          "stance": "hostile"
+        }
+      ]
+    },
+    {
+      "kind": "organization",
+      "id": "org-nebula-group",
+      "name": "Nebula Group",
+      "sideId": "red",
+      "visibility": "excon",
+      "standing": "proposed"
+    }
+  ],
+  "intent": [
+    {
+      "kind": "objective",
+      "id": "obj-t1",
+      "text": "T1 Alert Triage and Investigation",
+      "measures": [
+        "Triage all alerts within 15 minutes of appearance."
+      ],
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "objective",
+      "id": "obj-t2",
+      "text": "T2 Incident Containment",
+      "measures": [
+        "Initiate containment procedures within 30 minutes of confirming an incident."
+      ],
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "objective",
+      "id": "obj-t3",
+      "text": "T3 Communication and Reporting",
+      "measures": [
+        "Provide a clear, concise status update to the Incident Manager every hour."
+      ],
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "rule",
+      "id": "rule-conduct",
+      "text": "Adhere to standard incident response protocols and communication channels.",
+      "category": "conduct",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "rule",
+      "id": "rule-timing",
+      "text": "Complete all triage and containment actions within the four-hour exercise window.",
+      "category": "timing",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "teachingPoint",
+      "id": "tp-effective-alert-triage-and-inv",
+      "text": "Effective alert triage and investigation techniques.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "teachingPoint",
+      "id": "tp-timely-and-effective-containme",
+      "text": "Timely and effective containment procedures.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "teachingPoint",
+      "id": "tp-maintaining-clear-and-concise",
+      "text": "Maintaining clear and concise incident communication.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "plannedEvent",
+      "id": "pe-e1",
+      "title": "Initial alert: suspicious activity on Finance Workstation.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "plannedEvent",
+      "id": "pe-e2",
+      "title": "Secondary alert: lateral movement attempts toward the Domain Controller.",
+      "visibility": "excon",
+      "after": [
+        "pe-e1"
+      ],
+      "standing": "proposed"
+    },
+    {
+      "kind": "plannedEvent",
+      "id": "pe-e3",
+      "title": "Critical event: Ransomware encryption process begins on the workstation.",
+      "visibility": "excon",
+      "after": [
+        "pe-e2"
+      ],
+      "standing": "proposed"
+    },
+    {
+      "kind": "rule",
+      "id": "rule-scope",
+      "text": "Full compromise of the Corporate Domain Controller and widespread ransomware encryption across the network.",
+      "category": "scope",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "summary",
+      "id": "esc-1",
+      "title": "Escalation step 1",
+      "text": "Step 1: High volume of false positives on the SIEM.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "summary",
+      "id": "esc-2",
+      "title": "Escalation step 2",
+      "text": "Step 2: Targeted alert on the Finance Workstation.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "summary",
+      "id": "esc-3",
+      "title": "Escalation step 3",
+      "text": "Step 3: Lateral movement indicators towards the Domain Controller.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "summary",
+      "id": "esc-4",
+      "title": "Escalation step 4",
+      "text": "Step 4: Active ransomware encryption on key systems.",
+      "visibility": "excon",
+      "standing": "proposed"
+    },
+    {
+      "kind": "term",
+      "id": "term-alert",
+      "text": "Alert",
+      "usage": "fixed",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "term",
+      "id": "term-incident",
+      "text": "Incident",
+      "usage": "fixed",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "term",
+      "id": "term-containment",
+      "text": "Containment",
+      "usage": "fixed",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "term",
+      "id": "term-detection",
+      "text": "Detection",
+      "usage": "fixed",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "term",
+      "id": "term-hacked",
+      "text": "Hacked",
+      "usage": "banned",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "term",
+      "id": "term-victim",
+      "text": "Victim",
+      "usage": "banned",
+      "visibility": "participant",
+      "standing": "proposed"
+    },
+    {
+      "kind": "summary",
+      "id": "executive-summary",
+      "title": "Executive summary",
+      "text": "This exercise is a four-hour SOC Analyst training session conducted on a cyber range. The Blue Team is tasked with detecting and containing a ransomware attack targeting a finance department workstation within the FinTech Global/Nebula Group environment. The team will face challenges including high volumes of false-positive alerts and limited personnel. Success is measured by the ability to triage alerts within 15 minutes, initiate containment within 30 minutes of confirmation, and provide hourly status updates. The scenario involves an organized adversary using standard ransomware techniques, progressing from workstation-level alerts to potential domain-wide escalation.",
+      "visibility": "participant",
+      "standing": "stated"
+    }
+  ],
+  "asBuilt": [
+    {
+      "kind": "deployment",
+      "id": "dep-grayspace-cyber-antigen",
+      "builder": "grayspace",
+      "reference": "cyber-antigen",
+      "version": "sha256:23d40c77e1a0ca5f90aa55f17083e3f27645c5b739841d7e927afe4c811b4bf2",
+      "state": "ready",
+      "builds": [
+        "net-corporate-network",
+        "net-security-network",
+        "host-finance-workstation",
+        "host-corporate-domain-controller",
+        "host-siem-platform",
+        "host-internal-network-firewall"
+      ],
+      "visibility": "excon",
+      "standing": "stated"
+    }
+  ],
+  "asRun": [],
+  "lessons": [],
+  "history": [
+    {
+      "id": "8e861f1a-93c7-5fd2-9a20-727edc177403",
+      "chronicleId": "cyber-antigen",
+      "sequence": 1,
+      "recordedAt": "2026-11-06T18:37:35.3930664Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "audience",
+      "item": {
+        "kind": "fact",
+        "id": "audience",
+        "topic": "audience",
+        "text": "Blue Team SOC Analysts",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source explicitly states the unit is 'Blue Team SOC Analysts, responsible for incident detection and response'."
+    },
+    {
+      "id": "bb95b182-8859-5ec3-abd9-f0a676a0fa61",
+      "chronicleId": "cyber-antigen",
+      "sequence": 2,
+      "recordedAt": "2026-11-06T18:37:37.3910762Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "audience-2",
+      "item": {
+        "kind": "fact",
+        "id": "audience-2",
+        "topic": "audience",
+        "text": "6 participants: 4 SOC Analysts, 1 Incident Manager, and 1 Observer",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source states there are 6 participants: 4 SOC Analysts, 1 Incident Manager, and 1 Observer."
+    },
+    {
+      "id": "dafe1aff-84fd-563e-9c6b-5677cd4b6142",
+      "chronicleId": "cyber-antigen",
+      "sequence": 3,
+      "recordedAt": "2026-11-06T18:37:40.4987156Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "audience-3",
+      "item": {
+        "kind": "fact",
+        "id": "audience-3",
+        "topic": "audience",
+        "text": "Intermediate",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source does not specify proficiency, but the tasks involve standard SOC responder duties like triage and containment."
+    },
+    {
+      "id": "b3381177-7927-5654-ba35-3f6934d17992",
+      "chronicleId": "cyber-antigen",
+      "sequence": 4,
+      "recordedAt": "2026-11-06T18:39:05.1361048Z",
+      "part": "intent",
+      "kind": "objective",
+      "op": "add",
+      "itemId": "obj-t1",
+      "item": {
+        "kind": "objective",
+        "id": "obj-t1",
+        "text": "T1 Alert Triage and Investigation",
+        "measures": [
+          "Triage all alerts within 15 minutes of appearance."
+        ],
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source explicitly lists three tasks: T1 Alert Triage and Investigation, T2 Incident Containment, and T3 Communication and Reporting."
+    },
+    {
+      "id": "d31416cf-2822-54a8-976a-7df765eba1af",
+      "chronicleId": "cyber-antigen",
+      "sequence": 5,
+      "recordedAt": "2026-11-06T18:39:05.1361048Z",
+      "part": "intent",
+      "kind": "objective",
+      "op": "add",
+      "itemId": "obj-t2",
+      "item": {
+        "kind": "objective",
+        "id": "obj-t2",
+        "text": "T2 Incident Containment",
+        "measures": [
+          "Initiate containment procedures within 30 minutes of confirming an incident."
+        ],
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source explicitly lists three tasks: T1 Alert Triage and Investigation, T2 Incident Containment, and T3 Communication and Reporting."
+    },
+    {
+      "id": "063abb5a-af8b-5e34-b5e1-f33980604d27",
+      "chronicleId": "cyber-antigen",
+      "sequence": 6,
+      "recordedAt": "2026-11-06T18:39:05.1361048Z",
+      "part": "intent",
+      "kind": "objective",
+      "op": "add",
+      "itemId": "obj-t3",
+      "item": {
+        "kind": "objective",
+        "id": "obj-t3",
+        "text": "T3 Communication and Reporting",
+        "measures": [
+          "Provide a clear, concise status update to the Incident Manager every hour."
+        ],
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source explicitly lists three tasks: T1 Alert Triage and Investigation, T2 Incident Containment, and T3 Communication and Reporting."
+    },
+    {
+      "id": "a41518c5-1ac9-5f5c-9d28-9c9427032e9d",
+      "chronicleId": "cyber-antigen",
+      "sequence": 7,
+      "recordedAt": "2026-11-06T18:39:05.8547702Z",
+      "part": "intent",
+      "kind": "rule",
+      "op": "add",
+      "itemId": "rule-conduct",
+      "item": {
+        "kind": "rule",
+        "id": "rule-conduct",
+        "text": "Adhere to standard incident response protocols and communication channels.",
+        "category": "conduct",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source doesn't specify rules of engagement, but standard SOC response procedures apply. I'll propose 'Adhere to standard incident response protocols and communication channels.'"
+    },
+    {
+      "id": "7e434195-a9cd-5718-ba51-c1eaa9260b11",
+      "chronicleId": "cyber-antigen",
+      "sequence": 8,
+      "recordedAt": "2026-11-06T18:39:06.0138793Z",
+      "part": "intent",
+      "kind": "rule",
+      "op": "add",
+      "itemId": "rule-timing",
+      "item": {
+        "kind": "rule",
+        "id": "rule-timing",
+        "text": "Complete all triage and containment actions within the four-hour exercise window.",
+        "category": "timing",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source doesn't specify a deadline, but the exercise is a four-hour window. I'll propose 'Complete all triage and containment actions within the four-hour exercise window.'"
+    },
+    {
+      "id": "67f7a109-51a1-5cfa-8c8e-a0c009fbbcd1",
+      "chronicleId": "cyber-antigen",
+      "sequence": 9,
+      "recordedAt": "2026-11-06T18:39:06.4934046Z",
+      "part": "intent",
+      "kind": "teachingPoint",
+      "op": "add",
+      "itemId": "tp-effective-alert-triage-and-inv",
+      "item": {
+        "kind": "teachingPoint",
+        "id": "tp-effective-alert-triage-and-inv",
+        "text": "Effective alert triage and investigation techniques.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source doesn't specify teaching points, but based on the tasks, they would include effective triage, timely containment, and clear communication."
+    },
+    {
+      "id": "35aead29-b2cc-5432-8485-4d582e7a37ff",
+      "chronicleId": "cyber-antigen",
+      "sequence": 10,
+      "recordedAt": "2026-11-06T18:39:06.4934046Z",
+      "part": "intent",
+      "kind": "teachingPoint",
+      "op": "add",
+      "itemId": "tp-timely-and-effective-containme",
+      "item": {
+        "kind": "teachingPoint",
+        "id": "tp-timely-and-effective-containme",
+        "text": "Timely and effective containment procedures.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source doesn't specify teaching points, but based on the tasks, they would include effective triage, timely containment, and clear communication."
+    },
+    {
+      "id": "fa834267-462f-53c5-80b7-44f76bc008e2",
+      "chronicleId": "cyber-antigen",
+      "sequence": 11,
+      "recordedAt": "2026-11-06T18:39:06.4934046Z",
+      "part": "intent",
+      "kind": "teachingPoint",
+      "op": "add",
+      "itemId": "tp-maintaining-clear-and-concise",
+      "item": {
+        "kind": "teachingPoint",
+        "id": "tp-maintaining-clear-and-concise",
+        "text": "Maintaining clear and concise incident communication.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source doesn't specify teaching points, but based on the tasks, they would include effective triage, timely containment, and clear communication."
+    },
+    {
+      "id": "b3a2c2a9-693a-5931-902f-e846c24b1def",
+      "chronicleId": "cyber-antigen",
+      "sequence": 12,
+      "recordedAt": "2026-11-06T18:39:37.0242644Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "situation",
+      "item": {
+        "kind": "fact",
+        "id": "situation",
+        "topic": "situation",
+        "text": "On a cyber range; 4-hour exercise window.",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The source specifies the setting is \"On a cyber range\" and the time slot is \"Four hours of exercise, followed by a one-hour post-incident review.\""
+    },
+    {
+      "id": "deafffaf-1094-55b2-9989-b68360ae8031",
+      "chronicleId": "cyber-antigen",
+      "sequence": 13,
+      "recordedAt": "2026-11-06T18:39:55.6356805Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "gt-gt1",
+      "item": {
+        "kind": "fact",
+        "id": "gt-gt1",
+        "topic": "groundTruth",
+        "text": "An attacker is using ransomware to target the finance department.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The ground truth is a ransomware actor executing a staged attack starting from a finance workstation."
+    },
+    {
+      "id": "85b7767e-6790-5e5c-b3cd-9ac8eabdee23",
+      "chronicleId": "cyber-antigen",
+      "sequence": 14,
+      "recordedAt": "2026-11-06T18:39:55.6356805Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "gt-gt2",
+      "item": {
+        "kind": "fact",
+        "id": "gt-gt2",
+        "topic": "groundTruth",
+        "text": "The initial entry point is a workstation in the finance department.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The ground truth is a ransomware actor executing a staged attack starting from a finance workstation."
+    },
+    {
+      "id": "1e9a86dd-2e46-551a-b213-a433fa95455c",
+      "chronicleId": "cyber-antigen",
+      "sequence": 15,
+      "recordedAt": "2026-11-06T18:39:55.6356805Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "gt-gt3",
+      "item": {
+        "kind": "fact",
+        "id": "gt-gt3",
+        "topic": "groundTruth",
+        "text": "The attacker will attempt lateral movement to the Domain Controller.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The ground truth is a ransomware actor executing a staged attack starting from a finance workstation."
+    },
+    {
+      "id": "6dd9d6ac-4cec-53db-84dd-5efc8b39b3ae",
+      "chronicleId": "cyber-antigen",
+      "sequence": 16,
+      "recordedAt": "2026-11-06T18:39:55.9411243Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "ground-truth",
+      "item": {
+        "kind": "fact",
+        "id": "ground-truth",
+        "topic": "groundTruth",
+        "text": "A ransomware-focused threat actor targeting the infrastructure of FinTech Global and Nebula Group.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The scenario involves a ransomware attack on financial entities."
+    },
+    {
+      "id": "402563d4-163e-5a85-94b0-cfdb688e5ffd",
+      "chronicleId": "cyber-antigen",
+      "sequence": 17,
+      "recordedAt": "2026-11-06T18:39:56.238646Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "attack-technique",
+      "item": {
+        "kind": "fact",
+        "id": "attack-technique",
+        "topic": "attackTechnique",
+        "text": "T1059 Command and Scripting Interpreter",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Standard ransomware lifecycle techniques."
+    },
+    {
+      "id": "9a6bacb6-f91f-5643-9e8b-ed4c911be9c0",
+      "chronicleId": "cyber-antigen",
+      "sequence": 18,
+      "recordedAt": "2026-11-06T18:39:56.238646Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "attack-technique-2",
+      "item": {
+        "kind": "fact",
+        "id": "attack-technique-2",
+        "topic": "attackTechnique",
+        "text": "T1021 Remote Services",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Standard ransomware lifecycle techniques."
+    },
+    {
+      "id": "a7dbefe1-a35d-54ab-940a-2fad274cb86e",
+      "chronicleId": "cyber-antigen",
+      "sequence": 19,
+      "recordedAt": "2026-11-06T18:39:56.238646Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "attack-technique-3",
+      "item": {
+        "kind": "fact",
+        "id": "attack-technique-3",
+        "topic": "attackTechnique",
+        "text": "T1486 Data Encrypted for Impact",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Standard ransomware lifecycle techniques."
+    },
+    {
+      "id": "f7d5ca77-e2e3-50c7-9822-0f3202b64ba8",
+      "chronicleId": "cyber-antigen",
+      "sequence": 20,
+      "recordedAt": "2026-11-06T18:39:56.394724Z",
+      "part": "intent",
+      "kind": "plannedEvent",
+      "op": "add",
+      "itemId": "pe-e1",
+      "item": {
+        "kind": "plannedEvent",
+        "id": "pe-e1",
+        "title": "Initial alert: suspicious activity on Finance Workstation.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The events drive the progression of the training tasks."
+    },
+    {
+      "id": "23634104-87c6-5d23-bd6b-900b7300d1fb",
+      "chronicleId": "cyber-antigen",
+      "sequence": 21,
+      "recordedAt": "2026-11-06T18:39:56.394724Z",
+      "part": "intent",
+      "kind": "plannedEvent",
+      "op": "add",
+      "itemId": "pe-e2",
+      "item": {
+        "kind": "plannedEvent",
+        "id": "pe-e2",
+        "title": "Secondary alert: lateral movement attempts toward the Domain Controller.",
+        "visibility": "excon",
+        "after": [
+          "pe-e1"
+        ],
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The events drive the progression of the training tasks."
+    },
+    {
+      "id": "ad7e5ae6-ece6-5325-b3ec-1528b43cbb75",
+      "chronicleId": "cyber-antigen",
+      "sequence": 22,
+      "recordedAt": "2026-11-06T18:39:56.394724Z",
+      "part": "intent",
+      "kind": "plannedEvent",
+      "op": "add",
+      "itemId": "pe-e3",
+      "item": {
+        "kind": "plannedEvent",
+        "id": "pe-e3",
+        "title": "Critical event: Ransomware encryption process begins on the workstation.",
+        "visibility": "excon",
+        "after": [
+          "pe-e2"
+        ],
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The events drive the progression of the training tasks."
+    },
+    {
+      "id": "fe5849ef-edeb-5395-984c-582ba984a76c",
+      "chronicleId": "cyber-antigen",
+      "sequence": 23,
+      "recordedAt": "2026-11-06T18:39:56.8185134Z",
+      "part": "intent",
+      "kind": "rule",
+      "op": "add",
+      "itemId": "rule-scope",
+      "item": {
+        "kind": "rule",
+        "id": "rule-scope",
+        "text": "Full compromise of the Corporate Domain Controller and widespread ransomware encryption across the network.",
+        "category": "scope",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "The limit for the exercise is total domain compromise."
+    },
+    {
+      "id": "ff26ba6e-5be2-5476-b583-0c87d6b48b49",
+      "chronicleId": "cyber-antigen",
+      "sequence": 24,
+      "recordedAt": "2026-11-06T18:39:56.9671977Z",
+      "part": "intent",
+      "kind": "summary",
+      "op": "add",
+      "itemId": "esc-1",
+      "item": {
+        "kind": "summary",
+        "id": "esc-1",
+        "title": "Escalation step 1",
+        "text": "Step 1: High volume of false positives on the SIEM.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Stepwise progression of the threat."
+    },
+    {
+      "id": "e1a81e7c-b740-57a9-a456-5c3a3e28ff58",
+      "chronicleId": "cyber-antigen",
+      "sequence": 25,
+      "recordedAt": "2026-11-06T18:39:56.9671977Z",
+      "part": "intent",
+      "kind": "summary",
+      "op": "add",
+      "itemId": "esc-2",
+      "item": {
+        "kind": "summary",
+        "id": "esc-2",
+        "title": "Escalation step 2",
+        "text": "Step 2: Targeted alert on the Finance Workstation.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Stepwise progression of the threat."
+    },
+    {
+      "id": "6d7c6485-a145-59ee-9576-0dce32fc9ca5",
+      "chronicleId": "cyber-antigen",
+      "sequence": 26,
+      "recordedAt": "2026-11-06T18:39:56.9671977Z",
+      "part": "intent",
+      "kind": "summary",
+      "op": "add",
+      "itemId": "esc-3",
+      "item": {
+        "kind": "summary",
+        "id": "esc-3",
+        "title": "Escalation step 3",
+        "text": "Step 3: Lateral movement indicators towards the Domain Controller.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Stepwise progression of the threat."
+    },
+    {
+      "id": "d90b2208-70d0-5557-a734-eefd10057734",
+      "chronicleId": "cyber-antigen",
+      "sequence": 27,
+      "recordedAt": "2026-11-06T18:39:56.9671977Z",
+      "part": "intent",
+      "kind": "summary",
+      "op": "add",
+      "itemId": "esc-4",
+      "item": {
+        "kind": "summary",
+        "id": "esc-4",
+        "title": "Escalation step 4",
+        "text": "Step 4: Active ransomware encryption on key systems.",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Stepwise progression of the threat."
+    },
+    {
+      "id": "27b0520f-c391-5afe-9817-2f13404839d2",
+      "chronicleId": "cyber-antigen",
+      "sequence": 28,
+      "recordedAt": "2026-11-06T18:56:04.5350972Z",
+      "part": "world",
+      "kind": "network",
+      "op": "add",
+      "itemId": "net-corporate-network",
+      "item": {
+        "kind": "network",
+        "id": "net-corporate-network",
+        "name": "Corporate Network",
+        "description": "Finance Workstation and Domain Controller",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Segments are derived from the systems listed in the Cyber Antigen source."
+    },
+    {
+      "id": "e02cc187-a4c6-555d-80f5-3e529e30b172",
+      "chronicleId": "cyber-antigen",
+      "sequence": 29,
+      "recordedAt": "2026-11-06T18:56:04.5350972Z",
+      "part": "world",
+      "kind": "network",
+      "op": "add",
+      "itemId": "net-security-network",
+      "item": {
+        "kind": "network",
+        "id": "net-security-network",
+        "name": "Security Network",
+        "description": "SIEM and Firewall",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Segments are derived from the systems listed in the Cyber Antigen source."
+    },
+    {
+      "id": "b800445a-01b1-53bf-9763-f8577cee512b",
+      "chronicleId": "cyber-antigen",
+      "sequence": 30,
+      "recordedAt": "2026-11-06T18:56:10.1865332Z",
+      "part": "world",
+      "kind": "device",
+      "op": "add",
+      "itemId": "host-finance-workstation",
+      "item": {
+        "kind": "device",
+        "id": "host-finance-workstation",
+        "name": "Finance Workstation",
+        "deviceTypes": [
+          "ComputerNode"
+        ],
+        "isVirtual": true,
+        "role": "Windows 10",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Hosts are derived from the systems listed in the Cyber Antigen source."
+    },
+    {
+      "id": "b08bb5c0-0207-5d9b-99f8-a10fed1897ac",
+      "chronicleId": "cyber-antigen",
+      "sequence": 31,
+      "recordedAt": "2026-11-06T18:56:10.1865332Z",
+      "part": "world",
+      "kind": "device",
+      "op": "add",
+      "itemId": "host-corporate-domain-controller",
+      "item": {
+        "kind": "device",
+        "id": "host-corporate-domain-controller",
+        "name": "Corporate Domain Controller",
+        "deviceTypes": [
+          "ComputerNode"
+        ],
+        "isVirtual": true,
+        "role": "Windows Server 2019",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Hosts are derived from the systems listed in the Cyber Antigen source."
+    },
+    {
+      "id": "7f123a88-a216-59c1-a132-107abbabf155",
+      "chronicleId": "cyber-antigen",
+      "sequence": 32,
+      "recordedAt": "2026-11-06T18:56:10.1865332Z",
+      "part": "world",
+      "kind": "device",
+      "op": "add",
+      "itemId": "host-siem-platform",
+      "item": {
+        "kind": "device",
+        "id": "host-siem-platform",
+        "name": "SIEM Platform",
+        "deviceTypes": [
+          "ComputerNode"
+        ],
+        "isVirtual": true,
+        "role": "Linux",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Hosts are derived from the systems listed in the Cyber Antigen source."
+    },
+    {
+      "id": "2908c8b3-3294-56f7-ba70-884300e1f890",
+      "chronicleId": "cyber-antigen",
+      "sequence": 33,
+      "recordedAt": "2026-11-06T18:56:10.1865332Z",
+      "part": "world",
+      "kind": "device",
+      "op": "add",
+      "itemId": "host-internal-network-firewall",
+      "item": {
+        "kind": "device",
+        "id": "host-internal-network-firewall",
+        "name": "Internal Network Firewall",
+        "deviceTypes": [
+          "ComputerNode"
+        ],
+        "isVirtual": true,
+        "role": "Network Appliance",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Hosts are derived from the systems listed in the Cyber Antigen source."
+    },
+    {
+      "id": "f67a1b11-7fb4-59cc-9484-6eb4907ed2f9",
+      "chronicleId": "cyber-antigen",
+      "sequence": 34,
+      "recordedAt": "2026-11-06T18:56:30.9402245Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "simulated-users",
+      "item": {
+        "kind": "fact",
+        "id": "simulated-users",
+        "topic": "simulatedUsers",
+        "text": "2 users: 1 Finance Clerk performing routine tasks, 1 IT Administrator performing maintenance.",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Simulated users are proposed to add realistic background activity to the network."
+    },
+    {
+      "id": "27165842-845a-5916-a3f7-aa5eac5e0a5c",
+      "chronicleId": "cyber-antigen",
+      "sequence": 35,
+      "recordedAt": "2026-11-06T18:56:34.4719269Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "planted",
+      "item": {
+        "kind": "fact",
+        "id": "planted",
+        "topic": "planted",
+        "text": "Ransomware binary",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Planted items are proposed to facilitate the ransomware scenario described in the source."
+    },
+    {
+      "id": "885950e4-426e-55c5-a472-f5c1a4f157f8",
+      "chronicleId": "cyber-antigen",
+      "sequence": 36,
+      "recordedAt": "2026-11-06T18:56:34.4719269Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "planted-2",
+      "item": {
+        "kind": "fact",
+        "id": "planted-2",
+        "topic": "planted",
+        "text": "Malicious registry keys",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Planted items are proposed to facilitate the ransomware scenario described in the source."
+    },
+    {
+      "id": "831feafe-6221-505b-be81-036b2ce08292",
+      "chronicleId": "cyber-antigen",
+      "sequence": 37,
+      "recordedAt": "2026-11-06T18:56:34.4719269Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "planted-3",
+      "item": {
+        "kind": "fact",
+        "id": "planted-3",
+        "topic": "planted",
+        "text": "Unauthorized user account",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Planted items are proposed to facilitate the ransomware scenario described in the source."
+    },
+    {
+      "id": "f3a9bf4f-8fef-585f-bb6c-ed73ef5187e4",
+      "chronicleId": "cyber-antigen",
+      "sequence": 38,
+      "recordedAt": "2026-11-06T18:56:34.4719269Z",
+      "part": "world",
+      "kind": "fact",
+      "op": "add",
+      "itemId": "planted-4",
+      "item": {
+        "kind": "fact",
+        "id": "planted-4",
+        "topic": "planted",
+        "text": "Suspicious file activity logs",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Planted items are proposed to facilitate the ransomware scenario described in the source."
+    },
+    {
+      "id": "365f687d-f4a1-5d12-8b19-8db5a770e595",
+      "chronicleId": "cyber-antigen",
+      "sequence": 39,
+      "recordedAt": "2026-11-06T18:56:54.1454722Z",
+      "part": "world",
+      "kind": "side",
+      "op": "add",
+      "itemId": "blue",
+      "item": {
+        "kind": "side",
+        "id": "blue",
+        "name": "Friendly",
+        "visibility": "participant",
+        "standing": "proposed",
+        "relations": [
+          {
+            "sideId": "red",
+            "stance": "hostile"
+          }
+        ]
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Organizations are derived from the 'Who You Will Deal With' section of the source."
+    },
+    {
+      "id": "dc4e8e6c-2ba7-5454-9ddc-50aa006f202e",
+      "chronicleId": "cyber-antigen",
+      "sequence": 40,
+      "recordedAt": "2026-11-06T18:56:54.1454722Z",
+      "part": "world",
+      "kind": "organization",
+      "op": "add",
+      "itemId": "org-fintech-global",
+      "item": {
+        "kind": "organization",
+        "id": "org-fintech-global",
+        "name": "FinTech Global",
+        "sideId": "blue",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Organizations are derived from the 'Who You Will Deal With' section of the source."
+    },
+    {
+      "id": "cdb8e1c8-156d-5535-bf60-68f66aa15522",
+      "chronicleId": "cyber-antigen",
+      "sequence": 41,
+      "recordedAt": "2026-11-06T18:56:54.1454722Z",
+      "part": "world",
+      "kind": "side",
+      "op": "add",
+      "itemId": "red",
+      "item": {
+        "kind": "side",
+        "id": "red",
+        "name": "Adversary",
+        "visibility": "excon",
+        "standing": "proposed",
+        "relations": [
+          {
+            "sideId": "blue",
+            "stance": "hostile"
+          }
+        ]
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Organizations are derived from the 'Who You Will Deal With' section of the source."
+    },
+    {
+      "id": "9e054b46-e4ae-5a22-bfd2-b6dea4e55279",
+      "chronicleId": "cyber-antigen",
+      "sequence": 42,
+      "recordedAt": "2026-11-06T18:56:54.1454722Z",
+      "part": "world",
+      "kind": "organization",
+      "op": "add",
+      "itemId": "org-nebula-group",
+      "item": {
+        "kind": "organization",
+        "id": "org-nebula-group",
+        "name": "Nebula Group",
+        "sideId": "red",
+        "visibility": "excon",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Organizations are derived from the 'Who You Will Deal With' section of the source."
+    },
+    {
+      "id": "b27eb218-d815-54f7-a702-4b16adf239d3",
+      "chronicleId": "cyber-antigen",
+      "sequence": 43,
+      "recordedAt": "2026-11-06T18:56:54.2961215Z",
+      "part": "intent",
+      "kind": "term",
+      "op": "add",
+      "itemId": "term-alert",
+      "item": {
+        "kind": "term",
+        "id": "term-alert",
+        "text": "Alert",
+        "usage": "fixed",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Fixed terms are explicitly listed in the 'Terms to Use' section of the source."
+    },
+    {
+      "id": "2f156898-6462-5cb9-8cd9-c8b965c7760f",
+      "chronicleId": "cyber-antigen",
+      "sequence": 44,
+      "recordedAt": "2026-11-06T18:56:54.2961215Z",
+      "part": "intent",
+      "kind": "term",
+      "op": "add",
+      "itemId": "term-incident",
+      "item": {
+        "kind": "term",
+        "id": "term-incident",
+        "text": "Incident",
+        "usage": "fixed",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Fixed terms are explicitly listed in the 'Terms to Use' section of the source."
+    },
+    {
+      "id": "2adde4c2-dcf8-5f14-9389-6f5a7114c360",
+      "chronicleId": "cyber-antigen",
+      "sequence": 45,
+      "recordedAt": "2026-11-06T18:56:54.2961215Z",
+      "part": "intent",
+      "kind": "term",
+      "op": "add",
+      "itemId": "term-containment",
+      "item": {
+        "kind": "term",
+        "id": "term-containment",
+        "text": "Containment",
+        "usage": "fixed",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Fixed terms are explicitly listed in the 'Terms to Use' section of the source."
+    },
+    {
+      "id": "161ba616-c3f4-522d-bbcd-facf215621b7",
+      "chronicleId": "cyber-antigen",
+      "sequence": 46,
+      "recordedAt": "2026-11-06T18:56:54.2961215Z",
+      "part": "intent",
+      "kind": "term",
+      "op": "add",
+      "itemId": "term-detection",
+      "item": {
+        "kind": "term",
+        "id": "term-detection",
+        "text": "Detection",
+        "usage": "fixed",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Fixed terms are explicitly listed in the 'Terms to Use' section of the source."
+    },
+    {
+      "id": "fba91b10-f154-5898-961c-96e4b85c4be7",
+      "chronicleId": "cyber-antigen",
+      "sequence": 47,
+      "recordedAt": "2026-11-06T18:56:54.4407235Z",
+      "part": "intent",
+      "kind": "term",
+      "op": "add",
+      "itemId": "term-hacked",
+      "item": {
+        "kind": "term",
+        "id": "term-hacked",
+        "text": "Hacked",
+        "usage": "banned",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Banned terms are proposed to maintain professional language during the exercise."
+    },
+    {
+      "id": "e71a628a-b591-5efd-893f-d6e9954115ff",
+      "chronicleId": "cyber-antigen",
+      "sequence": 48,
+      "recordedAt": "2026-11-06T18:56:54.4407235Z",
+      "part": "intent",
+      "kind": "term",
+      "op": "add",
+      "itemId": "term-victim",
+      "item": {
+        "kind": "term",
+        "id": "term-victim",
+        "text": "Victim",
+        "usage": "banned",
+        "visibility": "participant",
+        "standing": "proposed"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "agent"
+      },
+      "reason": "Banned terms are proposed to maintain professional language during the exercise."
+    },
+    {
+      "id": "62138973-8b69-50fe-adf0-14c92646dca2",
+      "chronicleId": "cyber-antigen",
+      "sequence": 49,
+      "recordedAt": "2026-11-06T18:56:54.4407235Z",
+      "part": "intent",
+      "kind": "summary",
+      "op": "add",
+      "itemId": "executive-summary",
+      "item": {
+        "kind": "summary",
+        "id": "executive-summary",
+        "title": "Executive summary",
+        "text": "This exercise is a four-hour SOC Analyst training session conducted on a cyber range. The Blue Team is tasked with detecting and containing a ransomware attack targeting a finance department workstation within the FinTech Global/Nebula Group environment. The team will face challenges including high volumes of false-positive alerts and limited personnel. Success is measured by the ability to triage alerts within 15 minutes, initiate containment within 30 minutes of confirmation, and provide hourly status updates. The scenario involves an organized adversary using standard ransomware techniques, progressing from workstation-level alerts to potential domain-wide escalation.",
+        "visibility": "participant",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "scenario-builder",
+        "actor": "dev",
+        "via": "app"
+      }
+    },
+    {
+      "id": "2a772460-2110-57b5-8f8a-9c8eafccaa43",
+      "chronicleId": "cyber-antigen",
+      "sequence": 50,
+      "recordedAt": "2026-11-06T18:56:54.4407235Z",
+      "part": "asBuilt",
+      "kind": "deployment",
+      "op": "add",
+      "itemId": "dep-grayspace-cyber-antigen",
+      "item": {
+        "kind": "deployment",
+        "id": "dep-grayspace-cyber-antigen",
+        "builder": "grayspace",
+        "reference": "cyber-antigen",
+        "version": "sha256:23d40c77e1a0ca5f90aa55f17083e3f27645c5b739841d7e927afe4c811b4bf2",
+        "state": "ready",
+        "builds": [
+          "net-corporate-network",
+          "net-security-network",
+          "host-finance-workstation",
+          "host-corporate-domain-controller",
+          "host-siem-platform",
+          "host-internal-network-firewall"
+        ],
+        "visibility": "excon",
+        "standing": "stated"
+      },
+      "author": {
+        "app": "grayspace",
+        "via": "app"
+      }
+    }
+  ]
+}

@@ -5,13 +5,14 @@ The repository includes a devcontainer and an [Aspire](https://aspire.dev) AppHo
 ## Start Everything
 
 1. Open the repository in its devcontainer.
-2. Install the Scenario Builder's `node_modules` in `src/scenario-builder/ui` and `src/scenario-builder/agent`. On the devcontainer's mount, `npm install` can fail with `ENOTDIR`; the [Scenario Builder README](https://github.com/cmu-sei/rangerai/blob/master/src/scenario-builder/README.md) shows the workaround.
+2. Install `node_modules` in `src/chronicle/ui` and the Scenario Builder's in `src/scenario-builder/ui` and `src/scenario-builder/agent`. On the devcontainer's mount, `npm install` can fail with `ENOTDIR`; the [Scenario Builder README](https://github.com/cmu-sei/rangerai/blob/master/src/scenario-builder/README.md) shows the workaround.
 3. Press **F5** in VS Code ("Aspire: RangerAI (all services)"), or run `aspire run` from the repository root.
 4. Watch logs and status in the Aspire dashboard at <http://localhost:15180>.
 
 | Service | URL | What |
 |---|---|---|
 | `chronicle-api` | <http://localhost:5285> | Chronicle API: publish and subscribe to Chronicles (Swagger at `/swagger`) |
+| `chronicle-ui` | <http://localhost:4320> | Chronicle Angular UI: lists events and opens each one (proxies `/api` to :5285) |
 | `scenario-builder-api` | <http://localhost:5280> | Scenario Builder .NET API |
 | `scenario-builder-ui` | <http://localhost:4310> | Scenario Builder Angular UI (proxies `/api` to :5280) |
 

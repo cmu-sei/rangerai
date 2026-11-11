@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:ranger:chronicle:record:v0",
-  "title": "Chronicle record, schema 0.2.0",
+  "title": "Chronicle record, schema 0.3.0",
   "type": "object",
   "properties": {
     "schemaVersion": {
@@ -20,6 +20,17 @@
     "kind": {
       "description": "What kind of event it is.",
       "$ref": "#/$defs/EventKind"
+    },
+    "scenarioType": {
+      "description": "The scenario type the event was designed from, as the Scenario Builder names it. Absent if it had none.",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ScenarioTypeRef"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "description": {
       "description": "The event in a sentence or two.",
@@ -2462,6 +2473,27 @@
       "required": [
         "id",
         "text"
+      ],
+      "additionalProperties": false
+    },
+    "ScenarioTypeRef": {
+      "description": "A scenario type, by the id and version the Scenario Builder gives it, such as crucible-tabletop 0.3.0.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The scenario type's id.",
+          "type": "string"
+        },
+        "version": {
+          "description": "The version of the scenario type the scenario was built from.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id"
       ],
       "additionalProperties": false
     },
