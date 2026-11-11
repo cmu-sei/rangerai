@@ -1,9 +1,9 @@
 {
   "model_list": [
     {
-      "model_name": "aws/fable-5.1",
+      "model_name": "aws/fable-5.2",
       "litellm_params": {
-        "model": "bedrock/us.anthropic.claude-fable-5-1",
+        "model": "bedrock/us.anthropic.claude-fable-5-2",
         "aws_region_name": "us-east-1",
         "max_tokens": 32768,
         "drop_params": true
@@ -16,7 +16,10 @@
         "aws_region_name": "us-east-1",
         "max_tokens": 32768,
         "drop_params": true,
-        "additional_drop_params": ["temperature", "top_p"]
+        "additional_drop_params": [
+          "temperature",
+          "top_p"
+        ]
       },
       "model_info": {
         "mode": "chat",
@@ -117,7 +120,10 @@
         "max_tokens": 32768,
         "reasoning_effort": "low",
         "drop_params": true,
-        "additional_drop_params": ["temperature", "top_p"]
+        "additional_drop_params": [
+          "temperature",
+          "top_p"
+        ]
       },
       "model_info": {
         "mode": "responses",
@@ -143,7 +149,10 @@
         "max_tokens": 32768,
         "reasoning_effort": "low",
         "drop_params": true,
-        "additional_drop_params": ["temperature", "top_p"]
+        "additional_drop_params": [
+          "temperature",
+          "top_p"
+        ]
       },
       "model_info": {
         "mode": "responses",
@@ -169,7 +178,10 @@
         "max_tokens": 32768,
         "reasoning_effort": "low",
         "drop_params": true,
-        "additional_drop_params": ["temperature", "top_p"]
+        "additional_drop_params": [
+          "temperature",
+          "top_p"
+        ]
       },
       "model_info": {
         "mode": "responses",

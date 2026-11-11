@@ -33,3 +33,8 @@ ln -sfn "$SCRIPT_DIR/setup.sh" "$HOME/.local/bin/setup-devcontainer"
 # Keep the version in step with Aspire.AppHost.Sdk in src/apphost/RangerAI.AppHost.csproj.
 echo "Installing Aspire CLI..."
 dotnet tool install -g Aspire.Cli --version 13.6.4 || dotnet tool update -g Aspire.Cli --version 13.6.4
+
+# Create and trust the HTTPS dev certificate, so the Aspire dashboard doesn't warn
+# "No trusted development certificate". Trust relies on SSL_CERT_DIR in devcontainer.json.
+echo "Trusting the .NET HTTPS development certificate..."
+dotnet dev-certs https --trust || echo "Warning: could not trust the HTTPS development certificate."
