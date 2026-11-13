@@ -1,0 +1,1577 @@
+[
+ {
+  "router": "lum-sfr",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "San Francisco",
+  "latitude": 37.7749,
+  "longitude": -122.4194,
+  "customer_net": "8.8.8.0/24",
+  "free_static_addresses": 17,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-mex",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "Mexico City",
+  "latitude": 19.4326,
+  "longitude": -99.1332,
+  "customer_net": "200.38.194.0/24",
+  "free_static_addresses": 15,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-chi",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "Chicago",
+  "latitude": 41.8781,
+  "longitude": -87.6298,
+  "customer_net": "209.151.130.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-nyc",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "New York",
+  "latitude": 40.7128,
+  "longitude": -74.006,
+  "customer_net": "216.239.34.0/24",
+  "free_static_addresses": 17,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-ash",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "Ashburn",
+  "latitude": 39.0437,
+  "longitude": -77.4874,
+  "customer_net": "156.154.100.0/24",
+  "free_static_addresses": 17,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-lim",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "Lima",
+  "latitude": -12.0464,
+  "longitude": -77.0428,
+  "customer_net": "200.48.243.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-brs",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "Brasilia",
+  "latitude": -15.7939,
+  "longitude": -47.8828,
+  "customer_net": "200.223.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-lon",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "London",
+  "latitude": 51.5074,
+  "longitude": -0.1278,
+  "customer_net": "193.0.14.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-fra",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "Frankfurt",
+  "latitude": 50.1109,
+  "longitude": 8.6821,
+  "customer_net": "213.242.111.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-hel",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "Helsinki",
+  "latitude": 60.1699,
+  "longitude": 24.9384,
+  "customer_net": "194.156.121.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-dub",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "Dubai",
+  "latitude": 25.2048,
+  "longitude": 55.2708,
+  "customer_net": "212.77.192.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-alg",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "Algiers",
+  "latitude": 36.7538,
+  "longitude": 3.0588,
+  "customer_net": "41.222.192.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-joh",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "Johannesburg",
+  "latitude": -26.2041,
+  "longitude": 28.0473,
+  "customer_net": "41.150.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-man",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "Manila",
+  "latitude": 14.5995,
+  "longitude": 120.9842,
+  "customer_net": "202.137.96.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-sin",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "Singapore",
+  "latitude": 1.2953,
+  "longitude": 103.8363,
+  "customer_net": "203.127.192.0/24",
+  "free_static_addresses": 17,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-tok",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "Tokyo",
+  "latitude": 35.6762,
+  "longitude": 139.6503,
+  "customer_net": "210.138.175.0/24",
+  "free_static_addresses": 17,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "lum-seo",
+  "isp": "Lumen",
+  "asn": 3356,
+  "location": "Seoul",
+  "latitude": 37.5665,
+  "longitude": 126.978,
+  "customer_net": "203.254.80.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "6.0.0.0/16",
+   "free_addresses": 65486,
+   "largest_free_prefix": "6.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-sfr",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "San Francisco",
+  "latitude": 37.7749,
+  "longitude": -122.4194,
+  "customer_net": "108.162.192.0/24",
+  "free_static_addresses": 17,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-den",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Denver",
+  "latitude": 39.7392,
+  "longitude": -104.9903,
+  "customer_net": "198.54.100.0/24",
+  "free_static_addresses": 17,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-chi",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Chicago",
+  "latitude": 41.8781,
+  "longitude": -87.6298,
+  "customer_net": "199.7.83.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-ash",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Ashburn",
+  "latitude": 39.0437,
+  "longitude": -77.4874,
+  "customer_net": "198.41.0.0/24",
+  "free_static_addresses": 17,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-bog",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Bogota",
+  "latitude": 4.711,
+  "longitude": -74.0721,
+  "customer_net": "200.13.238.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-san",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Santiago",
+  "latitude": -33.4489,
+  "longitude": -70.6693,
+  "customer_net": "200.29.16.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-par",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Paris",
+  "latitude": 48.8566,
+  "longitude": 2.3522,
+  "customer_net": "213.186.33.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-lis",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Lisbon",
+  "latitude": 38.7223,
+  "longitude": -9.1393,
+  "customer_net": "91.196.216.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-hel",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Helsinki",
+  "latitude": 60.1699,
+  "longitude": 24.9384,
+  "customer_net": "9.9.9.0/24",
+  "free_static_addresses": 17,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-mos",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Moscow",
+  "latitude": 55.7558,
+  "longitude": 37.6173,
+  "customer_net": "94.142.136.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-dji",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Djibouti",
+  "latitude": 11.589,
+  "longitude": 43.1456,
+  "customer_net": "102.132.227.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-mum",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Mumbai",
+  "latitude": 19.076,
+  "longitude": 72.8777,
+  "customer_net": "116.206.32.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-che",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Chennai",
+  "latitude": 13.0827,
+  "longitude": 80.2707,
+  "customer_net": "111.93.125.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-hkg",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Hong Kong",
+  "latitude": 22.3193,
+  "longitude": 114.1694,
+  "customer_net": "114.114.114.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-seo",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Seoul",
+  "latitude": 37.5665,
+  "longitude": 126.978,
+  "customer_net": "118.221.112.0/24",
+  "free_static_addresses": 17,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-man",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Manila",
+  "latitude": 14.5995,
+  "longitude": 120.9842,
+  "customer_net": "122.53.116.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "are-ade",
+  "isp": "Arelion",
+  "asn": 1299,
+  "location": "Adelaide",
+  "latitude": -34.9285,
+  "longitude": 138.6007,
+  "customer_net": "125.7.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "7.0.0.0/16",
+   "free_addresses": 65452,
+   "largest_free_prefix": "7.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-chi",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Chicago",
+  "latitude": 41.8781,
+  "longitude": -87.6298,
+  "customer_net": "129.250.3.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-ash",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Ashburn",
+  "latitude": 39.0437,
+  "longitude": -77.4874,
+  "customer_net": "205.251.192.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-lis",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Lisbon",
+  "latitude": 38.7223,
+  "longitude": -9.1393,
+  "customer_net": "212.119.33.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-lim",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Lima",
+  "latitude": -12.0464,
+  "longitude": -77.0428,
+  "customer_net": "200.60.101.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-brs",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Brasilia",
+  "latitude": -15.7939,
+  "longitude": -47.8828,
+  "customer_net": "156.154.101.0/24",
+  "free_static_addresses": 17,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-kyv",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Kyiv",
+  "latitude": 50.4501,
+  "longitude": 30.5234,
+  "customer_net": "93.178.204.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-mos",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Moscow",
+  "latitude": 55.7558,
+  "longitude": 37.6173,
+  "customer_net": "193.232.192.0/24",
+  "free_static_addresses": 17,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-lag",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Lagos",
+  "latitude": 6.5935,
+  "longitude": 3.3516,
+  "customer_net": "41.217.160.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-dub",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Dubai",
+  "latitude": 25.2048,
+  "longitude": 55.2708,
+  "customer_net": "163.121.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-che",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Chennai",
+  "latitude": 13.0827,
+  "longitude": 80.2707,
+  "customer_net": "111.68.96.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-krs",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Krasnoyarsk",
+  "latitude": 56.0153,
+  "longitude": 92.8932,
+  "customer_net": "77.88.8.0/24",
+  "free_static_addresses": 17,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-hkg",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Hong Kong",
+  "latitude": 22.3193,
+  "longitude": 114.1694,
+  "customer_net": "223.5.5.0/24",
+  "free_static_addresses": 17,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-sin",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Singapore",
+  "latitude": 1.2953,
+  "longitude": 103.8363,
+  "customer_net": "203.116.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-dar",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Darwin",
+  "latitude": -12.4634,
+  "longitude": 130.8456,
+  "customer_net": "14.200.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-per",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Perth",
+  "latitude": -31.9505,
+  "longitude": 115.8605,
+  "customer_net": "150.107.64.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-syd",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Sydney",
+  "latitude": -33.8688,
+  "longitude": 151.2093,
+  "customer_net": "203.49.208.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-seo",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Seoul",
+  "latitude": 37.5665,
+  "longitude": 126.978,
+  "customer_net": "210.155.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-tok",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Tokyo",
+  "latitude": 35.6762,
+  "longitude": 139.6503,
+  "customer_net": "202.12.27.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "ntt-vla",
+  "isp": "NTT",
+  "asn": 2914,
+  "location": "Vladivostok",
+  "latitude": 43.1155,
+  "longitude": 131.8855,
+  "customer_net": "212.109.192.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "26.0.0.0/16",
+   "free_addresses": 65456,
+   "largest_free_prefix": "26.0.128.0/17"
+  }
+ },
+ {
+  "router": "com-por",
+  "isp": "Comcast",
+  "asn": 7922,
+  "location": "Portland",
+  "latitude": 45.5152,
+  "longitude": -122.6784,
+  "customer_net": "98.245.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "21.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "21.0.128.0/17"
+  }
+ },
+ {
+  "router": "com-sfr",
+  "isp": "Comcast",
+  "asn": 7922,
+  "location": "San Francisco",
+  "latitude": 37.7749,
+  "longitude": -122.4194,
+  "customer_net": "73.158.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "21.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "21.0.128.0/17"
+  }
+ },
+ {
+  "router": "com-den",
+  "isp": "Comcast",
+  "asn": 7922,
+  "location": "Denver",
+  "latitude": 39.7392,
+  "longitude": -104.9903,
+  "customer_net": "75.76.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "21.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "21.0.128.0/17"
+  }
+ },
+ {
+  "router": "com-hou",
+  "isp": "Comcast",
+  "asn": 7922,
+  "location": "Houston",
+  "latitude": 29.7604,
+  "longitude": -95.3698,
+  "customer_net": "98.192.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "21.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "21.0.128.0/17"
+  }
+ },
+ {
+  "router": "com-chi",
+  "isp": "Comcast",
+  "asn": 7922,
+  "location": "Chicago",
+  "latitude": 41.8781,
+  "longitude": -87.6298,
+  "customer_net": "50.232.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "21.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "21.0.128.0/17"
+  }
+ },
+ {
+  "router": "com-ash",
+  "isp": "Comcast",
+  "asn": 7922,
+  "location": "Ashburn",
+  "latitude": 39.0437,
+  "longitude": -77.4874,
+  "customer_net": "68.85.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "21.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "21.0.128.0/17"
+  }
+ },
+ {
+  "router": "com-nyc",
+  "isp": "Comcast",
+  "asn": 7922,
+  "location": "New York",
+  "latitude": 40.7128,
+  "longitude": -74.006,
+  "customer_net": "69.240.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "21.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "21.0.128.0/17"
+  }
+ },
+ {
+  "router": "rog-van",
+  "isp": "Rogers",
+  "asn": 812,
+  "location": "Vancouver",
+  "latitude": 49.2827,
+  "longitude": -123.1207,
+  "customer_net": "24.114.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "48.0.0.0/16",
+   "free_addresses": 65527,
+   "largest_free_prefix": "48.0.128.0/17"
+  }
+ },
+ {
+  "router": "rog-edm",
+  "isp": "Rogers",
+  "asn": 812,
+  "location": "Edmonton",
+  "latitude": 53.5461,
+  "longitude": -113.4938,
+  "customer_net": "74.198.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "48.0.0.0/16",
+   "free_addresses": 65527,
+   "largest_free_prefix": "48.0.128.0/17"
+  }
+ },
+ {
+  "router": "rog-wpg",
+  "isp": "Rogers",
+  "asn": 812,
+  "location": "Winnipeg",
+  "latitude": 49.8951,
+  "longitude": -97.1384,
+  "customer_net": "24.109.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "48.0.0.0/16",
+   "free_addresses": 65527,
+   "largest_free_prefix": "48.0.128.0/17"
+  }
+ },
+ {
+  "router": "rog-tor",
+  "isp": "Rogers",
+  "asn": 812,
+  "location": "Toronto",
+  "latitude": 43.6532,
+  "longitude": -79.3832,
+  "customer_net": "64.231.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "48.0.0.0/16",
+   "free_addresses": 65527,
+   "largest_free_prefix": "48.0.128.0/17"
+  }
+ },
+ {
+  "router": "rog-mtl",
+  "isp": "Rogers",
+  "asn": 812,
+  "location": "Montreal",
+  "latitude": 45.5017,
+  "longitude": -73.5673,
+  "customer_net": "206.47.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "48.0.0.0/16",
+   "free_addresses": 65527,
+   "largest_free_prefix": "48.0.128.0/17"
+  }
+ },
+ {
+  "router": "ctl-bei",
+  "isp": "China Telecom",
+  "asn": 4812,
+  "location": "Beijing",
+  "latitude": 39.9042,
+  "longitude": 116.4074,
+  "customer_net": "202.96.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "36.0.0.0/16",
+   "free_addresses": 65528,
+   "largest_free_prefix": "36.0.128.0/17"
+  }
+ },
+ {
+  "router": "ctl-sha",
+  "isp": "China Telecom",
+  "asn": 4812,
+  "location": "Shanghai",
+  "latitude": 31.2304,
+  "longitude": 121.4737,
+  "customer_net": "116.228.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "36.0.0.0/16",
+   "free_addresses": 65528,
+   "largest_free_prefix": "36.0.128.0/17"
+  }
+ },
+ {
+  "router": "ctl-hkg",
+  "isp": "China Telecom",
+  "asn": 4812,
+  "location": "Hong Kong",
+  "latitude": 22.3193,
+  "longitude": 114.1694,
+  "customer_net": "218.102.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "36.0.0.0/16",
+   "free_addresses": 65528,
+   "largest_free_prefix": "36.0.128.0/17"
+  }
+ },
+ {
+  "router": "ctl-chg",
+  "isp": "China Telecom",
+  "asn": 4812,
+  "location": "Chengdu",
+  "latitude": 30.5728,
+  "longitude": 104.0668,
+  "customer_net": "118.122.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "36.0.0.0/16",
+   "free_addresses": 65528,
+   "largest_free_prefix": "36.0.128.0/17"
+  }
+ },
+ {
+  "router": "sin-tok",
+  "isp": "Singtel",
+  "asn": 7473,
+  "location": "Tokyo",
+  "latitude": 35.6762,
+  "longitude": 139.6503,
+  "customer_net": "165.21.80.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "49.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "49.0.128.0/17"
+  }
+ },
+ {
+  "router": "sin-hcm",
+  "isp": "Singtel",
+  "asn": 7473,
+  "location": "Ho Chi Minh City",
+  "latitude": 10.8231,
+  "longitude": 106.6297,
+  "customer_net": "123.30.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "49.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "49.0.128.0/17"
+  }
+ },
+ {
+  "router": "sin-sin",
+  "isp": "Singtel",
+  "asn": 7473,
+  "location": "Singapore",
+  "latitude": 1.2953,
+  "longitude": 103.8363,
+  "customer_net": "165.21.16.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "49.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "49.0.128.0/17"
+  }
+ },
+ {
+  "router": "sin-dil",
+  "isp": "Singtel",
+  "asn": 7473,
+  "location": "Dili",
+  "latitude": -8.5536,
+  "longitude": 125.574,
+  "customer_net": "113.20.96.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "49.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "49.0.128.0/17"
+  }
+ },
+ {
+  "router": "sin-per",
+  "isp": "Singtel",
+  "asn": 7473,
+  "location": "Perth",
+  "latitude": -31.9505,
+  "longitude": 115.8605,
+  "customer_net": "101.160.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "49.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "49.0.128.0/17"
+  }
+ },
+ {
+  "router": "sin-brs",
+  "isp": "Singtel",
+  "asn": 7473,
+  "location": "Brisbane",
+  "latitude": -27.4698,
+  "longitude": 153.0251,
+  "customer_net": "110.174.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "49.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "49.0.128.0/17"
+  }
+ },
+ {
+  "router": "sin-mel",
+  "isp": "Singtel",
+  "asn": 7473,
+  "location": "Melbourne",
+  "latitude": -37.8136,
+  "longitude": 144.9631,
+  "customer_net": "124.190.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "49.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "49.0.128.0/17"
+  }
+ },
+ {
+  "router": "liq-alg",
+  "isp": "Liquid",
+  "asn": 37100,
+  "location": "Algiers",
+  "latitude": 36.7538,
+  "longitude": 3.0588,
+  "customer_net": "197.231.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "57.0.0.0/16",
+   "free_addresses": 65532,
+   "largest_free_prefix": "57.0.128.0/17"
+  }
+ },
+ {
+  "router": "liq-abj",
+  "isp": "Liquid",
+  "asn": 37100,
+  "location": "Abidjan",
+  "latitude": 5.3661,
+  "longitude": -4.0,
+  "customer_net": "102.68.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "57.0.0.0/16",
+   "free_addresses": 65532,
+   "largest_free_prefix": "57.0.128.0/17"
+  }
+ },
+ {
+  "router": "liq-mom",
+  "isp": "Liquid",
+  "asn": 37100,
+  "location": "Mombasa",
+  "latitude": -4.0435,
+  "longitude": 39.6682,
+  "customer_net": "197.248.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "57.0.0.0/16",
+   "free_addresses": 65532,
+   "largest_free_prefix": "57.0.128.0/17"
+  }
+ },
+ {
+  "router": "liq-cpt",
+  "isp": "Liquid",
+  "asn": 37100,
+  "location": "Cape Town",
+  "latitude": -33.9249,
+  "longitude": 18.4241,
+  "customer_net": "197.220.192.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "57.0.0.0/16",
+   "free_addresses": 65532,
+   "largest_free_prefix": "57.0.128.0/17"
+  }
+ },
+ {
+  "router": "tdc-mad",
+  "isp": "TDC",
+  "asn": 3292,
+  "location": "Madrid",
+  "latitude": 40.4168,
+  "longitude": -3.7038,
+  "customer_net": "80.160.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "84.0.0.0/16",
+   "free_addresses": 65523,
+   "largest_free_prefix": "84.0.128.0/17"
+  }
+ },
+ {
+  "router": "tdc-cop",
+  "isp": "TDC",
+  "asn": 3292,
+  "location": "Copenhagen",
+  "latitude": 55.6761,
+  "longitude": 12.5683,
+  "customer_net": "195.215.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "84.0.0.0/16",
+   "free_addresses": 65523,
+   "largest_free_prefix": "84.0.128.0/17"
+  }
+ },
+ {
+  "router": "tdc-pra",
+  "isp": "TDC",
+  "asn": 3292,
+  "location": "Prague",
+  "latitude": 50.0755,
+  "longitude": 14.4378,
+  "customer_net": "212.96.160.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "84.0.0.0/16",
+   "free_addresses": 65523,
+   "largest_free_prefix": "84.0.128.0/17"
+  }
+ },
+ {
+  "router": "tdc-war",
+  "isp": "TDC",
+  "asn": 3292,
+  "location": "Warsaw",
+  "latitude": 52.2297,
+  "longitude": 21.0122,
+  "customer_net": "83.0.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "84.0.0.0/16",
+   "free_addresses": 65523,
+   "largest_free_prefix": "84.0.128.0/17"
+  }
+ },
+ {
+  "router": "tdc-buc",
+  "isp": "TDC",
+  "asn": 3292,
+  "location": "Bucharest",
+  "latitude": 44.4268,
+  "longitude": 26.1025,
+  "customer_net": "82.76.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "84.0.0.0/16",
+   "free_addresses": 65523,
+   "largest_free_prefix": "84.0.128.0/17"
+  }
+ },
+ {
+  "router": "stc-dam",
+  "isp": "STC",
+  "asn": 39386,
+  "location": "Damascus",
+  "latitude": 33.5138,
+  "longitude": 36.2765,
+  "customer_net": "82.137.192.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "82.0.0.0/16",
+   "free_addresses": 65532,
+   "largest_free_prefix": "82.0.128.0/17"
+  }
+ },
+ {
+  "router": "stc-riy",
+  "isp": "STC",
+  "asn": 39386,
+  "location": "Riyadh",
+  "latitude": 24.7136,
+  "longitude": 46.6753,
+  "customer_net": "86.108.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "82.0.0.0/16",
+   "free_addresses": 65532,
+   "largest_free_prefix": "82.0.128.0/17"
+  }
+ },
+ {
+  "router": "stc-teh",
+  "isp": "STC",
+  "asn": 39386,
+  "location": "Tehran",
+  "latitude": 35.6892,
+  "longitude": 51.389,
+  "customer_net": "91.98.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "82.0.0.0/16",
+   "free_addresses": 65532,
+   "largest_free_prefix": "82.0.128.0/17"
+  }
+ },
+ {
+  "router": "stc-dub",
+  "isp": "STC",
+  "asn": 39386,
+  "location": "Dubai",
+  "latitude": 25.2048,
+  "longitude": 55.2708,
+  "customer_net": "78.93.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "82.0.0.0/16",
+   "free_addresses": 65532,
+   "largest_free_prefix": "82.0.128.0/17"
+  }
+ },
+ {
+  "router": "bns-del",
+  "isp": "BSNL",
+  "asn": 9829,
+  "location": "Delhi",
+  "latitude": 28.6139,
+  "longitude": 77.209,
+  "customer_net": "218.248.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "117.0.0.0/16",
+   "free_addresses": 65533,
+   "largest_free_prefix": "117.0.128.0/17"
+  }
+ },
+ {
+  "router": "bns-hyd",
+  "isp": "BSNL",
+  "asn": 9829,
+  "location": "Hyderabad",
+  "latitude": 17.385,
+  "longitude": 78.4867,
+  "customer_net": "117.200.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "117.0.0.0/16",
+   "free_addresses": 65533,
+   "largest_free_prefix": "117.0.128.0/17"
+  }
+ },
+ {
+  "router": "bns-kol",
+  "isp": "BSNL",
+  "asn": 9829,
+  "location": "Kolkata",
+  "latitude": 22.5726,
+  "longitude": 88.3639,
+  "customer_net": "59.160.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "117.0.0.0/16",
+   "free_addresses": 65533,
+   "largest_free_prefix": "117.0.128.0/17"
+  }
+ },
+ {
+  "router": "sea-brs",
+  "isp": "Seaborn",
+  "asn": 52789,
+  "location": "Brasilia",
+  "latitude": -15.7939,
+  "longitude": -47.8828,
+  "customer_net": "138.36.192.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "91.0.0.0/16",
+   "free_addresses": 65533,
+   "largest_free_prefix": "91.0.128.0/17"
+  }
+ },
+ {
+  "router": "sea-sal",
+  "isp": "Seaborn",
+  "asn": 52789,
+  "location": "Salvador",
+  "latitude": -12.9777,
+  "longitude": -38.5016,
+  "customer_net": "138.185.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "91.0.0.0/16",
+   "free_addresses": 65533,
+   "largest_free_prefix": "91.0.128.0/17"
+  }
+ },
+ {
+  "router": "sea-sao",
+  "isp": "Seaborn",
+  "asn": 52789,
+  "location": "Sao Paulo",
+  "latitude": -23.5505,
+  "longitude": -46.6333,
+  "customer_net": "138.204.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "91.0.0.0/16",
+   "free_addresses": 65533,
+   "largest_free_prefix": "91.0.128.0/17"
+  }
+ },
+ {
+  "router": "cla-qui",
+  "isp": "Claro",
+  "asn": 7303,
+  "location": "Quito",
+  "latitude": -0.1807,
+  "longitude": -78.4678,
+  "customer_net": "190.96.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "201.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "201.0.128.0/17"
+  }
+ },
+ {
+  "router": "cla-car",
+  "isp": "Claro",
+  "asn": 7303,
+  "location": "Caracas",
+  "latitude": 10.4806,
+  "longitude": -66.9036,
+  "customer_net": "190.200.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "201.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "201.0.128.0/17"
+  }
+ },
+ {
+  "router": "cla-lap",
+  "isp": "Claro",
+  "asn": 7303,
+  "location": "La Paz",
+  "latitude": -16.4897,
+  "longitude": -68.1193,
+  "customer_net": "200.87.64.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "201.0.0.0/16",
+   "free_addresses": 65529,
+   "largest_free_prefix": "201.0.128.0/17"
+  }
+ },
+ {
+  "router": "mts-mos",
+  "isp": "MTS",
+  "asn": 8359,
+  "location": "Moscow",
+  "latitude": 55.7558,
+  "longitude": 37.6173,
+  "customer_net": "212.188.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "217.0.0.0/16",
+   "free_addresses": 65528,
+   "largest_free_prefix": "217.0.128.0/17"
+  }
+ },
+ {
+  "router": "mts-agb",
+  "isp": "MTS",
+  "asn": 8359,
+  "location": "Ashgabat",
+  "latitude": 37.9601,
+  "longitude": 58.3261,
+  "customer_net": "62.205.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "217.0.0.0/16",
+   "free_addresses": 65528,
+   "largest_free_prefix": "217.0.128.0/17"
+  }
+ },
+ {
+  "router": "mts-krs",
+  "isp": "MTS",
+  "asn": 8359,
+  "location": "Krasnoyarsk",
+  "latitude": 56.0153,
+  "longitude": 92.8932,
+  "customer_net": "85.235.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "217.0.0.0/16",
+   "free_addresses": 65528,
+   "largest_free_prefix": "217.0.128.0/17"
+  }
+ },
+ {
+  "router": "mts-vla",
+  "isp": "MTS",
+  "asn": 8359,
+  "location": "Vladivostok",
+  "latitude": 43.1155,
+  "longitude": 131.8855,
+  "customer_net": "195.161.64.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "217.0.0.0/16",
+   "free_addresses": 65528,
+   "largest_free_prefix": "217.0.128.0/17"
+  }
+ },
+ {
+  "router": "tel-gua",
+  "isp": "Telmex",
+  "asn": 8151,
+  "location": "Guadalajara",
+  "latitude": 20.6597,
+  "longitude": -103.3496,
+  "customer_net": "201.174.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "200.0.0.0/16",
+   "free_addresses": 65533,
+   "largest_free_prefix": "200.0.128.0/17"
+  }
+ },
+ {
+  "router": "tel-mex",
+  "isp": "Telmex",
+  "asn": 8151,
+  "location": "Mexico City",
+  "latitude": 19.4326,
+  "longitude": -99.1332,
+  "customer_net": "201.134.128.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "200.0.0.0/16",
+   "free_addresses": 65533,
+   "largest_free_prefix": "200.0.128.0/17"
+  }
+ },
+ {
+  "router": "tel-oax",
+  "isp": "Telmex",
+  "asn": 8151,
+  "location": "Oaxaca",
+  "latitude": 17.0732,
+  "longitude": -96.7266,
+  "customer_net": "201.159.0.0/24",
+  "free_static_addresses": 18,
+  "address_space": {
+   "public_block": "200.0.0.0/16",
+   "free_addresses": 65533,
+   "largest_free_prefix": "200.0.128.0/17"
+  }
+ }
+]

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } 
 import { RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { DocumentView, PluginView } from '../../../core/models/builder.model';
-import { BuilderApiService, errorMessage } from '../../../core/services/builder-api.service';
+import { BuilderApiService, ChroniclePublished, errorMessage } from '../../../core/services/builder-api.service';
 import { MeService } from '../../../core/services/me.service';
 import { AUDIENCES, FORMATS } from '../../../shared/labels/document-labels';
 import { WorkspaceStore } from '../workspace.store';
@@ -38,6 +38,9 @@ export class FinishPageComponent {
   protected readonly text = signal<string | null>(null);
   protected readonly sendNote = signal<string | null>(null);
   protected readonly error = signal<string | null>(null);
+  protected readonly published = signal<ChroniclePublished | null>(null);
+  protected readonly publishing = signal(false);
+  protected readonly publishError = signal<string | null>(null);
   protected readonly findings = computed(() => this.store.progress()?.gate.findings.length ?? 0);
 
   constructor() {
@@ -58,6 +61,21 @@ export class FinishPageComponent {
       }
       const text = shown === 'json' ? this.api.pull(id).pipe(map(doc => JSON.stringify(doc, null, 2))) : this.api.exportMarkdown(id);
       text.subscribe({ next: t => this.text.set(t), error: e => this.error.set(errorMessage(e)) });
+    });
+  }
+
+  protected publish(): void {
+    this.publishing.set(true);
+    this.publishError.set(null);
+    this.api.publishChronicle(this.store.scenarioId()).subscribe({
+      next: p => {
+        this.published.set(p);
+        this.publishing.set(false);
+      },
+      error: e => {
+        this.publishError.set(errorMessage(e));
+        this.publishing.set(false);
+      }
     });
   }
 

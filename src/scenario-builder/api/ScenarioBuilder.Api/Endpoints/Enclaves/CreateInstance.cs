@@ -13,7 +13,7 @@ public record CreateInstance(string? Prefix, string? Version);
 public class CreateInstanceEndpoint : IEndpoint
 {
     public RouteHandlerBuilder Register(RouteGroupBuilder group, string tag) =>
-        group.MapPost("/scenarios/{id:int}/enclave/instance", async (int id, CreateInstance body, HttpContext http, BuilderDb db, GraySpaceClient grayspace, CancellationToken ct) =>
+        group.MapPost("/scenarios/{id:int}/enclave/instance", async (int id, CreateInstance body, HttpContext http, BuilderDb db, GraySpaceClient grayspace, AsBuiltRelay relay, CancellationToken ct) =>
             {
                 if (await EnclaveRules.Find(db, id, ct) is not { } enclave)
                     return ScenarioState.Missing(id);
@@ -37,6 +37,8 @@ public class CreateInstanceEndpoint : IEndpoint
                 enclave.JobId = EnclaveRules.JobOf(accepted);
                 EnclaveRules.Touch(db, enclave, http);
                 await db.SaveChangesAsync(ct);
+                if (await db.Scenarios.FindAsync([id], ct) is { } scenario)
+                    await relay.Building(scenario.Slug, EnclaveRules.Spec(enclave), version, enclave.InstanceId, ct);
                 return Results.Ok(new EnclaveAnswer(EnclaveView.From(enclave), accepted));
             })
             .AddEndpointFilter<GraySpaceFilter>().WithTags(tag);

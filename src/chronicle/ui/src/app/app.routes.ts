@@ -9,5 +9,9 @@ export const routes: Routes = [
     path: 'events/:id',
     loadComponent: () => import('./features/event-detail/event-detail.component').then(m => m.EventDetailComponent)
   },
+  {
+    path: 'events/:id/subscribers',
+    loadComponent: () => import('./features/subscribers/subscribers.component').then(m => m.SubscribersComponent)
+  },
   { path: '**', redirectTo: '' }
 ];

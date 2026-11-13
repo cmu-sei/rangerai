@@ -1,0 +1,160 @@
+<section class="diagram" data-testid="enclave-diagram" [class.is-building]="building()" [class.is-live]="live()" aria-label="Enclave diagram">
+  <header class="diagram-head">
+    <div class="title">
+      <span class="eyebrow">Enclave</span>
+      <h2>{{ spec().slug }}</h2>
+      <span class="prefix">prefix <code>{{ spec().prefix }}</code></span>
+    </div>
+    <p class="totals">
+      <span><strong>{{ hostTotals().sites }}</strong> {{ hostTotals().sites === 1 ? 'site' : 'sites' }}</span>
+      <span><strong>{{ hostTotals().hosts }}</strong> hosts</span>
+      <span><strong>{{ domains().length }}</strong> domains</span>
+      @if (job(); as j) {
+        <span class="state-pill" [attr.data-state]="j.state" data-testid="instance-state">
+          @if (building()) { Building · {{ hostTotals().running }}/{{ hostTotals().hosts }} up }
+          @else if (j.state === 'succeeded') { Ready · {{ hostTotals().running }}/{{ hostTotals().hosts }} running }
+          @else { {{ j.state }} }
+        </span>
+      } @else {
+        <span class="state-pill" data-state="draft" data-testid="instance-state">Drafted</span>
+      }
+    </p>
+  </header>
+
+  @if (stages().length) {
+    <ol class="stepper" data-testid="stage-stepper" [attr.data-stage]="job()?.stage ?? ''" [attr.data-state]="job()?.state">
+      @for (s of stages(); track s.id; let i = $index) {
+        <li [attr.data-state]="s.state" [title]="s.title">
+          <span class="dot">
+            @if (s.state === 'done') { <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.2l2.4 2.3 4.6-5" /></svg> }
+            @else { {{ i + 1 }} }
+          </span>
+          <span class="name">{{ s.id }}</span>
+        </li>
+      }
+    </ol>
+    @for (s of stages(); track s.id) {
+      @if (s.state === 'current' || s.state === 'failed') {
+        <p class="stage-title" [attr.data-state]="s.state">{{ s.title }}…</p>
+      }
+    }
+  }
+
+  <div class="canvas">
+    <div class="backbone">
+      <svg class="mesh" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 38 C 150 10, 300 52, 450 30 S 750 8, 900 34 S 1100 50, 1200 22" />
+        <path d="M0 22 C 200 46, 350 14, 520 36 S 820 54, 980 20 S 1150 30, 1200 40" />
+      </svg>
+      <span class="backbone-label">
+        <strong>GraySpace</strong> simulated internet
+        @if (baseName(); as b) { <span class="sep">·</span> base {{ b }} }
+        @if (routers(); as r) { <span class="sep">·</span> {{ r }} routers }
+      </span>
+    </div>
+
+    <div class="columns">
+      @for (col of columns(); track col.key) {
+        <div class="column" [style.flex-grow]="col.weight" [attr.data-attach]="col.router ?? col.key">
+          <div class="node">
+            <span class="node-dot" aria-hidden="true"></span>
+            @if (col.router) { <code>{{ col.router }}</code> }
+            <span>{{ col.label }}</span>
+          </div>
+          <div class="branches" [class.single]="col.sites.length + col.internetHosts.length === 1">
+            @for (site of col.sites; track site.name) {
+              <div class="branch site-branch">
+                <article class="site" [attr.data-site]="site.name">
+                  <header class="site-head">
+                    <span class="edge" aria-hidden="true">
+                      <svg viewBox="0 0 20 20"><rect x="2.5" y="6.5" width="15" height="7" rx="2" /><path d="M6 10h.01M9 10h.01M12.5 10h3" /></svg>
+                    </span>
+                    <div>
+                      <h3>{{ site.name }}</h3>
+                      <span class="site-sub">
+                        {{ site.routed ? 'Routed' : 'NAT edge' }}
+                        @if (site.wanIp) { <span class="sep">·</span> WAN <code>{{ site.wanIp }}</code> }
+                      </span>
+                    </div>
+                  </header>
+                  <div class="lanes">
+                    @for (lane of site.segments; track lane.name) {
+                      <div class="lane" [attr.data-segment]="lane.name">
+                        <div class="lane-head">
+                          <span class="lane-name">{{ lane.name }}</span>
+                          <code class="cidr" [class.pending]="!lane.cidr">{{ lane.cidr ?? 'auto' }}</code>
+                        </div>
+                        <div class="chips">
+                          @for (h of lane.hosts; track h.name) {
+                            <ng-container *ngTemplateOutlet="chip; context: { $implicit: h }" />
+                          } @empty {
+                            <p class="empty">No hosts</p>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </article>
+              </div>
+            }
+            @for (h of col.internetHosts; track h.name) {
+              <div class="branch host-branch">
+                <ng-container *ngTemplateOutlet="chip; context: { $implicit: h }" />
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (domains().length || certificates().length) {
+    <footer class="names">
+      @if (domains().length) {
+        <div class="names-group">
+          <span class="names-label">DNS</span>
+          @for (d of domains(); track d.domain) {
+            <span class="name-chip" data-testid="dns-domain"><strong>{{ d.domain }}</strong><span class="arrow">→</span>{{ d.server }}@if (d.records) { <span class="count">{{ d.records }}</span> }</span>
+          }
+        </div>
+      }
+      @if (certificates().length) {
+        <div class="names-group">
+          <span class="names-label">TLS</span>
+          @for (c of certificates(); track c.names) {
+            <span class="name-chip cert" [class.issued]="c.issued"><svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2.5" y="5.5" width="7" height="5" rx="1" /><path d="M4 5.5V4a2 2 0 014 0v1.5" /></svg>{{ c.names }}<span class="arrow">·</span>{{ c.ca }}</span>
+          }
+        </div>
+      }
+    </footer>
+  }
+</section>
+
+<ng-template #chip let-h>
+  <div class="chip" [attr.data-host]="h.name" [attr.data-state]="h.state" [class.internet]="h.internet">
+    <div class="chip-top">
+      <span class="kind" [attr.data-kind]="h.imageType" [title]="h.image">{{ h.imageType }}</span>
+      <span class="chip-name">{{ h.name }}@if (h.count > 1) { <span class="times">×{{ h.count }}</span> }</span>
+      <span class="status" [attr.data-state]="h.state" aria-hidden="true"></span>
+    </div>
+    @if (h.roles.length || h.publish || h.internet) {
+      <div class="badges">
+        @for (r of h.roles; track r) { <span class="role" [attr.data-role]="r">{{ r }}</span> }
+        @if (h.publish) { <span class="role public">public</span> }
+        @if (h.internet) { <span class="role public">internet</span> }
+      </div>
+    }
+    <div class="chip-foot">
+      @if (h.ip) {
+        <code class="ip">{{ h.ip }}</code>
+        @if (h.publicIp) { <code class="ip public-ip">{{ h.publicIp }}</code> }
+        @if (h.count > 1) { <span class="up">{{ h.running }}/{{ h.count }} running</span> }
+      } @else if (h.state === 'building') {
+        <span class="building-text">building…</span>
+      } @else {
+        @for (l of h.labels; track l.key) { <span class="label"><span class="lk">{{ l.key }}</span> {{ l.value }}</span> }
+        @if (!h.labels.length) { <span class="label">{{ h.image }}</span> }
+      }
+    </div>
+  </div>
+</ng-template>

@@ -68,7 +68,13 @@ The Chronicle API stores Chronicles and carries their entries. Locally it runs i
 | Chronicles | `GET /api/chronicles`, `POST /api/chronicles`, `GET /api/chronicles/{id}`, `GET /api/chronicles/{id}/findings`, `POST /api/chronicles/validate` |
 | Entries | `GET /api/chronicles/{id}/entries`, `GET /api/chronicles/{id}/entries/{sequence}`, `POST /api/chronicles/{id}/entries` |
 | Subscription | `GET /api/chronicles/{id}/entries/stream`: server-sent events, the history first and then each new entry |
+| Live | `GET /api/chronicles/{id}/live`: a WebSocket with the subscribers, activity, new entries and agents' words as they're written |
+| Activity | `POST /api/chronicles/{id}/activity` (with an `entry`, it's notable and stored), `GET /api/chronicles/{id}/activity` |
+| Subscribers | `GET /api/chronicles/{id}/subscribers`, `PUT`/`DELETE /api/chronicles/{id}/subscribers/{subscriberId}`, `POST …/{subscriberId}/run` |
+| Context | `GET /api/chronicles/{id}/context`: a view as text a model can read, with what it withholds |
 | Schema | `GET /api/schema/record`, `GET /api/schema/entry` |
+
+Activity is the live feed, kept in memory (the last 1,000 per Chronicle). Only notable activity, the kind that carries an entry, becomes part of the record. Subscribers are stored with the Chronicle; one registered with an agent can be run, and its output is published back. The Chronicle UI shows all of it, live, on each event's **Subscribers** page.
 
 Every read is an audience's view: `?audience=participant` (the default), `excon` or `designer`, and `?viewers=` for the personas or pools a simulated user speaks for. Entry reads and subscriptions also filter by `parts`, `kinds` and `after`.
 

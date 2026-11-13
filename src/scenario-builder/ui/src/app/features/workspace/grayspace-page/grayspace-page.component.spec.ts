@@ -57,7 +57,8 @@ const failedJob: FollowView = {
 async function render(
   status: GraySpaceStatus | null = { connected: true, answering: true, url: 'http://gs.local:8000', connectedBy: 'dev', since: '2026-11-06T09:00:00Z' },
   me: Me = { user: 'dev', admin: true },
-  shown: GraySpaceOffers = offers
+  shown: GraySpaceOffers = offers,
+  drafted: SliceSpec | null = null
 ) {
   let enclave: EnclaveView = { spec: newSpec() };
   const api = {
@@ -68,6 +69,7 @@ async function render(
     getEnclave: vi.fn(() => of(enclave)),
     putEnclave: vi.fn((_: number, spec: SliceSpec) => of(enclave = { ...enclave, spec })),
     reuseEnclave: vi.fn(),
+    draftEnclave: vi.fn((): Observable<EnclaveView> => drafted ? of(enclave = { ...enclave, spec: drafted }) : throwError(() => new HttpErrorResponse({ status: 422 }))),
     validateEnclave: vi.fn(() => of({
       enclave, graySpace: { valid: false, version: 'sha256:aa', findings: [{ code: 'NO_SITES', severity: 'warning', path: 'sites', message: 'The enclave has no sites' }] }
     })),
@@ -111,6 +113,27 @@ function type(input: HTMLInputElement | HTMLSelectElement, value: string, event 
 }
 
 describe('GraySpacePageComponent', () => {
+  it('drafts an empty enclave from the network answers on open, and again on Draft from scenario', async () => {
+    const drafted: SliceSpec = { ...newSpec(), sites: [{ name: 'kbwa-corp', attach: { router: 'com-por' }, segments: [{ name: 'corp-lan' }] }],
+      hosts: [{ name: 'dc01', segment: 'corp-lan', image: 'ubuntu-24.04-vm', roles: [], labels: { 'chronicle.of': 'host-dc01' } }] };
+    const { fixture, api, root } = await render(undefined, undefined, undefined, drafted);
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(api.draftEnclave).toHaveBeenCalledTimes(1);
+    expect(root.textContent).toContain('Drafted from the scenario’s network answers');
+    root.querySelector<HTMLButtonElement>('[data-testid="enclave-draft"]')!.click();
+    expect(api.draftEnclave).toHaveBeenCalledTimes(2);
+  });
+
+  it('leaves an empty enclave empty when there is nothing to draft from', async () => {
+    const { api, root } = await render();
+
+    expect(api.draftEnclave).toHaveBeenCalledTimes(1);
+    expect(root.textContent).not.toContain('Drafted from the scenario’s network answers');
+    expect(root.querySelector('[role="alert"]')?.textContent ?? '').not.toContain('422');
+  });
+
   it('lays out every GraySpace decision in order, with the network answers in the section they feed', async () => {
     const { root } = await render();
 

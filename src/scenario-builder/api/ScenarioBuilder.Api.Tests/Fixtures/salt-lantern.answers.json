@@ -1,0 +1,161 @@
+{
+ "name": "SALT LANTERN",
+ "answers": {
+  "intent": "Train Mission Element HARBOR to hunt a quiet intrusion that crosses from a water utility's IT network into its plant, and to recommend containment that keeps the water safe and flowing. The team starts from an operator's report of drifting chlorine setpoints and must tell a real attack from a failing sensor.",
+  "unit": "Mission Element HARBOR, 41st Cyber Protection Team: a deployable hunt team that supports critical-infrastructure owners when an intrusion is suspected.",
+  "teamSize": "Six: a team lead, two host analysts, two network analysts and an OT/ICS specialist.",
+  "proficiency": "Experienced at enterprise hunting; have worked an OT environment once. Expect them to be slower and more cautious on the plant side.",
+  "mandate": "Protect the Kessick Bay Water Authority's treatment process and its corporate network. The team may hunt, collect evidence and recommend containment; it may advise plant operators but must never change process values itself.",
+  "timeSlot": "Four hours, then a one-hour review",
+  "setting": "On a cyber range",
+  "world": "Fictional world",
+  "recording": "Unclassified, fictional. Controllers log every inject and decision; screen capture on analyst stations; AI tools allowed for the team, logged in the review.",
+  "tasks": [
+   "Confirm or rule out a compromise from the operator's report",
+   "Find the intruder's entry point and the account they used",
+   "Scope the intrusion across the corporate and plant networks",
+   "Recommend containment that keeps the plant running safely",
+   "Brief the utility's leadership and keep exercise control informed"
+  ],
+  "standards": [
+   "Within 45 minutes, with evidence from the historian and the HMI",
+   "Within 90 minutes, naming the Tidewell jump host and the stolen technician account",
+   "Every compromised host listed with its evidence before containment",
+   "No action that changes a process value; the plant stays online",
+   "An hourly status update and a final brief of no more than five minutes"
+  ],
+  "conditions": "Night shift with a skeleton plant staff; a busy SOC queue full of false positives; the vendor is slow to answer; local news is asking questions by the second hour.",
+  "evaluation": "Rated per task (T, P, U)",
+  "trainingKind": "Mission-essential task (MET)",
+  "rulesOfEngagement": "Hunt and collect on any host. Isolate corporate hosts with the utility's approval. Plant hosts may be observed but not changed; any plant action goes through the operator. No contact with the adversary.",
+  "deadline": "By hour three, the next dosing change is scheduled. If the team has not found the jump host by then, the adversary changes setpoints again and the plant must go to manual control.",
+  "pacing": "Real time",
+  "adjudication": "Exercise control decides",
+  "teachingPoints": [
+   "A process anomaly is a security question until the evidence says otherwise",
+   "Vendor remote access is part of your attack surface",
+   "In OT, containment that stops the process is a second incident",
+   "Correlate IT and OT timelines: the historian is evidence"
+  ],
+  "problem": "Chlorine dosing setpoints at the Kessick Bay treatment plant drifted twice overnight, and nobody can say why.",
+  "description": "The Kessick Bay Water Authority runs the only treatment plant for a coastal city of 200,000. Overnight its chlorine dosing setpoints changed twice, and the night operator flagged it to IT. The utility has asked Mission Element HARBOR to find out whether this is a failing sensor or something worse, and to help keep the water safe while they do.",
+  "placeAndTime": "Kessick Bay, a fictional coastal city in the Pacific Northwest; late October, a Tuesday night into Wednesday morning.",
+  "groundTruth": [
+   "VOLT HERON stole a Tidewell Controls technician's credentials (account tw-svc-jmarsh) in a phishing campaign three weeks ago",
+   "They entered through jump01, Tidewell's remote access host in the plant's vendor DMZ, at 01:12",
+   "From jump01 they reached eng-ws01 and changed dosing setpoints through the HMI at 01:40 and 03:05 to test their access",
+   "Ransomware is staged on files01 and will be triggered if the team isolates jump01 without warning",
+   "The chlorine analyzer's calibration really is overdue: the obvious explanation is plausible but wrong"
+  ],
+  "opposition": "Scripted events only",
+  "adversary": "VOLT HERON, a state-aligned group that pre-positions in Western utilities. It wants quiet, durable access to the plant for a future crisis; being found costs it the access, so it will create noise on the corporate side to cover its exit.",
+  "actorCapability": "Organized",
+  "attackTechniques": [
+   "T1566.002 Spearphishing Link",
+   "T1078 Valid Accounts",
+   "T1133 External Remote Services",
+   "T0831 Manipulation of Control",
+   "T1486 Data Encrypted for Impact"
+  ],
+  "systems": [
+   "KBWA corporate network: domain controller, file share, mail, website, staff workstations",
+   "Plant control network: HMI, historian, engineering workstation",
+   "Vendor DMZ: Tidewell Controls jump host",
+   "Internet: Tidewell's support portal and the Kessick Valley Ledger"
+  ],
+  "keyEvents": [
+   "H+0:00, plant operator Dana Whitlock (GHOSTS) messages IT: 'Chlorine setpoint changed again, I didn't touch it.' Expect the team to pull historian data.",
+   "H+0:45, exercise control drops an analyzer calibration report showing it is overdue. Expect the team not to stop at the sensor.",
+   "H+1:30, the Kessick Valley Ledger (Pandora) runs 'Water Authority investigating overnight alarm'. Expect the team lead to brief leadership.",
+   "H+2:15, Tidewell's support desk answers a ticket late, confirming jmarsh was on leave. Expect the team to pivot to the vendor account.",
+   "H+3:00, if jump01 is still open, a third setpoint change. Expect containment with the operator in the loop."
+  ],
+  "branching": "If the team isolates jump01 without warning the utility, VOLT HERON triggers the staged ransomware on files01 and the exercise shifts to recovery. If they coordinate isolation with the operator and the vendor, the adversary loses access cleanly.",
+  "escalationCeiling": "Ransomware on the corporate side only; the plant never loses safe operation. Controllers ease off if the team is overwhelmed.",
+  "escalationSteps": [
+   "Second setpoint drift and a louder operator",
+   "News story and a call from the utility's general manager",
+   "Third setpoint change, plant goes to manual (last recoverable step)",
+   "Ransomware triggered on files01"
+  ],
+  "ending": "Ends at four hours, or when the team presents containment the utility accepts. The review starts with the historian timeline.",
+  "fog": "Partial: each role sees what it would",
+  "rangeReference": "GraySpace; enclave salt-lantern on base grayspace/2026.10",
+  "segments": [
+   "corp-lan: KBWA's corporate network and its domain",
+   "ot-control: the treatment plant's control network",
+   "vendor-dmz: Tidewell's remote access into the plant"
+  ],
+  "hosts": [
+   "corp-lan: dc01, domain controller and DNS for corp.kbwa.org, Ubuntu, 1",
+   "corp-lan: files01, file share with plant engineering documents, Ubuntu, 1",
+   "corp-lan: mail01 and www, mail and the public website, Ubuntu, 2",
+   "corp-lan: staff workstations with GHOSTS clients, Ubuntu, 4",
+   "ot-control: hmi01, the plant HMI, Ubuntu VM, 1",
+   "ot-control: historian01, the process historian, Ubuntu, 1",
+   "ot-control: eng-ws01, the engineering workstation, Ubuntu VM, 1",
+   "vendor-dmz: jump01, Tidewell's jump host, Ubuntu, 1"
+  ],
+  "services": [
+   "Directory and DNS: dc01",
+   "File share 'plant-engineering': files01",
+   "Email for kbwa.org: mail01",
+   "Website www.kbwa.org: www",
+   "HMI web interface: hmi01",
+   "Remote access remote.kbwa.org: jump01",
+   "News site www.kessickledger.com: ledger",
+   "Vendor portal support.tidewellcontrols.com: tidewell-portal"
+  ],
+  "connectivity": "The corporate site reaches the internet through Comcast in Portland. The plant site connects through Lumen, with the vendor DMZ published at remote.kbwa.org. The plant network accepts connections only from the DMZ and the corporate historian reader.",
+  "identity": "Active Directory domain corp.kbwa.org (KBWA) on dc01; named staff accounts, the operator account dana.whitlock, and the vendor service account tw-svc-jmarsh used on jump01.",
+  "monitoring": [
+   "Perimeter firewall logs at each site's edge",
+   "Sysmon and auditd on every host",
+   "Packet capture on the vendor DMZ",
+   "Historian data for every setpoint"
+  ],
+  "telemetry": [
+   "All host and firewall logs",
+   "Packet capture from the vendor DMZ",
+   "Historian setpoint history",
+   "Team chat and the controllers' notes"
+  ],
+  "platforms": [
+   "Email at kbwa.org",
+   "The public website www.kbwa.org",
+   "Kessick Valley Ledger news site (Pandora)",
+   "Tidewell Controls support portal"
+  ],
+  "simulatedUsers": "Five GHOSTS NPCs: four KBWA office staff browsing, mailing and using the file share during the day, and plant operator Dana Whitlock on the night shift, who messages IT about the readings and answers the team's questions.",
+  "planted": [
+   "tw-svc-jmarsh logons on jump01 at 01:12 from an unfamiliar address",
+   "Two setpoint changes in the historian at 01:40 and 03:05",
+   "Ransomware binary staged on files01, not yet run",
+   "Overdue calibration record for the chlorine analyzer"
+  ],
+  "buildLimits": "One GraySpace enclave, built in under 30 minutes; container images where possible, VMs only for the HMI and engineering workstation.",
+  "controlCell": "A lead controller runs injects and plays the utility's leadership; a white cell plays Tidewell's support desk and the press; two observers rate each task.",
+  "safety": "Anyone can say \"real world, stop\"; the lead controller restarts it",
+  "exerciseName": "SALT LANTERN",
+  "organizations": [
+   "Kessick Bay Water Authority: friendly",
+   "41st Cyber Protection Team: friendly",
+   "Tidewell Controls: neutral",
+   "Kessick Valley Ledger: neutral",
+   "VOLT HERON: adversary"
+  ],
+  "fixedTerms": [
+   "Setpoint",
+   "Historian",
+   "Jump host",
+   "Manual control"
+  ],
+  "bannedTerms": [
+   "Real utility, vendor or country names"
+  ],
+  "personas": [
+   "Dana Whitlock: night-shift plant operator, Kessick Bay Water Authority, twelve years at the plant, careful and tired of false alarms; messages IT when the readings look wrong"
+  ]
+ },
+ "executiveSummary": "SALT LANTERN is a four-hour hunt exercise for Mission Element HARBOR of the 41st Cyber Protection Team, set at the fictional Kessick Bay Water Authority. It opens when the night operator reports that chlorine dosing setpoints drifted twice overnight. The team must tell a failing sensor from an intruder, trace VOLT HERON's path from a stolen Tidewell Controls vendor account through the plant's jump host to the engineering workstation, scope the intrusion across IT and OT, and recommend containment that keeps the water safe and flowing. Success is measured by speed to evidence, a complete scope before containment, and no action that touches a process value. A hasty isolation triggers staged ransomware on the corporate side; a coordinated one closes the adversary out cleanly."
+}

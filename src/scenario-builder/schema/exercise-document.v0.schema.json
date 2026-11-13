@@ -121,7 +121,7 @@
     },
     "network": {
       "type": "object",
-      "description": "Network considerations for the network module: segments, hosts, connectivity, identity, monitoring, simulated users, what is planted, build limits.",
+      "description": "Network considerations for the network module: segments, hosts, connectivity, identity, monitoring, simulated users and the named ones (personas), what is planted, build limits.",
       "additionalProperties": {
         "anyOf": [
           {

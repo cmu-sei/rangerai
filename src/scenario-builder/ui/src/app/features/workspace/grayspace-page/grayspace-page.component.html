@@ -34,18 +34,22 @@
       }
       @if (connected()) {
         <div class="quick">
-          <button class="sb-button primary" type="button" [disabled]="!canDeployAll()" (click)="deployAll()">Deploy everything</button>
+          <button class="sb-button primary" type="button" data-testid="deploy-everything" [disabled]="!canDeployAll()" (click)="deployAll()">Deploy everything</button>
           <span class="aside">
             @if (!baseDeployed()) { Base {{ chosenVersion() }} ({{ chosenScope() }}), then }
             @if (spec()?.sites?.length || spec()?.hosts?.length) { this enclave as drafted, } @else { one site with one {{ smallestImage()?.name }} host, }
             then an instance of it.
           </span>
           @if (quick(); as q) {
-            <p class="state" role="status">{{ q }}</p>
+            <p class="state" role="status" data-testid="deploy-status">{{ q }}</p>
           }
         </div>
       }
     </section>
+  }
+
+  @if (spec(); as s) {
+    <app-enclave-diagram [spec]="s" [follow]="follow()" [offers]="offers()" />
   }
 
   @for (d of decisions; track d.id; let i = $index) {
@@ -215,6 +219,10 @@
                 <label>Name <input class="sb-field" [value]="s.slug" (change)="setField('slug', value($event))" /></label>
                 <label>Prefix <input class="sb-field" placeholder="a letter, then up to 7 letters or digits" [value]="s.prefix" (change)="setField('prefix', value($event))" /></label>
                 <label>Owner <input class="sb-field" [value]="s.owner ?? ''" (change)="setField('owner', value($event))" /></label>
+              </div>
+              <div class="fields">
+                <span class="hint">Drafted from the network answers: sites from Network Segments, hosts from Hosts, internet hosts, DNS and certificates from Services.</span>
+                <span class="buttons end"><button class="sb-button" type="button" data-testid="enclave-draft" [disabled]="!!busy() || !connected()" (click)="draft()">Draft from scenario</button></span>
               </div>
               <p class="state">
                 @if (enclave()?.version; as v) {
@@ -433,15 +441,15 @@
             <ol class="steps">
               <li>
                 <div><span class="step-name">Validate</span><span class="step-text">GraySpace checks the draft: errors and warnings, each with where it is and a suggested fix.</span></div>
-                <button class="sb-button" type="button" [disabled]="!connected() || !!busy()" (click)="validate()">Validate</button>
+                <button class="sb-button" type="button" [disabled]="!connected() || !!busy()" data-testid="step-validate" (click)="validate()">Validate</button>
               </li>
               <li>
                 <div><span class="step-name">Save to GraySpace</span><span class="step-text">Stores the draft as a new version of the enclave.</span></div>
-                <button class="sb-button" type="button" [disabled]="!connected() || !!busy()" (click)="save()">Save</button>
+                <button class="sb-button" type="button" [disabled]="!connected() || !!busy()" data-testid="step-save" (click)="save()">Save</button>
               </li>
               <li>
                 <div><span class="step-name">Plan</span><span class="step-text">Saves, then a job previews the addresses it would take, the plan and the capacity it needs.</span></div>
-                <button class="sb-button" type="button" [disabled]="!connected() || !!busy()" (click)="plan()">Plan</button>
+                <button class="sb-button" type="button" [disabled]="!connected() || !!busy()" data-testid="step-plan" (click)="plan()">Plan</button>
               </li>
               <li>
                 <div>
@@ -457,7 +465,7 @@
                     </select>
                   </span>
                 </div>
-                <button class="sb-button primary" type="button" [disabled]="!connected() || !!busy()" (click)="create()">Create instance</button>
+                <button class="sb-button primary" type="button" [disabled]="!connected() || !!busy()" data-testid="step-create" (click)="create()">Create instance</button>
               </li>
               <li>
                 <div>
@@ -492,7 +500,7 @@
               </li>
               <li>
                 <div><span class="step-name">Destroy</span><span class="step-text">Takes the instance down and undoes its actions; GraySpace keeps the record.</span></div>
-                <button class="sb-button" type="button" [disabled]="!connected() || !!busy() || !enclave()?.instanceId || follow()?.instance?.state === 'destroyed'" (click)="destroy()">Destroy instance</button>
+                <button class="sb-button" type="button" [disabled]="!connected() || !!busy() || !enclave()?.instanceId || follow()?.instance?.state === 'destroyed'" data-testid="step-destroy" (click)="destroy()">Destroy instance</button>
               </li>
             </ol>
             @if (note(); as n) {

@@ -12,6 +12,7 @@ import { BuilderApiService, errorMessage } from '../../../core/services/builder-
 import { MeService } from '../../../core/services/me.service';
 import { labelFor } from '../../../shared/labels/question-label';
 import { WorkspaceStore } from '../workspace.store';
+import { EnclaveDiagramComponent } from './enclave-diagram/enclave-diagram.component';
 
 /** One GraySpace decision: what it settles, the Terrain API routes behind it, and the network answers that feed it. */
 interface Decision {
@@ -40,7 +41,7 @@ const DOCKER_INTERNAL_HOSTS = new Set(['172.17.0.1', 'host.docker.internal', 'ga
 @Component({
   selector: 'app-grayspace-page',
   standalone: true,
-  imports: [RouterLink, DatePipe, JsonPipe, NgTemplateOutlet],
+  imports: [RouterLink, DatePipe, JsonPipe, NgTemplateOutlet, EnclaveDiagramComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './grayspace-page.component.html',
   styleUrls: ['./grayspace-page.component.scss']
@@ -67,7 +68,7 @@ export class GraySpacePageComponent {
     },
     {
       id: 'hosts', title: 'Hosts', decides: 'Each host’s segment, image, roles, size and count, and whether it gets a public address.',
-      api: ['GET /capabilities'], answers: ['hosts', 'services', 'platforms', 'monitoring', 'telemetry', 'simulatedUsers', 'planted']
+      api: ['GET /capabilities'], answers: ['hosts', 'services', 'platforms', 'monitoring', 'telemetry', 'simulatedUsers', 'personas', 'planted']
     },
     { id: 'roles', title: 'Role Settings', decides: 'The values a role needs to be set up, given once for the enclave.', api: ['GET /capabilities'], answers: ['identity'] },
     { id: 'dns', title: 'DNS and Certificates', decides: 'The enclave’s domains and records, and the certificates its hosts serve.', api: ['GET /capabilities'], answers: [] },
@@ -203,7 +204,22 @@ export class GraySpacePageComponent {
   }
 
   private load(id: number): void {
-    this.api.getEnclave(id).subscribe({ next: e => this.enclave.set(e), error: e => this.draftError.set(errorMessage(e)) });
+    this.api.getEnclave(id).subscribe({
+      next: e => {
+        this.enclave.set(e);
+        // An empty enclave is drafted from the network answers on first open; with nothing to draft from, it stays empty.
+        if (!e.spec.sites?.length && !e.spec.hosts?.length) {
+          this.api.draftEnclave(id).subscribe({
+            next: drafted => {
+              this.enclave.set(drafted);
+              this.note.set('Drafted from the scenario’s network answers. Change anything below.');
+            },
+            error: () => undefined
+          });
+        }
+      },
+      error: e => this.draftError.set(errorMessage(e))
+    });
     this.api.getGraySpace().subscribe({
       next: s => {
         this.status.set(s);
@@ -454,6 +470,23 @@ export class GraySpacePageComponent {
   protected setField(field: 'slug' | 'prefix' | 'owner', value: string): void {
     this.edit(s => {
       s[field] = value.trim();
+    });
+  }
+
+  /** Replaces the draft with one drafted from the scenario's network answers. */
+  protected draft(): void {
+    this.busy.set('draft');
+    this.note.set(null);
+    this.api.draftEnclave(this.store.scenarioId()).subscribe({
+      next: drafted => {
+        this.busy.set(null);
+        this.enclave.set(drafted);
+        this.note.set('Drafted from the scenario’s network answers.');
+      },
+      error: e => {
+        this.busy.set(null);
+        this.draftError.set(errorMessage(e));
+      }
     });
   }
 

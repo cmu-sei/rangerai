@@ -1,0 +1,530 @@
+{
+ "base": {
+  "name": "grayspace/2026.10",
+  "csv_sha256": "08b27fb59ada36f67f865b071f538e9dd34a4ef015f1e225216a1d3c7a188735",
+  "scope": "full"
+ },
+ "images": [
+  {
+   "name": "alpine-3.22",
+   "type": "lxc",
+   "os_family": "alpine",
+   "source": "http://download.proxmox.com/images/system/alpine-3.22-default_20250617_amd64.tar.xz",
+   "cores": 1,
+   "memory": 256,
+   "disk": 4,
+   "features": [],
+   "description": "Alpine Linux 3.22; the image of slice edge routers",
+   "entrypoint": null,
+   "origin": "shipped"
+  },
+  {
+   "name": "ghosts-pandora",
+   "type": "oci",
+   "os_family": "oci",
+   "source": "docker.io/dustinupdyke/ghosts-pandora:latest",
+   "cores": 1,
+   "memory": 512,
+   "disk": 8,
+   "features": [
+    "tls-kestrel"
+   ],
+   "description": "GHOSTS Pandora web and social media server (configured with env)",
+   "entrypoint": "cd /app && exec dotnet Ghosts.Pandora.dll",
+   "origin": "shipped"
+  },
+  {
+   "name": "ubuntu-22.04-lxc",
+   "type": "lxc",
+   "os_family": "ubuntu",
+   "source": "http://download.proxmox.com/images/system/ubuntu-22.04-standard_22.04-1_amd64.tar.zst",
+   "cores": 1,
+   "memory": 1024,
+   "disk": 8,
+   "features": [],
+   "description": "Ubuntu 22.04 container",
+   "entrypoint": null,
+   "origin": "shipped"
+  },
+  {
+   "name": "ubuntu-24.04-vm",
+   "type": "vm",
+   "os_family": "ubuntu",
+   "source": "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img",
+   "cores": 2,
+   "memory": 2048,
+   "disk": 16,
+   "features": [],
+   "description": "Ubuntu 24.04 cloud image VM",
+   "entrypoint": null,
+   "origin": "shipped"
+  }
+ ],
+ "roles": [
+  {
+   "name": "ad-dc",
+   "description": "A Samba Active Directory domain controller for the site",
+   "os_families": [
+    "ubuntu",
+    "debian"
+   ],
+   "variables": {
+    "realm": {
+     "description": "The Kerberos realm / DNS domain of the directory, e.g. corp.meridian-bank.com",
+     "required": true,
+     "default": null
+    },
+    "domain": {
+     "description": "The NetBIOS domain name, e.g. MERIDIAN",
+     "required": true,
+     "default": null
+    },
+    "admin_password": {
+     "description": "Password of the domain Administrator",
+     "required": true,
+     "default": null
+    }
+   }
+  },
+  {
+   "name": "dns",
+   "description": "BIND as a site DNS server, authoritative for an internal zone and forwarding everything else to the base resolver",
+   "os_families": [
+    "ubuntu",
+    "debian"
+   ],
+   "variables": {
+    "zone": {
+     "description": "The internal zone (default <prefix>.internal); every host of the site gets an A record in it",
+     "required": false,
+     "default": null
+    }
+   }
+  },
+  {
+   "name": "file",
+   "description": "A Samba file share",
+   "os_families": [
+    "ubuntu",
+    "debian"
+   ],
+   "variables": {
+    "share_name": {
+     "description": "Name of the share",
+     "required": false,
+     "default": "shared"
+    },
+    "guest_ok": {
+     "description": "Allow guest access",
+     "required": false,
+     "default": true
+    }
+   }
+  },
+  {
+   "name": "ghosts-client",
+   "description": "A GHOSTS client (Universal on Linux, the Windows client on Windows), installed from client_url and configured to report to api_url under a hostname-based identity. GraySpace ships no GHOSTS binaries.",
+   "os_families": [
+    "ubuntu",
+    "debian",
+    "windows"
+   ],
+   "variables": {
+    "client_url": {
+     "description": "URL of the client release archive (.tar.gz or .zip) the host downloads over the management network",
+     "required": true,
+     "default": null
+    },
+    "api_url": {
+     "description": "The GHOSTS API root, e.g. http://ghosts-api:5000/api",
+     "required": true,
+     "default": null
+    },
+    "api_host": {
+     "description": "An address that must stay reachable over the management network (the GHOSTS API, v1 \u00a79 option A); a host route is added for it",
+     "required": false,
+     "default": null
+    },
+    "executable": {
+     "description": "The client program inside the archive (default Ghosts.Client.Universal, or Ghosts.Client.Windows.exe on Windows)",
+     "required": false,
+     "default": null
+    },
+    "timeline": {
+     "description": "A GHOSTS timeline (JSON object) to write as config/timeline.json",
+     "required": false,
+     "default": null
+    }
+   }
+  },
+  {
+   "name": "mail",
+   "description": "Postfix and Dovecot (SMTP and IMAP) for a slice domain, with local mailboxes",
+   "os_families": [
+    "ubuntu",
+    "debian"
+   ],
+   "variables": {
+    "domain": {
+     "description": "The mail domain (default the first DNS domain of the slice)",
+     "required": false,
+     "default": null
+    },
+    "users": {
+     "description": "Mailboxes to create: a list of {name, password}",
+     "required": false,
+     "default": []
+    }
+   }
+  },
+  {
+   "name": "web",
+   "description": "nginx serving a placeholder site; HTTPS too when the slice issues the host a certificate",
+   "os_families": [
+    "ubuntu",
+    "debian"
+   ],
+   "variables": {
+    "site_title": {
+     "description": "Title of the placeholder page (default the host's name)",
+     "required": false,
+     "default": null
+    }
+   }
+  }
+ ],
+ "dns": {
+  "tlds": [
+   "ai",
+   "ar",
+   "au",
+   "br",
+   "cn",
+   "com",
+   "gov",
+   "io",
+   "jp",
+   "kr",
+   "mil",
+   "mx",
+   "net",
+   "org",
+   "ru",
+   "sg"
+  ],
+  "hosting": [
+   {
+    "hostname": "dns-aws",
+    "ip": "205.251.192.123",
+    "router": "ntt-ash",
+    "isp": "NTT"
+   },
+   {
+    "hostname": "dns-namecheap",
+    "ip": "198.54.100.10",
+    "router": "are-den",
+    "isp": "Arelion"
+   },
+   {
+    "hostname": "dns-ovh",
+    "ip": "213.186.33.99",
+    "router": "are-par",
+    "isp": "Arelion"
+   },
+   {
+    "hostname": "dns-cloudflare",
+    "ip": "108.162.192.9",
+    "router": "are-sfr",
+    "isp": "Arelion"
+   },
+   {
+    "hostname": "dns-alibaba",
+    "ip": "223.5.5.5",
+    "router": "ntt-hkg",
+    "isp": "NTT"
+   }
+  ],
+  "resolvers": [
+   {
+    "hostname": "dns-google",
+    "ip": "8.8.8.8",
+    "router": "lum-sfr",
+    "isp": "Lumen"
+   },
+   {
+    "hostname": "dns-quad9",
+    "ip": "9.9.9.9",
+    "router": "are-hel",
+    "isp": "Arelion"
+   },
+   {
+    "hostname": "dns-krnic",
+    "ip": "118.221.112.10",
+    "router": "are-seo",
+    "isp": "Arelion"
+   },
+   {
+    "hostname": "dns-yandex",
+    "ip": "77.88.8.8",
+    "router": "ntt-krs",
+    "isp": "NTT"
+   }
+  ]
+ },
+ "cas": [
+  {
+   "hostname": "ca-graytrust",
+   "name": "GrayTrust",
+   "ip": "63.140.38.10",
+   "router": "com-ash",
+   "isp": "Comcast"
+  },
+  {
+   "hostname": "ca-securesign",
+   "name": "SecureSign",
+   "ip": "185.199.40.10",
+   "router": "tdc-cop",
+   "isp": "TDC"
+  },
+  {
+   "hostname": "ca-netcert",
+   "name": "NetCert",
+   "ip": "103.28.148.10",
+   "router": "sin-tok",
+   "isp": "Singtel"
+  },
+  {
+   "hostname": "ca-cyberlock",
+   "name": "CyberLock",
+   "ip": "194.169.218.10",
+   "router": "lum-fra",
+   "isp": "Lumen"
+  }
+ ],
+ "isps": [
+  {
+   "name": "Lumen",
+   "asn": 3356,
+   "locations": [
+    "Algiers",
+    "Ashburn",
+    "Brasilia",
+    "Cairo",
+    "Chicago",
+    "Djibouti",
+    "Dubai",
+    "Fortaleza",
+    "Frankfurt",
+    "Helsinki",
+    "Hong Kong",
+    "Johannesburg",
+    "Kansas City",
+    "Lagos",
+    "Lima",
+    "London",
+    "Manila",
+    "Mexico City",
+    "Moscow",
+    "Mumbai",
+    "New York",
+    "Portland",
+    "San Francisco",
+    "Seoul",
+    "Singapore",
+    "Tokyo"
+   ]
+  },
+  {
+   "name": "Arelion",
+   "asn": 1299,
+   "locations": [
+    "Adelaide",
+    "Ashburn",
+    "Bogota",
+    "Cairo",
+    "Chennai",
+    "Chicago",
+    "Delhi",
+    "Denver",
+    "Djibouti",
+    "Dubai",
+    "Fortaleza",
+    "Frankfurt",
+    "Helsinki",
+    "Hong Kong",
+    "Lagos",
+    "Lisbon",
+    "London",
+    "Los Angeles",
+    "Manila",
+    "Moscow",
+    "Mumbai",
+    "Paris",
+    "Perth",
+    "San Francisco",
+    "Santiago",
+    "Seoul",
+    "Singapore",
+    "Sydney"
+   ]
+  },
+  {
+   "name": "NTT",
+   "asn": 2914,
+   "locations": [
+    "Ashburn",
+    "Brasilia",
+    "Buenos Aires",
+    "Cairo",
+    "Chennai",
+    "Chicago",
+    "Darwin",
+    "Delhi",
+    "Djibouti",
+    "Dubai",
+    "Hong Kong",
+    "Johannesburg",
+    "Krasnoyarsk",
+    "Kyiv",
+    "Lagos",
+    "Lima",
+    "Lisbon",
+    "Los Angeles",
+    "Manila",
+    "Moscow",
+    "Perth",
+    "Portland",
+    "Santiago",
+    "Seoul",
+    "Singapore",
+    "Sydney",
+    "Tokyo",
+    "Vladivostok"
+   ]
+  },
+  {
+   "name": "Comcast",
+   "asn": 7922,
+   "locations": [
+    "Ashburn",
+    "Chicago",
+    "Denver",
+    "Houston",
+    "New York",
+    "Portland",
+    "San Francisco"
+   ]
+  },
+  {
+   "name": "Rogers",
+   "asn": 812,
+   "locations": [
+    "Edmonton",
+    "Montreal",
+    "Toronto",
+    "Vancouver",
+    "Winnipeg"
+   ]
+  },
+  {
+   "name": "China Telecom",
+   "asn": 4812,
+   "locations": [
+    "Beijing",
+    "Chengdu",
+    "Hong Kong",
+    "Shanghai"
+   ]
+  },
+  {
+   "name": "Singtel",
+   "asn": 7473,
+   "locations": [
+    "Brisbane",
+    "Dili",
+    "Ho Chi Minh City",
+    "Melbourne",
+    "Perth",
+    "Singapore",
+    "Tokyo"
+   ]
+  },
+  {
+   "name": "Liquid",
+   "asn": 37100,
+   "locations": [
+    "Abidjan",
+    "Algiers",
+    "Cape Town",
+    "Mombasa"
+   ]
+  },
+  {
+   "name": "Seaborn",
+   "asn": 52789,
+   "locations": [
+    "Brasilia",
+    "Salvador",
+    "Sao Paulo"
+   ]
+  },
+  {
+   "name": "MTS",
+   "asn": 8359,
+   "locations": [
+    "Ashgabat",
+    "Krasnoyarsk",
+    "Moscow",
+    "Vladivostok"
+   ]
+  },
+  {
+   "name": "Telmex",
+   "asn": 8151,
+   "locations": [
+    "Guadalajara",
+    "Mexico City",
+    "Oaxaca"
+   ]
+  },
+  {
+   "name": "Claro",
+   "asn": 7303,
+   "locations": [
+    "Caracas",
+    "La Paz",
+    "Quito"
+   ]
+  },
+  {
+   "name": "BSNL",
+   "asn": 9829,
+   "locations": [
+    "Delhi",
+    "Hyderabad",
+    "Kolkata"
+   ]
+  },
+  {
+   "name": "STC",
+   "asn": 39386,
+   "locations": [
+    "Damascus",
+    "Dubai",
+    "Riyadh",
+    "Tehran"
+   ]
+  },
+  {
+   "name": "TDC",
+   "asn": 3292,
+   "locations": [
+    "Bucharest",
+    "Copenhagen",
+    "Madrid",
+    "Prague",
+    "Warsaw"
+   ]
+  }
+ ]
+}

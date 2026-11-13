@@ -13,7 +13,7 @@ public record FollowView(EnclaveView Enclave, JsonNode? Instance, JsonNode? Job,
 public class FollowEndpoint : IEndpoint
 {
     public RouteHandlerBuilder Register(RouteGroupBuilder group, string tag) =>
-        group.MapGet("/scenarios/{id:int}/enclave/instance", async (int id, BuilderDb db, GraySpaceClient grayspace, CancellationToken ct) =>
+        group.MapGet("/scenarios/{id:int}/enclave/instance", async (int id, BuilderDb db, GraySpaceClient grayspace, AsBuiltRelay relay, CancellationToken ct) =>
             {
                 if (await EnclaveRules.Find(db, id, ct) is not { } enclave)
                     return ScenarioState.Missing(id);
@@ -25,6 +25,8 @@ public class FollowEndpoint : IEndpoint
                     job = await grayspace.Get($"jobs/{Uri.EscapeDataString(jobId)}", ct);
                     log = await grayspace.Text(HttpMethod.Get, $"jobs/{Uri.EscapeDataString(jobId)}/log?follow=false", null, ct);
                 }
+                if (await db.Scenarios.FindAsync([id], ct) is { } scenario)
+                    await relay.Followed(scenario.Slug, EnclaveRules.Spec(enclave), enclave.Version, instance, job, ct);
                 return Results.Ok(new FollowView(EnclaveView.From(enclave), instance, job, log));
             })
             .AddEndpointFilter<GraySpaceFilter>().WithTags(tag);

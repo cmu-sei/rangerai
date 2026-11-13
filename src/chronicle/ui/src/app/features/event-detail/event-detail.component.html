@@ -7,7 +7,17 @@
 
   @if (record(); as record) {
     <header class="head">
-      <p class="eyebrow ch-label">{{ record.kind }}</p>
+      <div class="eyebrow-row">
+        <p class="eyebrow ch-label">{{ record.kind }}</p>
+        <span class="live" [attr.data-state]="live()" data-live role="status" [attr.aria-label]="liveLabel() + ', subscribed as ' + audienceLabel()">
+          <span class="dot" aria-hidden="true"></span>
+          <span class="live-word">{{ liveLabel() }}</span>
+          <span class="live-sub">subscribed as {{ audienceLabel() }}</span>
+        </span>
+        <a class="subs-link" [routerLink]="['/events', record.id, 'subscribers']" data-subscribers-link>
+          <span class="pulse" aria-hidden="true"></span>Subscribers<span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
       <h1>{{ record.name }}</h1>
       @if (record.description) {
         <p class="description">{{ record.description }}</p>
@@ -18,83 +28,163 @@
           <div><dt class="ch-label">Scenario Type</dt><dd class="mono">{{ type.id }}{{ type.version ? ' v' + type.version : '' }}</dd></div>
         }
         <div><dt class="ch-label">Created</dt><dd>{{ record.created | date: 'MMM d, y, HH:mm' }}</dd></div>
-        <div><dt class="ch-label">Entries</dt><dd>{{ record.history.length }}</dd></div>
+        <div><dt class="ch-label">Entries</dt><dd class="entry-count">{{ record.history.length }}</dd></div>
         <div><dt class="ch-label">Schema</dt><dd class="mono">v{{ record.schemaVersion }}</dd></div>
         @if (record.seededFrom?.length) {
           <div><dt class="ch-label">Seeded From</dt><dd class="mono">{{ record.seededFrom!.join(', ') }}</dd></div>
         }
       </dl>
+
+      @if (contributors().length) {
+        <div class="authors" data-authors>
+          <span class="ch-label">Written by</span>
+          @for (c of contributors(); track c.app.key) {
+            <span class="author-pill" [style.--app]="c.app.color" [attr.data-app]="c.app.key">
+              <span class="swatch" aria-hidden="true"></span>{{ c.name }}
+              @if (c.agent) {<span class="agent-mark" title="Includes entries an AI agent made">AI</span>}
+              <span class="n">{{ c.entries }}</span>
+            </span>
+          }
+        </div>
+      }
     </header>
 
-    <div class="audience" role="radiogroup" aria-label="View as">
-      <span class="ch-label">View as</span>
-      @for (a of audiences; track a.key) {
-        <button type="button" role="radio" [attr.aria-checked]="audience() === a.key" (click)="audience.set(a.key)">{{ a.label }}</button>
-      }
+    <div class="toolbar">
+      <div class="audience" role="radiogroup" aria-label="View as">
+        <span class="ch-label">View as</span>
+        @for (a of audiences; track a.key) {
+          <button type="button" role="radio" [attr.data-audience]="a.key" [attr.aria-checked]="audience() === a.key" (click)="setAudience(a.key)">{{ a.label }}</button>
+        }
+      </div>
+      <p class="audience-note">
+        @switch (audience()) {
+          @case ('participant') { What the training audience may see. Ground truth stays hidden. }
+          @case ('excon') { Exercise control: the ground truth, the plan and every build. }
+          @case ('designer') { Everything, including the designers' own notes. }
+        }
+      </p>
     </div>
 
     <ol class="layers" aria-label="Parts">
       @for (part of parts(); track part.key) {
-        <li [class.filled]="part.items.length">
+        <li [class.filled]="part.items.length" [class.glow]="glowing().has(part.key)" [attr.data-part-tile]="part.key">
           <a [href]="'#' + part.key" (click)="$event.preventDefault(); jump(part.key)">
             <span class="ch-label">{{ part.stage }}</span>
             <strong>{{ part.label }}</strong>
-            <span class="count">{{ part.items.length }}</span>
+            <span class="tile-foot">
+              @for (n of [part.items.length]; track n) {
+                <span class="count">{{ n }}</span>
+              }
+              <span class="dots" aria-hidden="true">
+                @for (app of part.apps; track $index) {
+                  <span class="app-dot" [style.background]="app.color" [title]="app.label"></span>
+                }
+              </span>
+            </span>
           </a>
         </li>
       }
     </ol>
 
-    @for (part of parts(); track part.key) {
-      <section class="part" [id]="part.key">
-        <h2>{{ part.label }} <span class="ch-label">{{ part.items.length }}</span></h2>
-        @if (part.items.length) {
-          <ul class="items">
-            @for (item of part.items; track item.id) {
-              <li>
-                <span class="kind ch-label">{{ words(item.kind) }}</span>
-                <span class="body">
-                  <span class="title">{{ title(item) }}</span>
-                  @if (detail(item); as detail) {
-                    <span class="detail">{{ detail }}</span>
-                  }
-                </span>
-                <span class="tags">
-                  @if (item.standing === 'proposed') {
-                    <span class="tag proposed ch-label">Proposed</span>
-                  }
-                  @if (item.visibility !== 'participant') {
-                    <span class="tag ch-label" [title]="'Visible to ' + item.visibility + ' and up'">{{ item.visibility }}</span>
-                  }
-                  <span class="item-id">{{ item.id }}</span>
-                </span>
-              </li>
+    <div class="columns" [class.switching]="switching()">
+      <div class="main">
+        @for (part of parts(); track part.key) {
+          <section class="part" [id]="part.key" [attr.data-part]="part.key">
+            <h2>{{ part.label }} <span class="ch-label">{{ part.items.length }}</span></h2>
+            @if (part.items.length) {
+              <ul class="items">
+                @for (row of part.rows; track row.item.id) {
+                  <li [class.fresh]="row.fresh" [class.hidden-truth]="row.item.visibility !== 'participant'" [attr.data-item-id]="row.item.id" [attr.data-kind]="row.item.kind">
+                    <span class="kind ch-label">{{ words(row.item.kind) }}</span>
+                    <span class="body">
+                      @if (row.view.eyebrow) {
+                        <span class="item-eyebrow ch-label">{{ words(row.view.eyebrow) }}</span>
+                      }
+                      <span class="title-line">
+                        <span class="title">{{ row.view.title }}</span>
+                        @if (row.view.state; as state) {
+                          <span class="state ch-label" [attr.data-state]="state">{{ state }}</span>
+                        }
+                      </span>
+                      @if (row.view.route; as route) {
+                        <span class="route">
+                          @if (route.from) {
+                            @if (!route.to.length) {<span class="by">by</span>}
+                            <span class="from">{{ route.from }}</span>
+                          }
+                          @if (route.to.length) {<span class="arrow" aria-label="to">→</span><span class="to">{{ route.to.join(', ') }}</span>}
+                          @if (route.channel) {<span class="channel">on {{ route.channel }}</span>}
+                        </span>
+                      }
+                      @if (row.view.detail; as detail) {
+                        <span class="detail">{{ detail }}</span>
+                      }
+                      @if (row.view.preview; as preview) {
+                        <span class="preview"><span class="clamp">{{ preview }}</span></span>
+                      }
+                      @if (row.view.meta.length) {
+                        <span class="meta">
+                          @for (m of row.view.meta; track $index) {
+                            <span class="meta-pair"><span class="meta-key">{{ m.label }}</span><span [class.mono]="m.mono">{{ m.value }}</span></span>
+                          }
+                        </span>
+                      }
+                    </span>
+                    <span class="tags">
+                      @if (row.item.visibility !== 'participant') {
+                        <span class="tag vis ch-label" [attr.data-vis]="row.item.visibility" [title]="'Visible to ' + row.item.visibility + ' and up'">{{ row.item.visibility }}</span>
+                      }
+                      @if (row.item.standing === 'proposed') {
+                        <span class="tag proposed ch-label">Proposed</span>
+                      }
+                      @if (row.chip; as chip) {
+                        <span class="author" [style.--app]="chip.color" [title]="'Written by ' + chip.label">{{ chip.label }}</span>
+                      }
+                      <span class="item-id">{{ row.item.id }}</span>
+                    </span>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="none">Nothing here yet{{ audience() !== 'designer' ? ', or nothing this audience may see' : '' }}.</p>
             }
-          </ul>
-        } @else {
-          <p class="none">Nothing here yet{{ audience() !== 'designer' ? ', or nothing this audience may see' : '' }}.</p>
+          </section>
         }
-      </section>
-    }
+      </div>
 
-    <section class="part">
-      <h2>Latest Entries <span class="ch-label">{{ record.history.length }}</span></h2>
-      @if (recent().length) {
-        <ul class="entries">
-          @for (entry of recent(); track entry.id) {
-            <li>
-              <span class="seq">#{{ entry.sequence }}</span>
-              <span class="op ch-label">{{ entry.op }}</span>
-              <span class="what">{{ words(entry.kind) }} <span class="mono">{{ entry.itemId }}</span> in {{ partLabel(entry.part) }}</span>
-              <span class="who">{{ entry.author.app }}{{ entry.author.actor ? ' · ' + entry.author.actor : '' }}</span>
-              <span class="when">{{ entry.recordedAt | date: 'MMM d, HH:mm' }}</span>
-            </li>
+      <aside class="rail" aria-label="Latest entries">
+        <section class="part feed">
+          <h2>
+            Latest Entries <span class="ch-label">{{ record.history.length }}</span>
+            <span class="feed-live" [attr.data-state]="live()"><span class="dot" aria-hidden="true"></span>{{ liveLabel() }}</span>
+          </h2>
+          @if (recent().length) {
+            <ul class="entries">
+              @for (r of recent(); track r.entry.id) {
+                <li [class.fresh]="r.fresh" [attr.data-seq]="r.entry.sequence">
+                  <span class="seq">#{{ r.entry.sequence }}</span>
+                  <span class="entry-body">
+                    <span class="entry-top">
+                      <span class="op ch-label" [attr.data-op]="r.entry.op">{{ r.entry.op }}</span>
+                      <span class="what-kind ch-label">{{ words(r.entry.kind) }}</span>
+                      <span class="in">in {{ partLabel(r.entry.part) }}</span>
+                    </span>
+                    <span class="what" [title]="r.entry.itemId">{{ r.title }}</span>
+                    <span class="entry-foot">
+                      <span class="author who" [style.--app]="r.chip.color">{{ r.chip.label }}</span>
+                      @if (r.entry.author.actor) {<span class="actor">{{ r.entry.author.actor }}</span>}
+                      <span class="when">{{ r.entry.recordedAt | date: 'MMM d, HH:mm:ss' }}</span>
+                    </span>
+                  </span>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="none">No entries this audience may see.</p>
           }
-        </ul>
-      } @else {
-        <p class="none">No entries this audience may see.</p>
-      }
-    </section>
+        </section>
+      </aside>
+    </div>
   } @else if (!error()) {
     <p class="none">Loading…</p>
   }

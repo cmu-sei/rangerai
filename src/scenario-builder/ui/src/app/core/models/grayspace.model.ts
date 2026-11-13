@@ -141,6 +141,26 @@ export interface GsHost {
   publish?: boolean;
 }
 
+export interface GsDnsDomain {
+  domain: string;
+  hosting_server: string;
+}
+
+export interface GsDnsRecord {
+  name: string;
+  type: string;
+  host?: string | null;
+  data?: string | null;
+  ttl?: number;
+}
+
+/** A certificate a host serves, issued by a base CA. */
+export interface GsTls {
+  host: string;
+  names: string[];
+  ca: string;
+}
+
 /** The slice spec (grayspace-slice-v1) the page edits. Fields it doesn't edit are kept as they are. */
 export interface SliceSpec {
   apiVersion: string;
@@ -152,6 +172,8 @@ export interface SliceSpec {
   sites?: GsSite[];
   hosts?: GsHost[];
   role_vars?: Record<string, Record<string, string>>;
+  dns?: { domains?: GsDnsDomain[]; records?: GsDnsRecord[] };
+  tls?: GsTls[];
   [other: string]: unknown;
 }
 
@@ -202,12 +224,55 @@ export interface GsJob {
   error?: string | null;
   finished?: string | null;
   result?: Record<string, unknown> | null;
+  /** Each stage's title, keyed by stage. */
+  stage_titles?: Record<string, string>;
 }
 
 export interface GsInstance {
   id: string;
   state: string;
   error?: string | null;
+  /** The manifest, as GraySpace's InstanceView gives it: filled in as the instance's job allocates and builds it. */
+  sites?: GsManifestSite[];
+  hosts?: GsManifestHost[];
+  dns?: { name: string; type: string; data: string }[];
+  certificates?: { host: string; names: string[]; ca: string; serial?: string | null }[];
+  stages_done?: string[];
+}
+
+export interface GsManifestSegment {
+  name: string;
+  cidr: string;
+  gateway?: string;
+}
+
+export interface GsManifestSite {
+  name: string;
+  router: string;
+  isp?: string;
+  location?: string | null;
+  wan_ip?: string;
+  routed?: boolean;
+  public_prefix?: string | null;
+  edge?: string;
+  segments?: GsManifestSegment[];
+}
+
+/** One built host; a host with a count is several, named <name>-01 and on. */
+export interface GsManifestHost {
+  name: string;
+  hostname?: string;
+  site?: string | null;
+  segment?: string | null;
+  ip?: string;
+  public_ip?: string | null;
+  mgmt_ip?: string | null;
+  fqdns?: string[];
+  roles?: string[];
+  labels?: Record<string, string>;
+  image?: string;
+  /** Proxmox status: running, stopped or unknown. */
+  status?: string;
 }
 
 /** GET /api/grayspace/base/job: GraySpace's latest base job and its log; neither before the first. */

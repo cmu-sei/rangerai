@@ -1,0 +1,124 @@
+<section class="stage" [attr.data-audience]="audience()">
+  <header class="head">
+    <div class="titles">
+      <a class="back" [routerLink]="['/events', id()]" data-back>← Event</a>
+      <p class="eyebrow">Chronicle · Subscribers</p>
+      <h1>{{ record()?.name ?? id() }} <i>live</i></h1>
+      <p class="sub">Each subscriber reads only what its audience may see. Activity streams in as apps report it; the notable becomes part of the record.</p>
+    </div>
+    <div class="side">
+      <span class="live" [attr.data-state]="state()" data-live>
+        <span class="dot" aria-hidden="true"></span>{{ state() === 'live' ? 'LIVE' : state() === 'off' ? 'OFF' : state() === 'connecting' ? 'CONNECTING' : 'RECONNECTING' }}
+        <span class="mono">ws /api/chronicles/{{ id() }}/live</span>
+      </span>
+      <div class="audience" role="radiogroup" aria-label="Watch as">
+        <span class="label">Watch as</span>
+        @for (a of audiences; track a.key) {
+          <button type="button" role="radio" [attr.data-audience]="a.key" [attr.aria-checked]="audience() === a.key" (click)="audience.set(a.key)">{{ a.label }}</button>
+        }
+      </div>
+    </div>
+  </header>
+
+  <div class="hub" data-hub>
+    <strong>{{ record()?.name ?? '…' }}</strong>
+    <span class="mono">{{ id() }}</span>
+    <span class="parts">
+      @for (p of parts(); track p.key) {
+        <span [attr.data-part-count]="p.key">{{ p.label }} <b>{{ p.count }}</b></span>
+      }
+      <span class="entries">{{ entries() }} entries</span>
+    </span>
+  </div>
+
+  @if (error(); as error) {
+    <p class="error" role="alert">{{ error }}</p>
+  }
+
+  <div class="body">
+    <main class="cards" [class.empty]="!agents().length">
+      @for (s of agents(); track s.id) {
+        @let run = runs()[s.id];
+        <section class="card" [class.on]="!!run" [class.running]="running(s)" [style.--c]="app(s.app).color" [attr.data-subscriber]="s.id">
+          <div class="top">
+            <div class="badge">{{ letter(s) }}</div>
+            <div class="who">
+              <div class="name">{{ s.name }}</div>
+              <div class="role">{{ s.role }}</div>
+            </div>
+            <div class="model"><b>{{ modelOf(s) }}</b><br />local · Ollama</div>
+          </div>
+
+          <div class="label">Subscribes</div>
+          <div class="query">@for (part of query(s.query); track $index) {<span [class.k]="part.key">{{ part.text }}</span>}</div>
+
+          <div class="sees">
+            <div class="stat"><div class="v" data-v="items">{{ run?.items ?? '–' }}</div><div class="l">items it may see</div></div>
+            <div class="stat withheld" [class.none]="run?.withheld === 0"><div class="v" data-v="withheld">{{ run?.withheld ?? '–' }}</div><div class="l">withheld from it</div></div>
+            <div class="stat"><div class="v" data-v="tokens">{{ run?.tokens ?? '–' }}</div><div class="l">tokens of context</div></div>
+          </div>
+          <div class="ctx">@for (x of run?.sample ?? []; track $index) {<span>{{ x }}</span>}</div>
+
+          <div class="label writes">Writes
+            <button type="button" class="run" [attr.data-run]="s.id" [disabled]="running(s)" (click)="start(s)">{{ running(s) ? 'Running…' : run ? 'Run again' : 'Run' }}</button>
+          </div>
+          <div class="out" [class.mono]="s.audience !== 'participant'" data-output>
+            <div class="inner">
+              @if (run?.text) {<span class="text">{{ run!.text }}</span>} @else if (!run) {<span class="hint">Waiting for a run.</span>}
+              @if (running(s)) {<span class="caret"></span>}
+            </div>
+          </div>
+
+          <div class="foot">
+            @if (run?.failed; as failed) {
+              <span class="pub failed"><span class="ok">!</span>{{ failed }}</span>
+            } @else if (run?.published; as p) {
+              <a class="pub done" [routerLink]="['/events', id()]" data-published><span class="ok">✓</span>Published <b>{{ p.kind }}</b> to <b>{{ partLabel(p.part) }}</b> · #{{ p.sequence }}</a>
+            } @else {
+              <span class="pub">{{ running(s) ? 'Writing…' : (s.published ? s.published + ' published' : 'Not published yet') }}</span>
+            }
+          </div>
+        </section>
+      } @empty {
+        <p class="none">No agents subscribe to this event at this audience yet. Register one with PUT /api/chronicles/{{ id() }}/subscribers/&#123;id&#125;.</p>
+      }
+    </main>
+
+    <aside class="rail">
+      @for (s of sources(); track s.id) {
+        <section class="source" [style.--c]="app(s.app).color" [attr.data-subscriber]="s.id">
+          <div class="badge">{{ letter(s) }}</div>
+          <div class="who">
+            <div class="name">{{ s.name }}</div>
+            <div class="role">{{ s.role }}</div>
+            <div class="last">{{ s.lastActivity ?? 'No activity yet' }}</div>
+          </div>
+          <div class="n"><b>{{ activityOf(s) }}</b><span>activities</span></div>
+        </section>
+      }
+
+      <div class="feed-head"><span class="label">Live activity</span><span class="count">{{ feed().length }}</span></div>
+      <ol class="feed" data-feed>
+        @for (a of feed(); track a.id) {
+          <li [class.fresh]="fresh().has(a.id)" [class.notable]="a.sequence" [class.excon]="a.visibility !== 'participant'" [style.--c]="app(a.source).color" [attr.data-activity]="a.kind">
+            <span class="glyph" [attr.title]="kind(a.kind).label">{{ kind(a.kind).glyph }}</span>
+            <div class="what">
+              <div class="line1">
+                <span class="chip"><span class="sw"></span>{{ a.source }}</span>
+                @if (actor(a.actor); as who) {<b class="actor">{{ who }}</b>}
+                @if (a.host) {<span class="host">{{ a.host }}</span>}
+                <time>{{ a.at | date: 'HH:mm:ss' }}</time>
+              </div>
+              <div class="text">{{ a.text ?? kind(a.kind).label }}</div>
+              @if (a.sequence) {
+                <a class="recorded" [routerLink]="['/events', id()]" [attr.data-recorded]="a.sequence">recorded · #{{ a.sequence }}</a>
+              }
+            </div>
+          </li>
+        } @empty {
+          <li class="quiet">Quiet. Activity appears here the moment an app reports it.</li>
+        }
+      </ol>
+    </aside>
+  </div>
+</section>

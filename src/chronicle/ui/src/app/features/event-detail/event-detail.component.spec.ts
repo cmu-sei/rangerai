@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { NEVER, Subject, of, throwError } from 'rxjs';
 import { ChronicleApiService } from '../../core/chronicle-api.service';
-import { Audience, ChronicleRecord } from '../../core/chronicle.model';
+import { Audience, ChronicleRecord, StreamEvent } from '../../core/chronicle.model';
 import { EventDetailComponent } from './event-detail.component';
 
 const author = { app: 'scenario-builder', actor: 'designer@example.org', via: 'person' };
@@ -27,12 +27,12 @@ function record(audience: Audience): ChronicleRecord {
   };
 }
 
-async function render(getChronicle = vi.fn((_id: string, audience: Audience) => of(record(audience)))) {
-  TestBed.configureTestingModule({ providers: [provideRouter([]), { provide: ChronicleApiService, useValue: { getChronicle } }] });
+async function render(getChronicle = vi.fn((_id: string, audience: Audience) => of(record(audience))), stream = vi.fn((_id: string, _a: Audience) => NEVER as unknown as Subject<StreamEvent>)) {
+  TestBed.configureTestingModule({ providers: [provideRouter([]), { provide: ChronicleApiService, useValue: { getChronicle, stream } }] });
   const fixture = TestBed.createComponent(EventDetailComponent);
   fixture.componentRef.setInput('id', 'harbor-ttx');
   await fixture.whenStable();
-  return { fixture, getChronicle, root: fixture.nativeElement as HTMLElement };
+  return { fixture, getChronicle, stream, root: fixture.nativeElement as HTMLElement };
 }
 
 const titles = (root: HTMLElement, part: string) =>
@@ -74,6 +74,42 @@ describe('EventDetailComponent', () => {
     expect(root.querySelector('[role="alert"]')).toBeNull();
     expect(Array.from(root.querySelectorAll('.layers .count')).map(c => c.textContent)).toEqual(['0', '0', '0', '0', '1']);
     expect(root.querySelector('.entries')).toBeNull();
+  });
+
+  it('subscribes as the audience, reads the record again for a newer entry, and highlights what arrived', async () => {
+    const events = new Subject<StreamEvent>();
+    let current = record('participant');
+    const getChronicle = vi.fn(() => of(current));
+    const { fixture, root, stream } = await render(getChronicle, vi.fn(() => events));
+    vi.useFakeTimers();
+    try {
+      expect(stream).toHaveBeenCalledWith('harbor-ttx', 'participant');
+
+      events.next({ type: 'open' });
+      events.next({ type: 'entry', entry: current.history[1] });   // already shown: no new read
+      vi.advanceTimersByTime(400);
+      expect(getChronicle).toHaveBeenCalledTimes(1);
+
+      const built = { kind: 'realization', id: 'real-web', visibility: 'participant' as const, of: 'port-authority', deploymentId: 'dep-1',
+        identifiers: { hostname: 'bay-web', ip: '10.0.0.5' } };
+      const entry = { id: 'e3', sequence: 3, recordedAt: '2026-11-02T15:00:00Z', part: 'asBuilt' as const, kind: 'realization', op: 'add',
+        itemId: 'real-web', item: built, author: { app: 'grayspace', via: 'app' } };
+      current = { ...current, asBuilt: [built], history: [...current.history, entry] };
+      events.next({ type: 'entry', entry });
+      vi.advanceTimersByTime(400);
+      fixture.detectChanges();
+
+      expect(getChronicle).toHaveBeenCalledTimes(2);
+      expect(root.querySelector('[data-live]')!.getAttribute('data-state')).toBe('live');
+      const row = root.querySelector('#asBuilt [data-item-id="real-web"]')!;
+      expect(row.classList).toContain('fresh');
+      expect(row.querySelector('.title')!.textContent).toBe('bay-web');
+      expect(row.querySelector('.author')!.textContent).toBe('grayspace');
+      expect(root.querySelector('[data-part-tile="asBuilt"]')!.classList).toContain('glow');
+      expect(root.querySelector('.entries [data-seq="3"]')!.classList).toContain('fresh');
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('says when there is no such event', async () => {

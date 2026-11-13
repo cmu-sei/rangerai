@@ -35,8 +35,20 @@ export interface Entry {
   kind: string;
   op: string;
   itemId: string;
-  author: { app: string; actor?: string; via: string };
+  item?: Item;
+  reason?: string;
+  author: Author;
 }
+
+/** Who made an entry: the app, the person or agent behind it, and how. */
+export interface Author {
+  app: string;
+  actor?: string;
+  via: 'person' | 'agent' | 'app' | string;
+}
+
+/** What a subscription hears: it opened, it dropped (the browser retries), or an entry arrived. */
+export type StreamEvent = { type: 'open' } | { type: 'error' } | { type: 'entry'; entry: Entry };
 
 /** What `GET /api/chronicles/{id}` returns: one event, as an audience sees it. */
 export interface ChronicleRecord {

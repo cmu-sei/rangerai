@@ -359,6 +359,7 @@ table {
   }
 }
 
+.hint,
 .state,
 .note {
   margin: 0 0 10px;
@@ -462,4 +463,10 @@ table {
   to {
     transform: rotate(360deg);
   }
+}
+
+.hint {
+  color: var(--sb-muted);
+  font-size: var(--sb-small);
+  align-self: center;
 }

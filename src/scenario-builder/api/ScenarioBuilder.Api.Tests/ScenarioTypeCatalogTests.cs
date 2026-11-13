@@ -105,14 +105,14 @@ public class ScenarioTypeCatalogTests
         var tabletop = catalog.Find(TestApi.TabletopType)!;
 
         var network = smallUnit.Stages[3].Questions;
-        Assert.Equal(["rangeReference", "segments", "hosts", "services", "connectivity", "identity", "monitoring", "telemetry", "platforms", "simulatedUsers", "planted", "buildLimits"],
+        Assert.Equal(["rangeReference", "segments", "hosts", "services", "connectivity", "identity", "monitoring", "telemetry", "platforms", "simulatedUsers", "personas", "planted", "buildLimits"],
             network.Select(q => q.Id));
         Assert.All(network, q => Assert.StartsWith("/network/", q.Path));
         Assert.Equal(["simulatedUsers", "planted"], network.Where(q => q.Visibility == "excon").Select(q => q.Id));
 
         Assert.Equal((2, "/network/notional"), (tabletop.Find("notionalNetwork")!.Value.Stage, tabletop.Find("notionalNetwork")!.Value.Question.Path));
         Assert.Equal("/network/liveRange", tabletop.Find("liveRange")!.Value.Question.Path);
-        Assert.All(new[] { smallUnit, tabletop }, k => Assert.Equal("0.3.0", k.Version));
+        Assert.Equal(("0.4.0", "0.3.0"), (smallUnit.Version, tabletop.Version));
     }
 
     [Fact]

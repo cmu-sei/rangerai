@@ -284,3 +284,101 @@ pre {
   font-size: var(--sb-small);
   color: var(--sb-muted);
 }
+
+// Chronicle: the record the event lives in, above the apps the scenario is sent to.
+.chronicle {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: linear-gradient(110deg, #fff 0%, #fff 55%, #fdf1f1 100%);
+  border: 1px solid var(--sb-line);
+  border-left: 3px solid #e2483d;
+  border-radius: var(--sb-radius);
+  transition: border-color 0.3s ease;
+
+  &.done {
+    border-color: #bfe2cf;
+    border-left-color: var(--sb-pass);
+  }
+}
+
+.chronicle-mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
+  background: #e2483d;
+  color: #fff;
+  font-family: var(--sb-serif);
+  font-style: italic;
+  font-size: 22px;
+}
+
+.chronicle-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.chronicle-name {
+  font-weight: 600;
+}
+
+.chronicle-description {
+  color: var(--sb-muted);
+}
+
+.chronicle-result {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin: 6px 0 0;
+  font-size: var(--sb-small);
+  color: var(--sb-muted);
+  animation: chronicle-in 0.4s ease-out;
+
+  .ok {
+    padding: 2px 8px;
+    border-radius: var(--sb-pill);
+    background: var(--sb-pass-soft);
+    color: var(--sb-pass);
+    font-weight: 600;
+  }
+
+  strong {
+    color: var(--sb-ink);
+  }
+
+  code {
+    font-family: var(--sb-mono);
+    font-size: 11px;
+  }
+}
+
+.chronicle-error {
+  margin: 6px 0 0;
+  font-size: var(--sb-small);
+  color: var(--sb-error);
+}
+
+.chronicle-actions {
+  display: flex;
+  gap: 8px;
+
+  a.sb-button {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+}
+
+@keyframes chronicle-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}

@@ -73,6 +73,39 @@
     }
   </section>
 
+  <section class="block" aria-labelledby="finish-chronicle">
+    <h2 id="finish-chronicle">Chronicle</h2>
+    <div class="chronicle" data-testid="chronicle-card" [class.done]="published()">
+      <span class="chronicle-mark" aria-hidden="true">C</span>
+      <div class="chronicle-text">
+        <span class="chronicle-name">One living record of this event</span>
+        <span class="chronicle-description">Publishing starts this event’s Chronicle with its World and Intent. GraySpace, GHOSTS and the other apps add to it as they build and run the event.</span>
+        @if (published(); as p) {
+          <p class="chronicle-result" role="status" data-testid="chronicle-result">
+            <span class="ok">Published · {{ p.entries }} entries</span>
+            <span class="count"><strong>{{ p.parts.world }}</strong> World</span>
+            <span class="count"><strong>{{ p.parts.intent }}</strong> Intent</span>
+            @if (p.subscribers) {
+              <span class="count" data-testid="chronicle-subscribers"><strong>{{ p.subscribers }}</strong> subscribers</span>
+            }
+            <code>{{ p.chronicleId }}</code>
+          </p>
+        }
+        @if (publishError(); as message) {
+          <p class="chronicle-error" role="alert" data-testid="chronicle-error">{{ message }}</p>
+        }
+      </div>
+      <div class="chronicle-actions">
+        @if (published(); as p) {
+          <a class="sb-button" id="chronicle-open" data-testid="chronicle-open" [href]="p.url" target="_blank" rel="noopener">Open in Chronicle ↗</a>
+        }
+        <button class="sb-button primary" type="button" id="chronicle-publish" data-testid="chronicle-publish" [disabled]="publishing()" (click)="publish()">
+          {{ publishing() ? 'Publishing…' : published() ? 'Publish again' : 'Publish to Chronicle' }}
+        </button>
+      </div>
+    </div>
+  </section>
+
   <section class="block" aria-labelledby="finish-plugins">
     <h2 id="finish-plugins">Plugins</h2>
     <p class="section-sub">Send the scenario to another app. Each sends once an admin connects it by its API's address.</p>

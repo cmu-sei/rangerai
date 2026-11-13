@@ -34,6 +34,13 @@ builder.Services.AddHttpClient(SourceText.WebClient, client => client.Timeout = 
 builder.Services.AddHttpClient(GraySpaceClient.Client, client => client.Timeout = TimeSpan.FromSeconds(30));
 builder.Services.AddScoped<GraySpaceClient>();
 
+builder.Services.Configure<ChronicleOptions>(builder.Configuration.GetSection(ChronicleOptions.Section));
+builder.Services.AddHttpClient(ChronicleClient.Client, client => client.Timeout = TimeSpan.FromSeconds(30));
+builder.Services.AddScoped<ChronicleClient>();
+builder.Services.AddScoped<ChroniclePublisher>();
+builder.Services.AddScoped<AsBuiltRelay>();
+builder.Services.Configure<EnclaveDraftOptions>(builder.Configuration.GetSection(EnclaveDraftOptions.Section));
+
 builder.AddApiEndpoints();
 
 // OpenAPI document at /openapi/v1.json, browsable at /swagger (Development only).

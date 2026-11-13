@@ -13,6 +13,16 @@ import {
  * The Scenario Builder API, called as the person at the keyboard: these calls never send X-Via,
  * so a person's answer is always stated. The agent calls the same API through its own client.
  */
+/** POST /api/scenarios/{id}/chronicle: the Chronicle the scenario started, and what went into it. */
+export interface ChroniclePublished {
+  chronicleId: string;
+  entries: number;
+  parts: { world: number; intent: number };
+  /** Downstream agents registered on the Chronicle; absent or 0 when its API has none yet. */
+  subscribers?: number;
+  url: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class BuilderApiService {
   private readonly http = inject(HttpClient);
@@ -157,6 +167,11 @@ export class BuilderApiService {
     return this.http.post<never>(`${this.base}/scenarios/${id}/send/${encodeURIComponent(target)}`, null);
   }
 
+  /** Starts (or updates) this scenario's Chronicle with its World and Intent; GraySpace and other apps add to it from there. */
+  publishChronicle(id: number): Observable<ChroniclePublished> {
+    return this.http.post<ChroniclePublished>(`${this.base}/scenarios/${id}/chronicle`, null);
+  }
+
   getGraySpace(): Observable<GraySpaceStatus> {
     return this.http.get<GraySpaceStatus>(`${this.base}/grayspace`);
   }
@@ -203,6 +218,11 @@ export class BuilderApiService {
 
   putEnclave(id: number, spec: SliceSpec): Observable<EnclaveView> {
     return this.http.put<EnclaveView>(`${this.base}/scenarios/${id}/enclave`, { spec });
+  }
+
+  /** Drafts the enclave from the scenario's stage 3 answers and what GraySpace offers, as the new draft. */
+  draftEnclave(id: number): Observable<EnclaveView> {
+    return this.http.post<EnclaveView>(`${this.base}/scenarios/${id}/enclave/draft`, null);
   }
 
   /** Makes an enclave already on GraySpace this scenario's draft. */
