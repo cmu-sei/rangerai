@@ -2,11 +2,11 @@
 // point, org-chart style. Status colours come from the builder's pass/attention/error tokens.
 :host {
   display: block;
-  --ed-band: #1b2233;
-  --ed-band-2: #263049;
-  --ed-wire: #c4cad5;
-  --ed-wire-live: #1f8a5b;
-  --ed-build: #2f5bea;
+  --ed-band: light-dark(#1b2233, #0e1520);
+  --ed-band-2: light-dark(#263049, #1b2a3c);
+  --ed-wire: light-dark(#c4cad5, #3a4554);
+  --ed-wire-live: var(--sb-pass);
+  --ed-build: var(--sb-person);
 }
 
 .diagram {
@@ -94,7 +94,7 @@ code {
 
   &[data-state='failed'],
   &[data-state='cancelled'] {
-    background: #fdecee;
+    background: var(--sb-error-soft);
     border-color: transparent;
     color: var(--sb-error);
   }
@@ -218,7 +218,7 @@ code {
   }
 
   50% {
-    box-shadow: 0 0 0 6px rgba(47, 91, 234, 0.12);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--sb-person) 12%, transparent);
   }
 }
 
@@ -310,7 +310,7 @@ code {
   border-radius: 999px;
   background: var(--sb-surface);
   border: 1px solid var(--sb-line-strong);
-  box-shadow: 0 2px 6px rgba(20, 28, 45, 0.12);
+  box-shadow: 0 2px 6px rgb(var(--sb-shadow) / 12%);
   font-size: 11.5px;
   color: var(--sb-ink);
   white-space: nowrap;
@@ -409,7 +409,7 @@ code {
   transition: border-color 0.5s ease;
 
   .is-live & {
-    border-color: #9fd3bb;
+    border-color: light-dark(#9fd3bb, #2a5a39);
   }
 }
 
@@ -426,7 +426,7 @@ code {
 .site {
   border: 1px solid var(--sb-line-strong);
   border-radius: 10px;
-  background: linear-gradient(180deg, #fbfcfe, #f6f8fb);
+  background: linear-gradient(180deg, light-dark(#fbfcfe, #1b222b), light-dark(#f6f8fb, #171e26));
   padding: 10px 10px 10px;
 }
 
@@ -502,7 +502,7 @@ code {
   font-family: var(--sb-mono);
   font-size: 11.5px;
   font-weight: 600;
-  color: #3d4557;
+  color: light-dark(#3d4557, #b8c7d8);
 }
 
 .cidr {
@@ -539,12 +539,12 @@ code {
   border-left: 3px solid var(--sb-line-strong);
   border-radius: 7px;
   background: var(--sb-surface);
-  box-shadow: 0 1px 2px rgba(20, 28, 45, 0.04);
+  box-shadow: 0 1px 2px rgb(var(--sb-shadow) / 4%);
   transition: border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
 
   &.internet {
     border-style: solid;
-    background: linear-gradient(180deg, #fff, #f8f9fc);
+    background: linear-gradient(180deg, var(--sb-surface), light-dark(#f8f9fc, #1b222b));
   }
 
   &[data-state='building'] {
@@ -554,16 +554,16 @@ code {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(100deg, transparent 20%, rgba(47, 91, 234, 0.08) 50%, transparent 80%);
+      background: linear-gradient(100deg, transparent 20%, color-mix(in srgb, var(--sb-person) 8%, transparent) 50%, transparent 80%);
       transform: translateX(-100%);
       animation: shimmer 1.6s ease-in-out infinite;
     }
   }
 
   &[data-state='running'] {
-    border-color: #bfe2cf;
+    border-color: var(--sb-pass-line);
     border-left-color: var(--sb-pass);
-    box-shadow: 0 1px 3px rgba(31, 138, 91, 0.1);
+    box-shadow: 0 1px 3px color-mix(in srgb, var(--sb-pass) 10%, transparent);
     animation: arrive 0.6s ease-out;
   }
 
@@ -607,17 +607,17 @@ code {
   line-height: 15px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  background: #eef0f4;
-  color: #5a6378;
+  background: light-dark(#eef0f4, #1d2630);
+  color: light-dark(#5a6378, #8a96a6);
 
   &[data-kind='vm'] {
-    background: #e9eefc;
-    color: #3550b8;
+    background: light-dark(#e9eefc, #0f1d2c);
+    color: light-dark(#3550b8, #4ea1ff);
   }
 
   &[data-kind='oci'] {
-    background: #f1ebfb;
-    color: #6a40c4;
+    background: light-dark(#f1ebfb, #261e3c);
+    color: light-dark(#6a40c4, #c3a6ff);
   }
 }
 
@@ -679,32 +679,32 @@ code {
   line-height: 15px;
   background: var(--sb-canvas);
   border: 1px solid var(--sb-line);
-  color: #4a5368;
+  color: light-dark(#4a5368, #8a96a6);
 
   &[data-role='ad-dc'],
   &[data-role='dns'] {
-    background: #fff6e6;
-    border-color: #f3dfb8;
-    color: #8a5a08;
+    background: light-dark(#fff6e6, #221b0c);
+    border-color: light-dark(#f3dfb8, #4a3b16);
+    color: light-dark(#8a5a08, #d29922);
   }
 
   &[data-role='ghosts-client'] {
     background: var(--sb-agent-soft);
-    border-color: #e2d6f6;
+    border-color: light-dark(#e2d6f6, #3a2d5c);
     color: var(--sb-agent);
   }
 
   &[data-role='web'],
   &[data-role='mail'] {
     background: var(--sb-person-soft);
-    border-color: #d7e1fb;
+    border-color: light-dark(#d7e1fb, #1f3a55);
     color: var(--sb-person);
   }
 
   &.public {
-    background: #e8f6f4;
-    border-color: #c8e8e2;
-    color: #157567;
+    background: light-dark(#e8f6f4, #0d2224);
+    border-color: light-dark(#c8e8e2, #1d4a47);
+    color: light-dark(#157567, #39c5b0);
   }
 }
 
@@ -739,7 +739,7 @@ code {
 }
 
 .public-ip {
-  color: #157567;
+  color: light-dark(#157567, #39c5b0);
 
   &::before {
     content: '⇄ ';
@@ -818,7 +818,7 @@ code {
 
   &.cert.issued {
     background: var(--sb-pass-soft);
-    border-color: #c8e6d6;
+    border-color: light-dark(#c8e6d6, #23462c);
     color: var(--sb-pass);
   }
 }

@@ -13,8 +13,8 @@
   position: absolute;
   border-radius: 10px;
   box-shadow:
-    0 0 0 2px rgb(255 255 255 / 85%),
-    0 0 0 9999px rgb(18 22 34 / 58%);
+    0 0 0 2px light-dark(rgb(255 255 255 / 85%), rgb(78 161 255 / 85%)),
+    0 0 0 9999px rgb(var(--sb-shadow) / 58%);
   transition: top 260ms cubic-bezier(0.2, 0.8, 0.2, 1), left 260ms cubic-bezier(0.2, 0.8, 0.2, 1),
     width 260ms cubic-bezier(0.2, 0.8, 0.2, 1), height 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -27,7 +27,7 @@
   padding: 18px 20px 16px;
   border-radius: 12px;
   background: var(--sb-surface);
-  box-shadow: 0 24px 60px -18px rgb(18 22 34 / 50%), 0 2px 8px rgb(18 22 34 / 12%);
+  box-shadow: 0 24px 60px -18px rgb(var(--sb-shadow) / 50%), 0 2px 8px rgb(var(--sb-shadow) / 12%);
   opacity: 0;
   transition: top 260ms cubic-bezier(0.2, 0.8, 0.2, 1), left 260ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 160ms;
 
@@ -76,7 +76,7 @@
 .text {
   margin: 8px 0 0;
   line-height: 1.6;
-  color: #3b4356;
+  color: var(--sb-body);
 }
 
 .actions {
@@ -117,7 +117,7 @@
   border: 1px solid var(--sb-line);
   border-radius: 12px;
   background: var(--sb-surface);
-  box-shadow: 0 18px 40px -20px rgb(18 22 34 / 40%);
+  box-shadow: 0 18px 40px -20px rgb(var(--sb-shadow) / 40%);
   animation: offer-in 320ms cubic-bezier(0.2, 0.8, 0.2, 1) 600ms both;
 }
 

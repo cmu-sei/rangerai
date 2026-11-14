@@ -3,23 +3,46 @@
 // is still open. Green appears only for a gate that has passed.
 @use '@angular/material' as mat;
 
+// Light is the default; html[data-theme='dark'] swaps the colour tokens for GraySpace's dark palette (its --gs-*
+// tokens), so the two read as one range. Only colours change; type, size and radius stay put.
 :root {
+  color-scheme: light;
+
   --sb-canvas: #f6f7f9;
   --sb-surface: #ffffff;
+  --sb-raised: #fafbfc;
   --sb-ink: #1c2230;
+  --sb-body: #3b4356;
   --sb-muted: #6b7385;
   --sb-faint: #9aa1b0;
   --sb-line: #e3e6eb;
   --sb-line-strong: #cfd4dc;
   --sb-person: #2f5bea;
+  --sb-person-hover: #2449c9;
   --sb-person-soft: #eaf0fe;
+  --sb-person-ink: #20357f;
   --sb-agent: #7a4fd6;
   --sb-agent-soft: #f2ecfc;
+  --sb-agent-line: #e3d8f7;
+  --sb-agent-ink: #4b2d8f;
   --sb-pass: #1f8a5b;
   --sb-pass-soft: #e7f5ee;
+  --sb-pass-line: #bfe2cf;
   --sb-attention: #a3600a;
   --sb-attention-soft: #fff3df;
+  --sb-attention-line: #f3dfb8;
   --sb-error: #c22f3a;
+  --sb-error-soft: #fdecee;
+  --sb-error-line: #f3c4c8;
+  --sb-on-accent: #ffffff;
+  // Shadows are drawn as rgb(var(--sb-shadow) / alpha).
+  --sb-shadow: 18 22 34;
+  // The term popover: an inverted card on light, a raised panel on dark.
+  --sb-pop: #1c2230;
+  --sb-pop-line: transparent;
+  --sb-pop-ink: #e9ecf3;
+  --sb-pop-muted: #9aa6c4;
+  --sb-pop-link: #a9bdff;
 
   --sb-font: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
   --sb-serif: 'IBM Plex Serif', Georgia, 'Times New Roman', serif;
@@ -31,10 +54,50 @@
   --sb-pill: 4px;
 }
 
+// GraySpace dark: bg #0f1318, panels #151b22 / #1b222b, lines #2a333f, text #d8dee6 / #8a96a6, accent #4ea1ff,
+// purple #a371f7, selected #22344a; status as its pills (a dark tint, a deeper border, the bright colour as text).
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --sb-canvas: #0f1318;
+  --sb-surface: #151b22;
+  --sb-raised: #1b222b;
+  --sb-ink: #d8dee6;
+  --sb-body: #b8c2cf;
+  --sb-muted: #8a96a6;
+  --sb-faint: #5f6b7a;
+  --sb-line: #2a333f;
+  --sb-line-strong: #36414f;
+  --sb-person: #4ea1ff;
+  --sb-person-hover: #3d8ee6;
+  --sb-person-soft: #22344a;
+  --sb-person-ink: #9cc8f5;
+  --sb-agent: #a371f7;
+  --sb-agent-soft: #261e3c;
+  --sb-agent-line: #3a2d5c;
+  --sb-agent-ink: #d6c6ff;
+  --sb-pass: #3fb950;
+  --sb-pass-soft: #10221a;
+  --sb-pass-line: #23462c;
+  --sb-attention: #d29922;
+  --sb-attention-soft: #221b0c;
+  --sb-attention-line: #4a3b16;
+  --sb-error: #f85149;
+  --sb-error-soft: #2a1110;
+  --sb-error-line: #5a2422;
+  --sb-on-accent: #ffffff;
+  --sb-shadow: 0 0 0;
+  --sb-pop: #1b222b;
+  --sb-pop-line: #2a333f;
+  --sb-pop-ink: #d8dee6;
+  --sb-pop-muted: #8a96a6;
+  --sb-pop-link: #4ea1ff;
+}
+
 html {
   @include mat.theme((
     color: (
-      theme-type: light,
+      theme-type: color-scheme,
       primary: mat.$blue-palette,
       tertiary: mat.$violet-palette,
     ),
@@ -44,14 +107,18 @@ html {
     ),
     density: -2,
   ));
+  // Material follows color-scheme; these pin its system colours to the builder's tokens in either theme.
   @include mat.theme-overrides((
-    primary: #2f5bea,
-    on-primary: #ffffff,
-    surface: #ffffff,
-    on-surface: #1c2230,
-    on-surface-variant: #6b7385,
-    outline: #cfd4dc,
-    outline-variant: #e3e6eb,
+    primary: var(--sb-person),
+    on-primary: var(--sb-on-accent),
+    surface: var(--sb-surface),
+    on-surface: var(--sb-ink),
+    on-surface-variant: var(--sb-muted),
+    inverse-surface: var(--sb-pop),
+    inverse-on-surface: var(--sb-pop-ink),
+    inverse-primary: var(--sb-pop-link),
+    outline: var(--sb-line-strong),
+    outline-variant: var(--sb-line),
     corner-full: 8px,
   ));
 }
@@ -123,11 +190,12 @@ a {
   &.primary {
     border-color: var(--sb-person);
     background: var(--sb-person);
-    color: #ffffff;
+    color: var(--sb-on-accent);
 
     &:hover:not(:disabled) {
-      background: #2449c9;
-      color: #ffffff;
+      border-color: var(--sb-person-hover);
+      background: var(--sb-person-hover);
+      color: var(--sb-on-accent);
     }
   }
 
@@ -170,6 +238,10 @@ a {
     border-color: var(--sb-person);
     box-shadow: 0 0 0 3px var(--sb-person-soft);
   }
+}
+
+.sb-field::placeholder {
+  color: var(--sb-faint);
 }
 
 textarea.sb-field {

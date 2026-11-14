@@ -120,7 +120,7 @@ pre {
   border-top: 1px solid var(--sb-line);
   font-size: 12px;
   line-height: 1.55;
-  color: #2a3142;
+  color: light-dark(#2a3142, #c9d1db);
 }
 
 .empty {
@@ -292,14 +292,14 @@ pre {
   align-items: center;
   gap: 14px;
   padding: 16px 18px;
-  background: linear-gradient(110deg, #fff 0%, #fff 55%, #fdf1f1 100%);
+  background: linear-gradient(110deg, var(--sb-surface) 0%, var(--sb-surface) 55%, light-dark(#fdf1f1, #2a1110) 100%);
   border: 1px solid var(--sb-line);
   border-left: 3px solid #e2483d;
   border-radius: var(--sb-radius);
   transition: border-color 0.3s ease;
 
   &.done {
-    border-color: #bfe2cf;
+    border-color: var(--sb-pass-line);
     border-left-color: var(--sb-pass);
   }
 }

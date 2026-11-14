@@ -2,6 +2,8 @@
 // palette. Slate for ink, coral for the one accent, Newsreader for the title, Inter for text and Plex Mono
 // for small labels.
 :root {
+  color-scheme: light;
+
   --ch-canvas: #f8fafc;
   --ch-surface: #ffffff;
   --ch-ink: #0f172a;
@@ -12,6 +14,33 @@
   --ch-line-strong: #cbd5e1;
   --ch-coral: #f0524d;
   --ch-coral-soft: #fef0ef;
+  --ch-coral-ink: #b42a26;
+  --ch-coral-wash: #ffe4e2;
+  --ch-error: #c22f3a;
+  --ch-on-accent: #ffffff;
+  // A selected segment or a solid tag: ink on light, GraySpace's selected blue on dark.
+  --ch-invert: #0f172a;
+  --ch-on-invert: #ffffff;
+  // What an app's colour is mixed toward: its tint (fills, borders) and its ink (text).
+  --ch-tint-base: #ffffff;
+  --ch-ink-base: #000000;
+  // Status, as GraySpace's pills on dark: a tint, a border, the colour as text.
+  --ch-ok: #15803d;
+  --ch-ok-soft: #f0fdf4;
+  --ch-ok-fill: #dcfce7;
+  --ch-ok-line: #bbf7d0;
+  --ch-ok-ink: #166534;
+  --ch-ok-dot: #22c55e;
+  --ch-warn: #b45309;
+  --ch-warn-soft: #fffbeb;
+  --ch-warn-fill: #fef3c7;
+  --ch-warn-line: #fde68a;
+  --ch-warn-ink: #92400e;
+  --ch-warn-dot: #f59e0b;
+  --ch-bad-fill: #fee2e2;
+  --ch-bad-ink: #991b1b;
+  // Shadows are drawn as rgb(var(--ch-shadow) / alpha).
+  --ch-shadow: 15 23 42;
 
   --ch-serif: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
   --ch-font: 'Inter', 'Helvetica Neue', Arial, sans-serif;
@@ -19,6 +48,46 @@
   --ch-text: 13px;
   --ch-small: 12px;
   --ch-radius: 8px;
+}
+
+// Dark is GraySpace's palette (its --gs-* tokens): bg #0f1318, panels #151b22, lines #2a333f, text #d8dee6 / #8a96a6,
+// selected #22344a, and its ok / warn / bad pills. Coral stays Chronicle's accent, lifted a little for the dark ground.
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --ch-canvas: #0f1318;
+  --ch-surface: #151b22;
+  --ch-ink: #f0f3f6;
+  --ch-slate: #d8dee6;
+  --ch-muted: #8a96a6;
+  --ch-faint: #5f6b7a;
+  --ch-line: #2a333f;
+  --ch-line-strong: #36414f;
+  --ch-coral: #f26b66;
+  --ch-coral-soft: #2a1514;
+  --ch-coral-ink: #ff9a95;
+  --ch-coral-wash: #3a1a19;
+  --ch-error: #f85149;
+  --ch-on-accent: #ffffff;
+  --ch-invert: #22344a;
+  --ch-on-invert: #ffffff;
+  --ch-tint-base: #151b22;
+  --ch-ink-base: #ffffff;
+  --ch-ok: #3fb950;
+  --ch-ok-soft: #10221a;
+  --ch-ok-fill: #1d3b27;
+  --ch-ok-line: #23462c;
+  --ch-ok-ink: #3fb950;
+  --ch-ok-dot: #3fb950;
+  --ch-warn: #d29922;
+  --ch-warn-soft: #221b0c;
+  --ch-warn-fill: #2e2410;
+  --ch-warn-line: #4a3b16;
+  --ch-warn-ink: #d29922;
+  --ch-warn-dot: #d29922;
+  --ch-bad-fill: #3a1513;
+  --ch-bad-ink: #f85149;
+  --ch-shadow: 0 0 0;
 }
 
 html,
@@ -79,6 +148,10 @@ a {
   border: 1px solid var(--ch-line-strong);
   border-radius: var(--ch-radius);
   padding: 6px 10px;
+
+  &::placeholder {
+    color: var(--ch-faint);
+  }
 
   &:focus {
     outline: none;

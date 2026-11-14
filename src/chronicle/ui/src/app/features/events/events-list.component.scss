@@ -24,7 +24,7 @@ h2 { margin: 0; font-size: 20px; font-weight: 600; color: var(--ch-ink); }
 
 .tools { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; .search { max-width: 360px; } }
 .count { margin-left: auto; color: var(--ch-faint); font-size: 9.5px; }
-.error { margin: 0 0 8px; color: #c22f3a; }
+.error { margin: 0 0 8px; color: var(--ch-error); }
 
 .grid { border: 1px solid var(--ch-line); border-radius: var(--ch-radius); background: var(--ch-surface); overflow: hidden; }
 table { width: 100%; border-collapse: collapse; }

@@ -11,7 +11,7 @@
   border-bottom: 1px solid var(--sb-line);
 
   &:hover {
-    background: #fafbfc;
+    background: var(--sb-raised);
   }
 
   &.editing {
@@ -100,7 +100,7 @@
   padding-left: 10px;
   border-left: 2px solid var(--sb-person-soft);
   font: italic 400 var(--sb-small) / 1.5 var(--sb-serif);
-  color: #3b4356;
+  color: var(--sb-body);
 }
 
 .answer {
@@ -124,13 +124,13 @@
     padding: 1px 7px;
     border-radius: var(--sb-pill);
     background: var(--sb-person-soft);
-    color: #20357f;
+    color: var(--sb-person-ink);
   }
 }
 
 [data-status='proposed by agent'] .items li {
   background: var(--sb-agent-soft);
-  color: #4b2d8f;
+  color: var(--sb-agent-ink);
 }
 
 .meta,

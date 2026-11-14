@@ -1,4 +1,4 @@
-import { signal } from '@angular/core';
+import { ApplicationRef, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { Me } from '../../../core/models/builder.model';
@@ -21,5 +21,17 @@ describe('TopBarComponent', () => {
     expect(adminLink(await render({ user: 'lee', admin: false }))).toBeUndefined();
     TestBed.resetTestingModule();
     expect(adminLink(await render(null))).toBeUndefined();
+  });
+
+  it('switches between light and dark', async () => {
+    localStorage.setItem('sb-theme', 'light');
+    const root = await render(null);
+    const button = root.querySelector<HTMLButtonElement>('button.theme')!;
+    expect(button.getAttribute('aria-label')).toBe('Switch to dark mode');
+    button.click();
+    await TestBed.inject(ApplicationRef).whenStable();
+    expect(document.documentElement.dataset['theme']).toBe('dark');
+    expect(button.getAttribute('aria-label')).toBe('Switch to light mode');
+    localStorage.removeItem('sb-theme');
   });
 });

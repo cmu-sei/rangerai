@@ -44,16 +44,16 @@ import { termRuns } from '../glossary-text';
     .sb-term:hover, .sb-term[aria-expanded='true'] { text-decoration-color: var(--sb-person); color: var(--sb-ink); background: var(--sb-person-soft); }
     .sb-term-pop {
       width: 300px; padding: 14px 16px 12px; border-radius: 10px;
-      background: var(--sb-ink); color: #e9ecf3;
-      box-shadow: 0 18px 40px -12px rgb(20 24 36 / 45%), 0 2px 6px rgb(20 24 36 / 18%);
+      background: var(--sb-pop); color: var(--sb-pop-ink); outline: 1px solid var(--sb-pop-line);
+      box-shadow: 0 18px 40px -12px rgb(var(--sb-shadow) / 45%), 0 2px 6px rgb(var(--sb-shadow) / 18%);
       animation: sb-term-in 140ms ease-out;
     }
-    .sb-term-pop-eyebrow { display: block; font: 500 10px/1 var(--sb-mono); letter-spacing: 0.14em; text-transform: uppercase; color: #9aa6c4; }
+    .sb-term-pop-eyebrow { display: block; font: 500 10px/1 var(--sb-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--sb-pop-muted); }
     .sb-term-pop-name { display: block; margin-top: 8px; font: 500 18px/1.2 var(--sb-serif); color: #ffffff; }
     .sb-term-pop-text { margin: 6px 0 10px; font-size: var(--sb-text); line-height: 1.5; color: #c9cfdc; }
     .sb-term-pop-more {
       padding: 0; border: 0; background: none; cursor: pointer;
-      font: 500 var(--sb-small) var(--sb-font); color: #a9bdff;
+      font: 500 var(--sb-small) var(--sb-font); color: var(--sb-pop-link);
       &:hover { color: #ffffff; }
     }
     @keyframes sb-term-in { from { opacity: 0; transform: translateY(-4px); } }

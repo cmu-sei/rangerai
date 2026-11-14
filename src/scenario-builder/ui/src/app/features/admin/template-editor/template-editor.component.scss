@@ -62,7 +62,7 @@
     padding: 14px 16px;
     border: 0;
     resize: none;
-    background: #fbfbfc;
+    background: var(--sb-raised);
     color: var(--sb-ink);
     font: 12.5px / 1.6 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
     tab-size: 2;
@@ -121,7 +121,7 @@ iframe {
   padding: 10px 12px;
   border: 1px solid var(--sb-error);
   border-radius: var(--sb-radius);
-  background: #fdf0f1;
+  background: var(--sb-error-soft);
   color: var(--sb-error);
   font: 12.5px / 1.5 'IBM Plex Mono', ui-monospace, Menlo, monospace;
   white-space: pre-wrap;

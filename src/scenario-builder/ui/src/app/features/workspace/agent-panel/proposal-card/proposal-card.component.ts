@@ -30,7 +30,7 @@ import { ProposalView } from '../../../../core/models/builder.model';
   styles: [`
     .card { margin: 10px 0; padding: 12px; border: 1px solid var(--sb-agent); border-radius: var(--sb-radius); background: var(--sb-agent-soft); }
     .card[data-status='applied'], .card[data-status='discarded'] { border-color: var(--sb-line); background: var(--sb-surface); }
-    .title { font-weight: 500; color: #4b2d8f; }
+    .title { font-weight: 500; color: var(--sb-agent-ink); }
     .change { display: flex; flex-direction: column; gap: 2px; margin: 8px 0; overflow-wrap: anywhere; }
     .before { color: var(--sb-muted); text-decoration: line-through; }
     .after { color: var(--sb-ink); font-weight: 500; }
