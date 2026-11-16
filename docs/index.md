@@ -3,7 +3,7 @@
 ???+ info "Ranger is being reorganized"
     The earlier Ranger stack (a chat API with workflows, MCP and RAG, shipped as a Docker stack or an appliance) is being retired. Ranger is now built from the parts below. These docs describe the new layout and grow as each part lands.
 
-Ranger is AI infrastructure that helps with automation and orchestration for cyber range training, experimentation, and exercise. Use it to design an event, build and run it, and learn from it, on local or frontier models. It works on closed and air-gapped ranges.
+Ranger is AI infrastructure that helps with automation and orchestration for cyber range training, exercise, and experimentation. Use it to design an event, build and run it, and learn from it, on local or frontier models. It works on closed and air-gapped ranges.
 
 ## The Problem
 
