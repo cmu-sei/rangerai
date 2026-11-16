@@ -3,7 +3,7 @@
 ???+ info "Draft"
     Chronicle has a draft spec and a running API. Nothing in the spec is settled until the architecture team agrees on it; the [schema design](https://github.com/cmu-sei/rangerai/blob/master/src/chronicle/docs/specs/2026-11-10-chronicle-schema-design.md) lists the decisions still open. The concept brief is [`src/chronicle/chronicle.html`](https://github.com/cmu-sei/rangerai/blob/master/src/chronicle/chronicle.html); open it in a browser or print it.
 
-Chronicle is one living record of an event, from the first idea to the last lesson. The event can be training, an exercise or a simulation, run at a table or on a live range.
+Chronicle is one living record of an event, from the first idea to the last lesson. The event can be training, an exercise or an experiment, run at a table or on a live range.
 
 It starts as the scenario: what the world looks like, and what the event must achieve. Around it, apps publish and subscribe. Each one subscribes to the parts it needs and publishes what it built, did and saw. When the event ends, the Chronicle is the event: complete, attributable, and ready to seed the next one.
 

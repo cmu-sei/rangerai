@@ -1,4 +1,4 @@
-export type EventKind = 'training' | 'exercise' | 'simulation';
+export type EventKind = 'training' | 'exercise' | 'experiment';
 export type Audience = 'participant' | 'excon' | 'designer';
 export type PartKey = 'world' | 'intent' | 'asBuilt' | 'asRun' | 'lessons';
 

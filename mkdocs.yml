@@ -1,5 +1,5 @@
 site_name: Ranger Documentation
-site_description: "Ranger is AI tooling for cyber range training, exercises and simulation: Chronicle, Scenario Builder and Range Automation."
+site_description: "Ranger is AI infrastructure that helps with automation and orchestration for cyber range training, experimentation, and exercise: Chronicle, Scenario Builder and Range Automation."
 site_author: "Ranger Team at CMU SEI"
 copyright: >
   Copyright &copy; 2026 Carnegie Mellon University. All rights reserved.

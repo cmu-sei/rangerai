@@ -975,11 +975,11 @@
       "additionalProperties": false
     },
     "EventKind": {
-      "description": "What kind of event a Chronicle records.",
+      "description": "What kind of event a Chronicle records. All three are simulations; an experiment is an exercise whose participants are all machines.",
       "enum": [
         "training",
         "exercise",
-        "simulation"
+        "experiment"
       ]
     },
     "Extension": {

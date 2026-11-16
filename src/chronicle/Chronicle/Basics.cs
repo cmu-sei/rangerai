@@ -21,8 +21,8 @@ public enum Part
     Lessons
 }
 
-/// <summary>What kind of event a Chronicle records.</summary>
-public enum EventKind { Training, Exercise, Simulation }
+/// <summary>What kind of event a Chronicle records. All three are simulations; an experiment is an exercise whose participants are all machines.</summary>
+public enum EventKind { Training, Exercise, Experiment }
 
 /// <summary>
 /// Who may see an item. The ladder is participant, then exercise control, then designer; an audience sees what is

@@ -1,6 +1,6 @@
 # Ranger
 
-Ranger is AI tooling for cyber range training, exercises and simulation. It runs on local or frontier models, so it works on closed and air-gapped ranges, and it works alongside the SEI's [Crucible Framework](https://cmu-sei.github.io/crucible/) and [GHOSTS](https://github.com/cmu-sei/GHOSTS).
+Ranger is AI infrastructure that helps with automation and orchestration for cyber range training, experimentation, and exercise. It runs on local or frontier models, so it works on closed and air-gapped ranges, and it works alongside the SEI's [Crucible Framework](https://cmu-sei.github.io/crucible/) and [GHOSTS](https://github.com/cmu-sei/GHOSTS).
 
 ![Ranger Logo](docs/assets/ranger-face-sm.png)
 
