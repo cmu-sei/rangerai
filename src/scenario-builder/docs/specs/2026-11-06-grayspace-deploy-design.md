@@ -5,7 +5,7 @@
 
 ## What It Does
 
-The Topology page's **Deploy to GraySpace** screen connects to one deployment of a GraySpace (Terrain API 1.7.0), shows what that
+The Topology page's **Deploy to GraySpace** screen connects to one deployment of a GraySpace (Terrain API 1.7.0, or a later build; see below), shows what that
 GraySpace offers, lets a person build the scenario's enclave, and deploys it.
 
 - **Connection.** An admin gives GraySpace's address and its `GRAYSPACE_API_TOKEN`. One GraySpace runs several
@@ -15,7 +15,8 @@ GraySpace offers, lets a person build the scenario's enclave, and deploys it.
   with or without a deployed base. What the server offers (images, roles, jobs, capacity) is read from
   `GET /capabilities`, asked for a shipped version when no base is deployed. The token never
   leaves the API. Everyone else sees where it is connected, by whom and since when.
-- **Live offers, read-only:** the base and its health; attachment points; images; roles, with the variables each needs;
+- **Live offers, read-only:** the base and its health; attachment points (from the map's routers when GraySpace has no
+  `/attachment-points`); images; roles, with the variables each needs;
   DNS and CAs; the base's links. Each part GraySpace fails to give shows its error in its own section.
 - **Deploy everything,** at the top: whatever is missing, in order, each with its default. The base if none is deployed
   (the deployed or first shipped version, at tier1, the smaller base; checked first), the enclave as drafted or, if the
@@ -51,5 +52,22 @@ actions on a running instance.
 ## Verification
 
 API tests against a fake GraySpace; UI specs for the page; a live run against GHOSTS's GraySpace simulator
-(`/stubs/grayspace`, token `dev-token`). The simulator doesn't serve attachment points, a single slice, plan or cancel,
+(`/stubs/grayspace`, token `dev-token`). The simulator doesn't serve attachment points, a single enclave, plan or cancel,
 so those are covered by the API tests only.
+
+## GraySpace After 1.7.0
+
+2026-11-16. GraySpace retired base clients: anything attached to the core, apart from its DNS and CA servers, is an
+enclave. The deprecated slice names went with them, so the API now uses only the enclave ones:
+
+- `/enclaves/{slug}` (put, validate, plan, reuse) and `GET /enclaves`, not `/slices`. Offers name the list `enclaves`.
+- `POST /instances` sends `enclave`, not `slice`; an instance's or job's `enclave` is read first, `slice` second.
+- Specs are `kind: Enclave`; the page shows `enclave_features` and `enclave_pool`.
+- `/attachment-points` may be gone: the API falls back to the routers on `GET /map` (ISP, ASN, location, coordinates).
+  The drafter attaches a site or internet host by its point's ISP and location, not its router.
+- Images list `features`. The drafter puts a user's workstation, desktop or laptop on GraySpace's desktop image (an LXC
+  image with the `desktop` feature, such as `grayspace-desktop`) when it takes the same roles as the LXC image, so a
+  GHOSTS workstation keeps `ghosts-client`. The page marks desktop images in the image picker.
+
+None of this was checked against the new build's OpenAPI document: its routes need a token. The routes and spec fields
+come from the GraySpace web app's code and the 1.7.0 document, where the enclave names were already the current ones.

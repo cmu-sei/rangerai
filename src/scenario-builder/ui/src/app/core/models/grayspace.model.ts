@@ -20,6 +20,8 @@ export interface GsImage {
   cores?: number;
   memory?: number;
   disk?: number;
+  /** e.g. desktop, for an image with a desktop in the browser; tls-kestrel. */
+  features?: string[];
 }
 
 export interface GsRoleVariable {
@@ -44,9 +46,9 @@ export interface GsServerInfo {
   jobs_unavailable_reason?: string | null;
   base_jobs?: boolean;
   base_jobs_unavailable_reason?: string | null;
-  slice_features: string[];
+  enclave_features: string[];
   management_subnet: string;
-  slice_pool: string;
+  enclave_pool: string;
   images: GsImage[];
   roles: GsRole[];
   capacity?: { node: string; cpus?: number | null; memory_free?: number | null; memory_total?: number | null } | null;
@@ -90,7 +92,7 @@ export interface GsAttachmentPoint {
   location?: string | null;
 }
 
-export interface GsSliceSummary {
+export interface GsEnclaveSummary {
   slug: string;
   kind: string;
   description: string;
@@ -106,7 +108,7 @@ export interface GraySpaceOffers {
   versions?: GsBaseVersion[];
   attachmentPoints?: GsAttachmentPoint[];
   map?: { features: { id: string; properties: { kind: string; type?: string; state?: string } }[] };
-  slices?: GsSliceSummary[];
+  enclaves?: GsEnclaveSummary[];
   problems: Record<string, string>;
 }
 
@@ -161,8 +163,8 @@ export interface GsTls {
   ca: string;
 }
 
-/** The slice spec (grayspace-slice-v1) the page edits. Fields it doesn't edit are kept as they are. */
-export interface SliceSpec {
+/** The enclave spec (grayspace-enclave-v1) the page edits. Fields it doesn't edit are kept as they are. */
+export interface EnclaveSpec {
   apiVersion: string;
   kind: string;
   slug: string;
@@ -179,7 +181,7 @@ export interface SliceSpec {
 
 /** GET/PUT /api/scenarios/{id}/enclave */
 export interface EnclaveView {
-  spec: SliceSpec;
+  spec: EnclaveSpec;
   version?: string;
   instanceId?: string;
   jobId?: string;
@@ -207,7 +209,7 @@ export interface GsValidateResult {
   findings: GsFinding[];
 }
 
-export interface GsPutSliceResult {
+export interface GsPutEnclaveResult {
   slug: string;
   version: string;
   created: boolean;

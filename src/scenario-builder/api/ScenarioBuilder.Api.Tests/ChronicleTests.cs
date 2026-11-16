@@ -240,8 +240,9 @@ public class ChronicleTests
         var sites = spec["sites"]!.AsArray();
         Assert.Equal(["kbwa-corp", "kbwa-plant"], sites.Select(s => (string)s!["name"]!));
         Assert.Equal(["ot-control", "vendor-dmz"], sites[1]!["segments"]!.AsArray().Select(g => (string)g!["name"]!));
-        Assert.Equal("com-por", (string)sites[0]!["attach"]!["router"]!);   // Portland, for the Pacific Northwest
-        Assert.NotEqual(Isp((string)sites[0]!["attach"]!["router"]!), Isp((string)sites[1]!["attach"]!["router"]!));
+        Assert.Equal(("Comcast", "Portland"), ((string)sites[0]!["attach"]!["isp"]!, (string)sites[0]!["attach"]!["location"]!));   // Portland, for the Pacific Northwest
+        Assert.Null(sites[0]!["attach"]!["router"]);
+        Assert.NotEqual((string)sites[0]!["attach"]!["isp"]!, (string)sites[1]!["attach"]!["isp"]!);
 
         var hosts = spec["hosts"]!.AsArray().OfType<JsonObject>().ToDictionary(h => (string)h["name"]!);
         Assert.Equal(["dc01", "files01", "mail01", "www", "staff-ws", "hmi01", "historian01", "eng-ws01", "jump01", "ledger", "tidewell-portal"], hosts.Keys);
@@ -263,8 +264,55 @@ public class ChronicleTests
 
         // The draft is saved: the page reads it back.
         Assert.Equal(11, (await client.GetFromJsonAsync<JsonObject>($"/api/scenarios/{id}/enclave"))!["spec"]!["hosts"]!.AsArray().Count);
+    }
 
-        static string Isp(string router) => (string)AttachmentPoints().Single(p => (string)p!["router"]! == router)!["isp"]!;
+    [Fact]
+    public async Task A_workstation_gets_the_desktop_image_when_GraySpace_offers_one()
+    {
+        var capabilities = Capabilities();
+        capabilities["images"]!.AsArray().Add(JsonNode.Parse("""
+            {"name":"grayspace-desktop","type":"lxc","os_family":"ubuntu","features":["desktop"],"description":"Fluxbox desktop over noVNC"}
+            """));
+        var grayspace = new FakeGraySpace();
+        grayspace.Routes[$"GET {FakeGraySpace.Base}/capabilities"] = () => Json(capabilities.ToJsonString());
+        using var factory = new ApiFactory();
+        using var app = With(factory, new FakeChronicle(), grayspace);
+        var (client, id) = await SaltLantern(factory, app);
+
+        var spec = (await Body(await client.PostAsync($"/api/scenarios/{id}/enclave/draft", null)))["spec"]!.AsObject();
+
+        var hosts = spec["hosts"]!.AsArray().OfType<JsonObject>().ToDictionary(h => (string)h["name"]!);
+        Assert.Equal(("grayspace-desktop", "ghosts-client"), ((string)hosts["staff-ws"]["image"]!, (string)hosts["staff-ws"]["roles"]![0]!));
+        Assert.Equal("ubuntu-24.04-vm", (string)hosts["eng-ws01"]["image"]!);   // an engineering workstation stays a VM
+        Assert.NotEqual("grayspace-desktop", (string)hosts["dc01"]["image"]!);
+    }
+
+    [Fact]
+    public async Task Without_attachment_points_the_draft_attaches_at_the_routers_on_the_map()
+    {
+        var points = AttachmentPoints();
+        var map = new JsonObject
+        {
+            ["type"] = "FeatureCollection",
+            ["features"] = new JsonArray(points.OfType<JsonObject>().Select(p => (JsonNode)new JsonObject
+            {
+                ["type"] = "Feature",
+                ["id"] = (string)p["router"]!,
+                ["geometry"] = new JsonObject { ["type"] = "Point", ["coordinates"] = new JsonArray(p["longitude"]!.DeepClone(), p["latitude"]!.DeepClone()) },
+                ["properties"] = new JsonObject { ["id"] = (string)p["router"]!, ["kind"] = "router", ["isp"] = (string)p["isp"]!, ["asn"] = p["asn"]!.DeepClone(), ["location"] = (string?)p["location"] }
+            }).ToArray())
+        };
+        var grayspace = new FakeGraySpace();
+        grayspace.Routes.Remove($"GET {FakeGraySpace.Base}/attachment-points");
+        grayspace.Routes[$"GET {FakeGraySpace.Base}/map"] = () => Json(map.ToJsonString());
+        using var factory = new ApiFactory();
+        using var app = With(factory, new FakeChronicle(), grayspace);
+        var (client, id) = await SaltLantern(factory, app);
+
+        var spec = (await Body(await client.PostAsync($"/api/scenarios/{id}/enclave/draft", null)))["spec"]!.AsObject();
+
+        var site = spec["sites"]![0]!;
+        Assert.Equal(("Comcast", "Portland"), ((string)site["attach"]!["isp"]!, (string)site["attach"]!["location"]!));
     }
 
     [Fact]
@@ -294,7 +342,7 @@ public class ChronicleTests
         var published = chronicle.Entries("salt-lantern").Count;
 
         const string Base = FakeGraySpace.Base;
-        grayspace.Routes[$"PUT {Base}/slices/salt-lantern"] = () => Json("""{"slug":"salt-lantern","version":"sha256:abc","created":true,"findings":[]}""");
+        grayspace.Routes[$"PUT {Base}/enclaves/salt-lantern"] = () => Json("""{"slug":"salt-lantern","version":"sha256:abc","created":true,"findings":[]}""");
         grayspace.Routes[$"POST {Base}/instances"] = () => Json("""{"instance":"saltlan","job":{"id":"j1","state":"queued"}}""", HttpStatusCode.Accepted);
         (await client.PostAsJsonAsync($"/api/scenarios/{id}/enclave/instance", new { })).EnsureSuccessStatusCode();
 
@@ -341,7 +389,7 @@ public class ChronicleTests
         using var app = With(factory, chronicle, grayspace);
         var (client, id) = await SaltLantern(factory, app);
         (await client.PostAsync($"/api/scenarios/{id}/enclave/draft", null)).EnsureSuccessStatusCode();
-        grayspace.Routes[$"PUT {FakeGraySpace.Base}/slices/salt-lantern"] = () => Json("""{"slug":"salt-lantern","version":"sha256:abc"}""");
+        grayspace.Routes[$"PUT {FakeGraySpace.Base}/enclaves/salt-lantern"] = () => Json("""{"slug":"salt-lantern","version":"sha256:abc"}""");
         grayspace.Routes[$"POST {FakeGraySpace.Base}/instances"] = () => Json("""{"instance":"saltlan","job":{"id":"j1"}}""");
 
         (await client.PostAsJsonAsync($"/api/scenarios/{id}/enclave/instance", new { })).EnsureSuccessStatusCode();

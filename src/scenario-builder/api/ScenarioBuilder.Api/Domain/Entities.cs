@@ -201,13 +201,13 @@ public class GraySpaceConnection
     public DateTime Connected { get; set; }
 }
 
-/// <summary>A scenario's enclave on GraySpace: the slice spec being built, and what the page last did with it there.</summary>
+/// <summary>A scenario's enclave on GraySpace: the enclave spec being built, and what the page last did with it there.</summary>
 public class Enclave
 {
     public int Id { get; set; }
     public int ScenarioId { get; set; }
 
-    /// <summary>The slice spec (GraySpace's grayspace-slice-v1) as JSON, as last written.</summary>
+    /// <summary>The enclave spec (GraySpace's grayspace-enclave-v1) as JSON, as last written.</summary>
     public string Spec { get; set; } = "{}";
 
     /// <summary>The version GraySpace stored on the last save or reuse; none before.</summary>

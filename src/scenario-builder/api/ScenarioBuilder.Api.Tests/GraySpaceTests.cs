@@ -179,8 +179,11 @@ public class GraySpaceTests
         using var factory = new ApiFactory();
         var grayspace = new FakeGraySpace();
         grayspace.Routes["GET /deployments/abc/api/v1/base"] = () => Json("""{"status":"healthy","routers":{"expected":3,"running":3}}""");
-        grayspace.Routes["GET /deployments/abc/api/v1/map"] = () => Json("""{"type":"FeatureCollection","features":[]}""");
-        grayspace.Routes["GET /deployments/abc/api/v1/slices"] = () => Json("""[{"slug":"other","kind":"slice","description":""}]""");
+        grayspace.Routes["GET /deployments/abc/api/v1/map"] = () => Json("""
+            {"type":"FeatureCollection","features":[{"type":"Feature","id":"lum-chi","geometry":{"type":"Point","coordinates":[-87.63,41.88]},
+             "properties":{"id":"lum-chi","kind":"router","isp":"Lumen","asn":3356,"location":"Chicago"}}]}
+            """);
+        grayspace.Routes["GET /deployments/abc/api/v1/enclaves"] = () => Json("""[{"slug":"other","kind":"slice","description":""}]""");
         using var app = With(factory, grayspace);
         var (client, _) = await Ready(app);
 
@@ -189,9 +192,12 @@ public class GraySpaceTests
         Assert.Equal("192.168.0.0/16", (string)offers["server"]!["slice_pool"]!);
         Assert.Equal("com", (string)offers["capabilities"]!["dns"]!["tlds"]![0]!);
         Assert.Equal("healthy", (string)offers["base"]!["status"]!);
-        Assert.Equal("other", (string)offers["slices"]![0]!["slug"]!);
-        Assert.Null(offers["attachmentPoints"]);
-        Assert.Contains("Not Found", (string)offers["problems"]!["attachmentPoints"]!);
+        Assert.Equal("other", (string)offers["enclaves"]![0]!["slug"]!);
+        // No GET /attachment-points: the map's routers stand in for them.
+        Assert.Equal(("lum-chi", "Lumen", "Chicago", 41.88), ((string)offers["attachmentPoints"]![0]!["router"]!, (string)offers["attachmentPoints"]![0]!["isp"]!,
+            (string)offers["attachmentPoints"]![0]!["location"]!, (double)offers["attachmentPoints"]![0]!["latitude"]!));
+        Assert.Null(offers["versions"]);
+        Assert.Contains("Not Found", (string)offers["problems"]!["versions"]!);
     }
 
     [Fact]
@@ -229,7 +235,7 @@ public class GraySpaceTests
         var put = await client.PutAsJsonAsync($"/api/scenarios/{id}/enclave", new { spec });
         var kept = (await client.GetFromJsonAsync<JsonObject>($"/api/scenarios/{id}/enclave"))!;
 
-        Assert.Equal(("grayspace/v1", "Slice", "harbor-blackout", "harborbl"),
+        Assert.Equal(("grayspace/v1", "Enclave", "harbor-blackout", "harborbl"),
             ((string)fresh["spec"]!["apiVersion"]!, (string)fresh["spec"]!["kind"]!, (string)fresh["spec"]!["slug"]!, (string)fresh["spec"]!["prefix"]!));
         Assert.Null(fresh["updatedBy"]);
         Assert.Equal(HttpStatusCode.OK, put.StatusCode);
@@ -245,10 +251,10 @@ public class GraySpaceTests
     {
         using var factory = new ApiFactory();
         var grayspace = new FakeGraySpace();
-        grayspace.Routes["PUT /deployments/abc/api/v1/slices/harbor-blackout"] = () => Json("""{"slug":"harbor-blackout","version":"sha256:aa","created":true,"findings":[]}""");
-        grayspace.Routes["POST /deployments/abc/api/v1/slices/harbor-blackout/validate"] = () =>
+        grayspace.Routes["PUT /deployments/abc/api/v1/enclaves/harbor-blackout"] = () => Json("""{"slug":"harbor-blackout","version":"sha256:aa","created":true,"findings":[]}""");
+        grayspace.Routes["POST /deployments/abc/api/v1/enclaves/harbor-blackout/validate"] = () =>
             Json("""{"valid":false,"version":"sha256:aa","findings":[{"code":"NO_SITES","severity":"warning","path":"sites","message":"no sites"}]}""");
-        grayspace.Routes["POST /deployments/abc/api/v1/slices/harbor-blackout/plan"] = () => Json("""{"job":{"id":"job-plan","kind":"plan","state":"queued"}}""");
+        grayspace.Routes["POST /deployments/abc/api/v1/enclaves/harbor-blackout/plan"] = () => Json("""{"job":{"id":"job-plan","kind":"plan","state":"queued"}}""");
         using var app = With(factory, grayspace);
         var (client, id) = await Ready(app);
 
@@ -258,11 +264,11 @@ public class GraySpaceTests
 
         Assert.Equal("NO_SITES", (string)validated["graySpace"]!["findings"]![0]!["code"]!);
         Assert.Null(validated["enclave"]!["version"]);
-        Assert.Equal("harbor-blackout", (string)grayspace.BodyOf("POST /deployments/abc/api/v1/slices/harbor-blackout/validate")["slug"]!);
+        Assert.Equal("harbor-blackout", (string)grayspace.BodyOf("POST /deployments/abc/api/v1/enclaves/harbor-blackout/validate")["slug"]!);
         Assert.Equal("sha256:aa", (string)saved["enclave"]!["version"]!);
         Assert.Equal("sha256:aa", (string)(await client.GetFromJsonAsync<JsonObject>($"/api/scenarios/{id}"))!["deployments"]![0]!["version"]!);
-        Assert.Equal("grayspace/v1", (string)grayspace.BodyOf("PUT /deployments/abc/api/v1/slices/harbor-blackout")["apiVersion"]!);
-        Assert.Equal("sha256:aa", (string)grayspace.BodyOf("POST /deployments/abc/api/v1/slices/harbor-blackout/plan")["version"]!);
+        Assert.Equal("grayspace/v1", (string)grayspace.BodyOf("PUT /deployments/abc/api/v1/enclaves/harbor-blackout")["apiVersion"]!);
+        Assert.Equal("sha256:aa", (string)grayspace.BodyOf("POST /deployments/abc/api/v1/enclaves/harbor-blackout/plan")["version"]!);
         Assert.Equal("job-plan", (string)planned["enclave"]!["jobId"]!);
         Assert.All(grayspace.Calls, c => Assert.Equal($"Bearer {Token}", c.Auth));
     }
@@ -272,7 +278,7 @@ public class GraySpaceTests
     {
         using var factory = new ApiFactory();
         var grayspace = new FakeGraySpace();
-        grayspace.Routes["PUT /deployments/abc/api/v1/slices/harbor-blackout"] = () => Json("""{"slug":"harbor-blackout","version":"sha256:aa","created":false,"findings":[]}""");
+        grayspace.Routes["PUT /deployments/abc/api/v1/enclaves/harbor-blackout"] = () => Json("""{"slug":"harbor-blackout","version":"sha256:aa","created":false,"findings":[]}""");
         grayspace.Routes["POST /deployments/abc/api/v1/instances"] = () => Json("""{"instance":"harborbl","job":{"id":"job-1","kind":"create","state":"queued"}}""");
         grayspace.Routes["GET /deployments/abc/api/v1/instances/harborbl"] = () => Json("""{"id":"harborbl","state":"provisioning"}""");
         grayspace.Routes["GET /deployments/abc/api/v1/jobs/job-1"] = () => Json("""{"id":"job-1","state":"failed","stage":"apply"}""");
@@ -293,7 +299,7 @@ public class GraySpaceTests
         var destroyed = await Body(await client.DeleteAsync($"{url}/instance"));
 
         var create = grayspace.BodyOf("POST /deployments/abc/api/v1/instances");
-        Assert.Equal(("harbor-blackout", "sha256:aa", "copy2"), ((string)create["slice"]!, (string)create["version"]!, (string)create["prefix"]!));
+        Assert.Equal(("harbor-blackout", "sha256:aa", "copy2"), ((string)create["enclave"]!, (string)create["version"]!, (string)create["prefix"]!));
         Assert.Equal(("harborbl", "job-1"), ((string)created["enclave"]!["instanceId"]!, (string)created["enclave"]!["jobId"]!));
         Assert.Equal(("provisioning", "apply"), ((string)followed["instance"]!["state"]!, (string)followed["job"]!["stage"]!));
         Assert.Contains("apply failed", (string)followed["log"]!);
@@ -308,7 +314,7 @@ public class GraySpaceTests
     {
         using var factory = new ApiFactory();
         var grayspace = new FakeGraySpace();
-        grayspace.Routes["PUT /deployments/abc/api/v1/slices/harbor-blackout"] = () => Json("""{"slug":"harbor-blackout","version":"sha256:bb","created":true,"findings":[]}""");
+        grayspace.Routes["PUT /deployments/abc/api/v1/enclaves/harbor-blackout"] = () => Json("""{"slug":"harbor-blackout","version":"sha256:bb","created":true,"findings":[]}""");
         grayspace.Routes["POST /deployments/abc/api/v1/instances"] = () =>
             Json("""{"detail":{"findings":[{"code":"IMAGE_UNKNOWN","severity":"error","path":"hosts[0].image","message":"unknown image win-11"}]}}""", HttpStatusCode.UnprocessableEntity);
         using var app = With(factory, grayspace);
@@ -399,9 +405,9 @@ public class GraySpaceTests
     {
         using var factory = new ApiFactory();
         var grayspace = new FakeGraySpace();
-        grayspace.Routes["GET /deployments/abc/api/v1/slices/meridian"] = () =>
+        grayspace.Routes["GET /deployments/abc/api/v1/enclaves/meridian"] = () =>
             Json("""{"slug":"meridian","kind":"slice","description":"","version":"sha256:cc","spec":{"apiVersion":"grayspace/v1","kind":"Slice","slug":"meridian","prefix":"mer"}}""");
-        grayspace.Routes["GET /deployments/abc/api/v1/slices/base"] = () => Json("""{"slug":"base","kind":"base","description":"","spec":null}""");
+        grayspace.Routes["GET /deployments/abc/api/v1/enclaves/base"] = () => Json("""{"slug":"base","kind":"base","description":"","spec":null}""");
         using var app = With(factory, grayspace);
         var (client, id) = await Ready(app);
 

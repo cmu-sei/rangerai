@@ -6,7 +6,7 @@ import { Observable, Subscription, firstValueFrom } from 'rxjs';
 import { AnswerValue } from '../../../core/models/builder.model';
 import {
   BaseJobView, EnclaveAnswer, EnclaveView, FollowView, GraySpaceOffers, GraySpaceStatus, GsAttach, GsFinding, GsHost, GsJob, GsPreflight,
-  GsPutSliceResult, GsRole, GsServer, GsValidateResult, SliceSpec
+  GsPutEnclaveResult, GsRole, GsServer, GsValidateResult, EnclaveSpec
 } from '../../../core/models/grayspace.model';
 import { BuilderApiService, errorMessage } from '../../../core/services/builder-api.service';
 import { MeService } from '../../../core/services/me.service';
@@ -60,11 +60,11 @@ export class GraySpacePageComponent {
     },
     {
       id: 'enclave', title: 'Enclave', decides: 'Build a new enclave from this scenario, or reuse one already on GraySpace. Each save is a new version.',
-      api: ['GET /slices', 'GET /slices/{slug}'], answers: ['rangeReference', 'buildLimits']
+      api: ['GET /enclaves', 'GET /enclaves/{slug}'], answers: ['rangeReference', 'buildLimits']
     },
     {
       id: 'sites', title: 'Sites and Segments', decides: 'Where each site’s edge router joins the base, how it’s addressed, and the segments behind it.',
-      api: ['GET /attachment-points'], answers: ['segments', 'connectivity']
+      api: ['GET /attachment-points', 'GET /map'], answers: ['segments', 'connectivity']
     },
     {
       id: 'hosts', title: 'Hosts', decides: 'Each host’s segment, image, roles, size and count, and whether it gets a public address.',
@@ -75,7 +75,7 @@ export class GraySpacePageComponent {
     { id: 'conditions', title: 'Network Conditions', decides: 'Latency, jitter, loss and bandwidth on the base’s links while the instance runs.', api: ['GET /map'], answers: [] },
     {
       id: 'deploy', title: 'Deploy', decides: 'Check the enclave, plan it, run it as an instance, follow the job, and take it down.',
-      api: ['POST /slices/{slug}/validate', 'PUT /slices/{slug}', 'POST /slices/{slug}/plan', 'POST /instances', 'GET /instances/{id}', 'GET /jobs/{id}/log',
+      api: ['POST /enclaves/{slug}/validate', 'PUT /enclaves/{slug}', 'POST /enclaves/{slug}/plan', 'POST /instances', 'GET /instances/{id}', 'GET /jobs/{id}/log',
         'POST /jobs/{id}/cancel', 'POST /jobs/{id}/retry', 'DELETE /instances/{id}'], answers: []
     }
   ];
@@ -144,7 +144,7 @@ export class GraySpacePageComponent {
   protected readonly roles = computed(() => this.server()?.roles ?? []);
   protected readonly links = computed(() => (this.offers()?.map?.features ?? []).filter(f => f.properties.kind === 'link'));
   protected readonly segments = computed(() => (this.spec()?.sites ?? []).flatMap(site => site.segments.map(s => ({ site: site.name, name: s.name }))));
-  protected readonly versions = computed(() => this.offers()?.slices?.find(s => s.slug === this.spec()?.slug)?.versions ?? []);
+  protected readonly versions = computed(() => this.offers()?.enclaves?.find(s => s.slug === this.spec()?.slug)?.versions ?? []);
   protected readonly running = computed(() => !!this.follow()?.job && !this.follow()!.job!.finished);
   protected readonly baseRunning = computed(() => !!this.baseFollow()?.job && !this.baseFollow()!.job!.finished);
   protected readonly baseDeployed = computed(() => !!this.offers()?.base && this.offers()!.base!.status !== 'not_deployed');
@@ -372,7 +372,7 @@ export class GraySpacePageComponent {
   }
 
   /** The empty draft's default: one NAT site on the first attach point, with one segment, and one host on it. */
-  private defaultEnclave(current: SliceSpec): SliceSpec {
+  private defaultEnclave(current: EnclaveSpec): EnclaveSpec {
     const spec = structuredClone(current);
     spec.sites = [{ name: 'site-1', attach: this.attachOptions()[0]?.attach ?? {}, segments: [{ name: 'lan' }] }];
     spec.hosts = [{ name: 'host-1', image: this.smallestImage()?.name ?? '', segment: 'lan', roles: [] }];
@@ -456,7 +456,7 @@ export class GraySpacePageComponent {
   }
 
   /** Changes the draft and saves it to the builder. Nothing goes to GraySpace until a deploy step. */
-  private edit(change: (spec: SliceSpec) => void): void {
+  private edit(change: (spec: EnclaveSpec) => void): void {
     const current = this.spec();
     if (!current) {
       return;
@@ -671,7 +671,7 @@ export class GraySpacePageComponent {
   }
 
   protected save(): void {
-    this.step('save', this.api.saveEnclave(this.store.scenarioId()), (a: EnclaveAnswer<GsPutSliceResult>) => {
+    this.step('save', this.api.saveEnclave(this.store.scenarioId()), (a: EnclaveAnswer<GsPutEnclaveResult>) => {
       this.findings.set(a.graySpace?.findings ?? []);
       this.note.set(`Saved to GraySpace as version ${this.short(a.graySpace?.version)}${a.graySpace?.created ? '' : ', the same as before'}.`);
       this.loadOffers();

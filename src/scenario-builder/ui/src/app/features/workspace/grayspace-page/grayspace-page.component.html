@@ -126,9 +126,9 @@
             @if (server(); as c) {
               <dl class="facts">
                 <dt>Runs Jobs</dt><dd>{{ c.jobs ? 'Yes' : 'No' }}@if (c.jobs_unavailable_reason) { ({{ c.jobs_unavailable_reason }}) }</dd>
-                <dt>Builds</dt><dd>{{ c.slice_features.join(', ') }}</dd>
+                <dt>Builds</dt><dd>{{ c.enclave_features.join(', ') }}</dd>
                 <dt>Management Subnet</dt><dd>{{ c.management_subnet }} (enclaves will not overlap this)</dd>
-                <dt>Auto Addresses From</dt><dd>{{ c.slice_pool }}</dd>
+                <dt>Auto Addresses From</dt><dd>{{ c.enclave_pool }}</dd>
                 <dt>Capacity</dt>
                 <dd>
                   @if (c.capacity; as cap) {
@@ -232,14 +232,14 @@
                 }
               </p>
             }
-            @if (offers()?.slices; as slices) {
+            @if (offers()?.enclaves; as enclaves) {
               <div class="fields">
                 <label>Reuse an Enclave on GraySpace
                   <select class="sb-field" (change)="reuseSlug.set(value($event))">
                     <option value="">Choose one</option>
-                    @for (slice of slices; track slice.slug) {
-                      @if (slice.kind !== 'base') {
-                        <option [value]="slice.slug" [selected]="slice.slug === reuseSlug()">{{ slice.slug }}{{ slice.description ? ': ' + slice.description : '' }}</option>
+                    @for (e of enclaves; track e.slug) {
+                      @if (e.kind !== 'base') {
+                        <option [value]="e.slug" [selected]="e.slug === reuseSlug()">{{ e.slug }}{{ e.description ? ': ' + e.description : '' }}</option>
                       }
                     }
                   </select>
@@ -329,7 +329,7 @@
                   <label>Image
                     <select class="sb-field" (change)="setImage(hi, value($event))">
                       @for (image of images(); track image.name) {
-                        <option [value]="image.name" [selected]="image.name === host.image">{{ image.name }}</option>
+                        <option [value]="image.name" [selected]="image.name === host.image">{{ image.name }}{{ image.features?.includes('desktop') ? ' (desktop)' : '' }}</option>
                       }
                     </select>
                   </label>

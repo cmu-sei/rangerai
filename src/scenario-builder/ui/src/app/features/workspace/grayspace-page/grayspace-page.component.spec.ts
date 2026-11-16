@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { NEVER, Observable, Subject, of, throwError } from 'rxjs';
 import { AnsweredView, Me, ScenarioType, ScenarioTypeQuestion } from '../../../core/models/builder.model';
-import { BaseJobView, EnclaveView, FollowView, GraySpaceOffers, GraySpaceStatus, SliceSpec } from '../../../core/models/grayspace.model';
+import { BaseJobView, EnclaveView, FollowView, GraySpaceOffers, GraySpaceStatus, EnclaveSpec } from '../../../core/models/grayspace.model';
 import { BuilderApiService } from '../../../core/services/builder-api.service';
 import { MeService } from '../../../core/services/me.service';
 import { WorkspaceStore } from '../workspace.store';
@@ -21,11 +21,11 @@ const answered: AnsweredView = {
   id: 'segments', stage: 0, value: ['IT Network: Corporate services', 'DMZ: Jump hosts'], who: 'stated', by: 'dev', via: 'person', time: '2026-11-02T00:00:00Z'
 };
 
-const newSpec = (): SliceSpec => ({ apiVersion: 'grayspace/v1', kind: 'Slice', slug: 'cyber-antigen', prefix: 'cyberant', owner: 'scenario-builder', sites: [], hosts: [], role_vars: {} });
+const newSpec = (): EnclaveSpec => ({ apiVersion: 'grayspace/v1', kind: 'Enclave', slug: 'cyber-antigen', prefix: 'cyberant', owner: 'scenario-builder', sites: [], hosts: [], role_vars: {} });
 
 const offers: GraySpaceOffers = {
   server: {
-    jobs: true, base_jobs: true, slice_features: ['nat-site', 'internet-host'], management_subnet: '10.0.0.0/16', slice_pool: '192.168.0.0/16',
+    jobs: true, base_jobs: true, enclave_features: ['nat-site', 'internet-host'], management_subnet: '10.0.0.0/16', enclave_pool: '192.168.0.0/16',
     images: [{ name: 'ubuntu-24.04-vm', type: 'vm', os_family: 'ubuntu', description: 'Ubuntu 24.04', cores: 2, memory: 2048, disk: 20 }],
     roles: [
       { name: 'web', description: 'nginx', os_families: ['ubuntu'] },
@@ -43,7 +43,7 @@ const offers: GraySpaceOffers = {
   },
   base: { version: { name: 'grayspace/2026.10', scope: 'tier1' }, status: 'healthy', routers: { expected: 3, running: 3 }, bgp: { total: 4, established: 4 } },
   map: { features: [{ id: 'lum-chi:are-ash', properties: { kind: 'link', type: 'PEERS_WITH', state: 'up' } }] },
-  slices: [],
+  enclaves: [],
   problems: { attachmentPoints: 'GraySpace refused it: Not Found' }
 };
 
@@ -58,7 +58,7 @@ async function render(
   status: GraySpaceStatus | null = { connected: true, answering: true, url: 'http://gs.local:8000', connectedBy: 'dev', since: '2026-11-06T09:00:00Z' },
   me: Me = { user: 'dev', admin: true },
   shown: GraySpaceOffers = offers,
-  drafted: SliceSpec | null = null
+  drafted: EnclaveSpec | null = null
 ) {
   let enclave: EnclaveView = { spec: newSpec() };
   const api = {
@@ -67,7 +67,7 @@ async function render(
     disconnectGraySpace: vi.fn(() => of(undefined)),
     getGraySpaceOffers: vi.fn(() => of(shown)),
     getEnclave: vi.fn(() => of(enclave)),
-    putEnclave: vi.fn((_: number, spec: SliceSpec) => of(enclave = { ...enclave, spec })),
+    putEnclave: vi.fn((_: number, spec: EnclaveSpec) => of(enclave = { ...enclave, spec })),
     reuseEnclave: vi.fn(),
     draftEnclave: vi.fn((): Observable<EnclaveView> => drafted ? of(enclave = { ...enclave, spec: drafted }) : throwError(() => new HttpErrorResponse({ status: 422 }))),
     validateEnclave: vi.fn(() => of({
@@ -114,7 +114,7 @@ function type(input: HTMLInputElement | HTMLSelectElement, value: string, event 
 
 describe('GraySpacePageComponent', () => {
   it('drafts an empty enclave from the network answers on open, and again on Draft from scenario', async () => {
-    const drafted: SliceSpec = { ...newSpec(), sites: [{ name: 'kbwa-corp', attach: { router: 'com-por' }, segments: [{ name: 'corp-lan' }] }],
+    const drafted: EnclaveSpec = { ...newSpec(), sites: [{ name: 'kbwa-corp', attach: { router: 'com-por' }, segments: [{ name: 'corp-lan' }] }],
       hosts: [{ name: 'dc01', segment: 'corp-lan', image: 'ubuntu-24.04-vm', roles: [], labels: { 'chronicle.of': 'host-dc01' } }] };
     const { fixture, api, root } = await render(undefined, undefined, undefined, drafted);
     await fixture.whenStable();
@@ -315,7 +315,7 @@ describe('GraySpacePageComponent', () => {
     type(clientUrl.querySelector('input')!, 'http://ghosts:5000/client.zip');
     await fixture.whenStable();
 
-    const spec = api.putEnclave.mock.lastCall![1] as SliceSpec;
+    const spec = api.putEnclave.mock.lastCall![1] as EnclaveSpec;
     expect(spec.sites).toEqual([{ name: 'site-1', attach: { isp: 'Lumen' }, segments: [{ name: 'segment-1' }] }]);
     expect(spec.hosts).toEqual([{ name: 'host-1', image: 'ubuntu-24.04-vm', segment: 'segment-1', roles: ['ghosts-client'] }]);
     expect(spec.role_vars).toEqual({ 'ghosts-client': { client_url: 'http://ghosts:5000/client.zip' } });

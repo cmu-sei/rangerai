@@ -19,7 +19,7 @@ public class PlanEndpoint : IEndpoint
                 await EnclaveRules.Save(grayspace, enclave, slug, ct);
                 EnclaveRules.Touch(db, enclave, http);
                 await db.SaveChangesAsync(ct);
-                var accepted = await grayspace.Json(HttpMethod.Post, $"slices/{Uri.EscapeDataString(slug)}/plan", new JsonObject { ["version"] = enclave.Version }, ct);
+                var accepted = await grayspace.Json(HttpMethod.Post, $"enclaves/{Uri.EscapeDataString(slug)}/plan", new JsonObject { ["version"] = enclave.Version }, ct);
                 enclave.JobId = EnclaveRules.JobOf(accepted);
                 await db.SaveChangesAsync(ct);
                 return Results.Ok(new EnclaveAnswer(EnclaveView.From(enclave), accepted));

@@ -15,7 +15,7 @@ public class ValidateEndpoint : IEndpoint
                     return ScenarioState.Missing(id);
                 if (EnclaveRules.Slug(enclave) is not { } slug)
                     return EnclaveRules.Unnamed();
-                var result = await grayspace.Json(HttpMethod.Post, $"slices/{Uri.EscapeDataString(slug)}/validate", EnclaveRules.Spec(enclave), ct);
+                var result = await grayspace.Json(HttpMethod.Post, $"enclaves/{Uri.EscapeDataString(slug)}/validate", EnclaveRules.Spec(enclave), ct);
                 return Results.Ok(new EnclaveAnswer(EnclaveView.From(enclave), result));
             })
             .AddEndpointFilter<GraySpaceFilter>().WithTags(tag);

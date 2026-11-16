@@ -28,7 +28,7 @@ public class CreateInstanceEndpoint : IEndpoint
                     await db.SaveChangesAsync(ct);
                     version = enclave.Version;
                 }
-                var request = new JsonObject { ["slice"] = slug, ["version"] = version };
+                var request = new JsonObject { ["enclave"] = slug, ["version"] = version };
                 if (!string.IsNullOrWhiteSpace(body.Prefix))
                     request["prefix"] = body.Prefix.Trim();
 

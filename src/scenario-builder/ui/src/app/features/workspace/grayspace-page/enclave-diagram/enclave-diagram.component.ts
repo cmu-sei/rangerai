@@ -7,7 +7,7 @@ import {
   GsHost,
   GsManifestHost,
   GsManifestSite,
-  SliceSpec
+  EnclaveSpec
 } from '../../../../core/models/grayspace.model';
 
 /** Where a host stands: drafted only, being built, or built and in GraySpace's manifest. */
@@ -80,13 +80,13 @@ const DEFAULT_STAGES = ['validate', 'allocate', 'render', 'apply', 'wait', 'conf
   styleUrls: ['./enclave-diagram.component.scss']
 })
 export class EnclaveDiagramComponent {
-  readonly spec = input.required<SliceSpec>();
+  readonly spec = input.required<EnclaveSpec>();
   readonly follow = input<FollowView | null>(null);
   readonly offers = input<GraySpaceOffers | null>(null);
 
   protected readonly job = computed(() => {
     const job = this.follow()?.job;
-    return job && job.kind !== 'plan_slice' && job.kind !== 'plan' ? job : null;
+    return job && job.kind !== 'plan_enclave' && job.kind !== 'plan_slice' && job.kind !== 'plan' ? job : null;
   });
   protected readonly instance = computed(() => this.follow()?.instance ?? null);
   /** Hosts are being built: a job that makes or changes the instance is running. */

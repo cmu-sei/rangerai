@@ -21,7 +21,7 @@ public sealed class EnclaveDraftOptions
 }
 
 /// <summary>
-/// Drafts a GraySpace enclave (slice spec) from a scenario's stage 3 answers and what GraySpace offers.
+/// Drafts a GraySpace enclave spec from a scenario's stage 3 answers and what GraySpace offers.
 /// <list type="bullet">
 /// <item><b>Sites:</b> one NAT site per segment, except a DMZ (a segment named or described as one), which joins the
 /// site of the segment it shares a word with (vendor-dmz, "remote access into the plant", joins ot-control, "the
@@ -29,9 +29,10 @@ public sealed class EnclaveDraftOptions
 /// initials and its segment (kbwa-corp), or the shared word when a DMZ joined it (kbwa-plant).</item>
 /// <item><b>Attachments:</b> the first site attaches at the attachment point nearest the scenario's place (a city, or a
 /// region such as the Pacific Northwest); each other site at the nearest point of an ISP not used yet. Internet hosts
-/// attach at the point nearest the place.</item>
+/// attach at the point nearest the place. Each is written as the point's ISP and location.</item>
 /// <item><b>Hosts:</b> each parsed host (<see cref="WorldParser.Hosts"/>) on its segment: a VM image for a VM, an
-/// LXC image otherwise; roles from what it does and the services it runs; public when it serves a website, mail or
+/// LXC image otherwise, and GraySpace's desktop image (an LXC image with the <c>desktop</c> feature) for a user's
+/// workstation, desktop or laptop when it takes the same roles; roles from what it does and the services it runs; public when it serves a website, mail or
 /// remote access at an address. A service whose host is on no segment becomes an internet host (a news site on the
 /// Pandora image). Every host is labelled with the World item it builds (<c>chronicle.of</c>) and the Chronicle
 /// (<c>chronicle.id</c>); GHOSTS hosts get a <c>ghosts.pool</c>.</item>
@@ -126,7 +127,7 @@ public static partial class EnclaveDrafter
             sites.Add(new JsonObject
             {
                 ["name"] = siteName,
-                ["attach"] = point is null ? new JsonObject() : new JsonObject { ["router"] = (string?)point["router"] },
+                ["attach"] = Attach(point),
                 ["routed"] = false,
                 ["segments"] = new JsonArray(siteSegments[s].Select(n => (JsonNode)new JsonObject { ["name"] = n }).ToArray())
             });
@@ -139,11 +140,19 @@ public static partial class EnclaveDrafter
         var lxc = images.FirstOrDefault(i => (string?)i["type"] == "lxc" && (string?)i["os_family"] == "ubuntu") ?? images.FirstOrDefault(i => (string?)i["type"] == "lxc");
         var vm = images.FirstOrDefault(i => (string?)i["type"] == "vm") ?? lxc;
         var pandora = images.FirstOrDefault(i => ((string?)i["name"] ?? "").Contains("pandora", StringComparison.OrdinalIgnoreCase));
+        var desktop = images.FirstOrDefault(i => (string?)i["type"] == "lxc" && (i["features"] as JsonArray ?? []).Any(f => (string?)f == "desktop"));
         var hosts = new JsonArray();
         var hostByName = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         var usedRoles = new HashSet<string>();
 
         JsonArray RolesFor(string text, JsonObject? image)
+        {
+            var fits = Fits(text, image);
+            usedRoles.UnionWith(fits);
+            return new JsonArray(fits.Select(r => (JsonNode)r).ToArray());
+        }
+
+        List<string> Fits(string text, JsonObject? image)
         {
             var family = (string?)image?["os_family"];
             var wanted = new List<string>();
@@ -154,10 +163,8 @@ public static partial class EnclaveDrafter
             if (Regex.IsMatch(t, @"\bmail\b|email")) wanted.Add("mail");
             if (t.Contains("website") || t.Contains("web site") || t.Contains("web server") || t.Contains("hmi") || t.Contains("portal")) wanted.Add("web");
             if (t.Contains("ghosts")) wanted.Add("ghosts-client");
-            var fits = wanted.Distinct().Where(r => roles.TryGetValue(r, out var role)
+            return wanted.Distinct().Where(r => roles.TryGetValue(r, out var role)
                 && (family is null || (role["os_families"] as JsonArray ?? []).Count == 0 || (role["os_families"] as JsonArray)!.Any(f => (string?)f == family))).ToList();
-            usedRoles.UnionWith(fits);
-            return new JsonArray(fits.Select(r => (JsonNode)r).ToArray());
         }
 
         bool Public(IEnumerable<ParsedService> on) => on.Any(s => s.Address is not null && s.ServiceType is "Website" or "Email" or "Remote access" or "News website");
@@ -166,7 +173,12 @@ public static partial class EnclaveDrafter
         {
             var on = services.Where(s => s.Host == h.Hostname).ToList();
             var image = h.Virtual || Regex.IsMatch(h.Role, @"\b(hmi|engineering workstation)\b", RegexOptions.IgnoreCase) ? vm : lxc;
-            var hostRoles = RolesFor($"{h.Role} {string.Join(' ', on.Select(s => $"{s.Name} {s.ServiceType}"))}", image);
+            var roleText = $"{h.Role} {string.Join(' ', on.Select(s => $"{s.Name} {s.ServiceType}"))}";
+            // A user's workstation gets GraySpace's desktop image, unless that would cost it a role the LXC image takes.
+            if (image == lxc && desktop is not null && Workstation().IsMatch(h.Role)
+                && Fits(roleText, desktop).Count >= Fits(roleText, lxc).Count)
+                image = desktop;
+            var hostRoles = RolesFor(roleText, image);
             var labels = new JsonObject { ["chronicle.of"] = h.Id, ["chronicle.id"] = chronicleId };
             if (hostRoles.Any(r => (string?)r == "ghosts-client"))
                 labels["ghosts.pool"] = orgTag is null ? h.Hostname.TrimEnd("0123456789".ToCharArray()) : $"{orgTag}-{h.Hostname.TrimEnd("0123456789".ToCharArray()).TrimEnd('-')}";
@@ -192,7 +204,7 @@ public static partial class EnclaveDrafter
             var host = new JsonObject
             {
                 ["name"] = s.Host,
-                ["internet"] = internetPoint is null ? new JsonObject() : new JsonObject { ["router"] = (string?)internetPoint["router"] },
+                ["internet"] = Attach(internetPoint),
                 ["image"] = (string?)image?["name"],
                 ["roles"] = news ? new JsonArray() : RolesFor($"{s.Name} {s.ServiceType}", image),
                 ["labels"] = new JsonObject { ["chronicle.of"] = s.Id, ["chronicle.id"] = chronicleId }
@@ -272,7 +284,7 @@ public static partial class EnclaveDrafter
         return new JsonObject
         {
             ["apiVersion"] = (string?)current["apiVersion"] ?? "grayspace/v1",
-            ["kind"] = (string?)current["kind"] ?? "Slice",
+            ["kind"] = "Enclave",
             ["slug"] = (string?)current["slug"],
             ["prefix"] = (string?)current["prefix"],
             ["description"] = $"{(string?)doc["name"]}: drafted from the scenario's network answers",
@@ -350,6 +362,17 @@ public static partial class EnclaveDrafter
     }
 
     /// <summary>A password for the drafted role settings, the same for the same scenario so redrafting doesn't make a new version.</summary>
+    /// <summary>An attachment point as GraySpace's enclave spec takes it: its ISP and location; any point when there is none.</summary>
+    private static JsonObject Attach(JsonObject? point)
+    {
+        var attach = new JsonObject();
+        if ((string?)point?["isp"] is { } isp)
+            attach["isp"] = isp;
+        if ((string?)point?["location"] is { } location)
+            attach["location"] = location;
+        return attach;
+    }
+
     private static string Secret(string seed) =>
         "Rng-" + Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes($"ranger-enclave:{seed}")))[..10].ToLowerInvariant() + "!";
 
@@ -378,6 +401,9 @@ public static partial class EnclaveDrafter
 
     [GeneratedRegex(@"\b[a-z0-9-]+(?:\.[a-z0-9-]+)+\.(?:org|com|net|gov|mil|io|local|internal|lan)\b", RegexOptions.IgnoreCase)]
     private static partial Regex DomainToken();
+
+    [GeneratedRegex(@"\b(workstations?|desktops?|laptops?)\b", RegexOptions.IgnoreCase)]
+    private static partial Regex Workstation();
 
     [GeneratedRegex(@"\(([A-Z][A-Z0-9-]{1,14})\)")]
     private static partial Regex NetBios();

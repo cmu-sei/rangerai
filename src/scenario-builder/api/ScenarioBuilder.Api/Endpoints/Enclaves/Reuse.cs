@@ -19,7 +19,7 @@ public class ReuseEndpoint : IEndpoint
                 if (string.IsNullOrWhiteSpace(body.Slug))
                     return ErrorResults.BadRequest("SLUG_REQUIRED", "Name the enclave on GraySpace to reuse.");
 
-                var detail = await grayspace.Get($"slices/{Uri.EscapeDataString(body.Slug.Trim())}", ct);
+                var detail = await grayspace.Get($"enclaves/{Uri.EscapeDataString(body.Slug.Trim())}", ct);
                 if (detail?["spec"] is not JsonObject spec)
                     return ErrorResults.Conflict("ENCLAVE_HAS_NO_SPEC", $"{body.Slug} is GraySpace's base, not an enclave a scenario can reuse.");
                 enclave.Spec = spec.ToJsonString();

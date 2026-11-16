@@ -16,7 +16,7 @@ public sealed class GraySpaceException(int status, string code, string message, 
 }
 
 /// <summary>
-/// Calls the connected GraySpace's Terrain API 1.7.0 with its token as a bearer. Answers come back as GraySpace wrote
+/// Calls the connected GraySpace's Terrain API (1.7.0 and the enclave-only builds after it) with its token as a bearer. Answers come back as GraySpace wrote
 /// them; a failed call throws <see cref="GraySpaceException"/>. One GraySpace runs several deployments, each a base and
 /// its enclaves: the connection's address is one deployment's base URL (<c>http://host/deployments/abc</c>), which every
 /// call goes under.
@@ -37,6 +37,39 @@ public sealed class GraySpaceClient(BuilderDb db, IHttpClientFactory clients)
     {
         var connection = await Connection(ct);
         return await Send(connection.Url, connection.Token, method, path, body, ct);
+    }
+
+    /// <summary>
+    /// Where sites and internet hosts can join the base: GET /attachment-points, as GraySpace wrote it. A GraySpace
+    /// without that route (it was dropped after 1.7.0) gets the base's routers from GET /map instead, each with its
+    /// ISP, ASN, location and coordinates.
+    /// </summary>
+    public async Task<JsonArray> AttachmentPoints(CancellationToken ct)
+    {
+        try
+        {
+            return await Get("attachment-points", ct) as JsonArray ?? [];
+        }
+        catch (GraySpaceException e) when (e.Status == StatusCodes.Status404NotFound)
+        {
+            var map = await Get("map", ct);
+            return new JsonArray((map?["features"] as JsonArray ?? []).OfType<JsonObject>()
+                .Where(f => (string?)f["properties"]?["kind"] == "router")
+                .Select(f =>
+                {
+                    var p = f["properties"]!;
+                    var at = f["geometry"]?["coordinates"] as JsonArray;
+                    return (JsonNode)new JsonObject
+                    {
+                        ["router"] = (string?)p["id"] ?? (string?)f["id"],
+                        ["isp"] = (string?)p["isp"],
+                        ["asn"] = p["asn"]?.DeepClone(),
+                        ["location"] = (string?)p["location"],
+                        ["latitude"] = at?.Count > 1 ? at[1]?.DeepClone() : null,
+                        ["longitude"] = at?.Count > 1 ? at[0]?.DeepClone() : null
+                    };
+                }).ToArray());
+        }
     }
 
     /// <summary>Whether the connected deployment answers now; throws when it doesn't.</summary>

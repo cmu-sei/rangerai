@@ -6,7 +6,7 @@ using ScenarioBuilder.Api.Infrastructure;
 namespace ScenarioBuilder.Api.Endpoints.GraySpace;
 
 /// <summary>What GraySpace offers an enclave, each part as GraySpace wrote it; <c>problems</c> says why a part is missing.</summary>
-public record OffersView(JsonNode? Server, JsonNode? Capabilities, JsonNode? Base, JsonNode? Versions, JsonNode? AttachmentPoints, JsonNode? Map, JsonNode? Slices, Dictionary<string, string> Problems);
+public record OffersView(JsonNode? Server, JsonNode? Capabilities, JsonNode? Base, JsonNode? Versions, JsonNode? AttachmentPoints, JsonNode? Map, JsonNode? Enclaves, Dictionary<string, string> Problems);
 
 /// <summary>
 /// GET /grayspace/offers — the connected deployment's server part (images, roles, jobs, capacity), the deployed base's
@@ -23,11 +23,13 @@ public class OffersEndpoint : IEndpoint
                 await grayspace.Check(ct);
                 var problems = new Dictionary<string, string>();
 
-                async Task<JsonNode?> Part(string name, string path)
+                Task<JsonNode?> Part(string name, string path) => Ask(name, () => grayspace.Get(path, ct));
+
+                async Task<JsonNode?> Ask(string name, Func<Task<JsonNode?>> ask)
                 {
                     try
                     {
-                        return await grayspace.Get(path, ct);
+                        return await ask();
                     }
                     catch (GraySpaceException e)
                     {
@@ -50,7 +52,7 @@ public class OffersEndpoint : IEndpoint
                 }
 
                 return Results.Ok(new OffersView(server, capabilities, await Part("base", "base"), versions,
-                    await Part("attachmentPoints", "attachment-points"), await Part("map", "map"), await Part("slices", "slices"), problems));
+                    await Ask("attachmentPoints", async () => await grayspace.AttachmentPoints(ct)), await Part("map", "map"), await Part("enclaves", "enclaves"), problems));
             })
             .AddEndpointFilter<GraySpaceFilter>().WithTags(tag);
 }

@@ -24,7 +24,7 @@ public class DraftEndpoint : IEndpoint
                 if (await EnclaveRules.Find(db, id, ct) is not { } enclave)
                     return ScenarioState.Missing(id);
                 var capabilities = await grayspace.Get("capabilities", ct) as JsonObject ?? [];
-                var points = await grayspace.Get("attachment-points", ct) as JsonArray ?? [];
+                var points = await grayspace.AttachmentPoints(ct);
                 var doc = ScenarioDocument.Build(state.ScenarioType, state.Scenario, state.Decisions);
                 try
                 {

@@ -64,7 +64,7 @@ public sealed partial class AsBuiltRelay(ChronicleClient chronicle, ILogger<AsBu
                     continue;
                 await chronicle.Append(chronicleId, ChronicleRecordBuilder.Entry(chronicleId, "asBuilt", realization, DateTime.UtcNow, null, Author.DeepClone().AsObject(), null), ct);
             }
-            var ready = Deployment(slug, version ?? (string?)instance?["slice"]?["version"] ?? (string?)job?["slice"]?["version"], "ready", builds);
+            var ready = Deployment(slug, version ?? (string?)(instance?["enclave"] ?? instance?["slice"])?["version"] ?? (string?)(job?["enclave"] ?? job?["slice"])?["version"], "ready", builds);
             ready["at"] = (string?)job?["finished"] ?? DateTime.UtcNow.ToString("O");
             if (!items.TryGetValue(depId, out var current))
                 await chronicle.Append(chronicleId, ChronicleRecordBuilder.Entry(chronicleId, "asBuilt", ready, DateTime.UtcNow, null, Author.DeepClone().AsObject(),

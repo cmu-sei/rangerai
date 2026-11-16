@@ -5,8 +5,8 @@ import {
   AnsweredView, AnswerValue, DocumentView, ScenarioType, ScenarioTypeSummary, ScenarioTypeUpdatePlan, LogEntry, PluginView, Progress, ProposalView, ScenarioSummary, SourceView
 } from '../models/builder.model';
 import {
-  BaseJobView, EnclaveAnswer, EnclaveView, FollowView, GraySpaceOffers, GraySpaceStatus, GsPreflight, GsPutSliceResult, GsValidateResult,
-  SliceSpec
+  BaseJobView, EnclaveAnswer, EnclaveView, FollowView, GraySpaceOffers, GraySpaceStatus, GsPreflight, GsPutEnclaveResult, GsValidateResult,
+  EnclaveSpec
 } from '../models/grayspace.model';
 
 /**
@@ -216,7 +216,7 @@ export class BuilderApiService {
     return this.http.get<EnclaveView>(`${this.base}/scenarios/${id}/enclave`);
   }
 
-  putEnclave(id: number, spec: SliceSpec): Observable<EnclaveView> {
+  putEnclave(id: number, spec: EnclaveSpec): Observable<EnclaveView> {
     return this.http.put<EnclaveView>(`${this.base}/scenarios/${id}/enclave`, { spec });
   }
 
@@ -234,8 +234,8 @@ export class BuilderApiService {
     return this.http.post<EnclaveAnswer<GsValidateResult>>(`${this.base}/scenarios/${id}/enclave/validate`, null);
   }
 
-  saveEnclave(id: number): Observable<EnclaveAnswer<GsPutSliceResult>> {
-    return this.http.post<EnclaveAnswer<GsPutSliceResult>>(`${this.base}/scenarios/${id}/enclave/save`, null);
+  saveEnclave(id: number): Observable<EnclaveAnswer<GsPutEnclaveResult>> {
+    return this.http.post<EnclaveAnswer<GsPutEnclaveResult>>(`${this.base}/scenarios/${id}/enclave/save`, null);
   }
 
   planEnclave(id: number): Observable<EnclaveAnswer> {

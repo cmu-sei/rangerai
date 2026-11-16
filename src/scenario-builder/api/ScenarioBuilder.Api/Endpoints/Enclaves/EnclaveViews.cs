@@ -8,7 +8,7 @@ using ScenarioBuilder.Api.Infrastructure;
 
 namespace ScenarioBuilder.Api.Endpoints.Enclaves;
 
-/// <summary>A scenario's enclave: its slice spec as GraySpace takes it, the version last saved, and the last instance and job.</summary>
+/// <summary>A scenario's enclave: its enclave spec as GraySpace takes it, the version last saved, and the last instance and job.</summary>
 public record EnclaveView(JsonNode Spec, string? Version, string? InstanceId, string? JobId, string? UpdatedBy, DateTime? Updated)
 {
     public static EnclaveView From(Enclave e) =>
@@ -39,9 +39,16 @@ public static partial class EnclaveRules
         enclave.Updated = DateTime.UtcNow;
     }
 
-    public static JsonObject Spec(Enclave enclave) => JsonNode.Parse(enclave.Spec)!.AsObject();
+    /// <summary>The enclave's spec. A draft saved as <c>kind: Slice</c>, the name GraySpace dropped after 1.7.0, reads as <c>Enclave</c>.</summary>
+    public static JsonObject Spec(Enclave enclave)
+    {
+        var spec = JsonNode.Parse(enclave.Spec)!.AsObject();
+        if ((string?)spec["kind"] == "Slice")
+            spec["kind"] = "Enclave";
+        return spec;
+    }
 
-    /// <summary>The slice's slug; null when the enclave has no name.</summary>
+    /// <summary>The enclave's slug; null when the enclave has no name.</summary>
     public static string? Slug(Enclave enclave) =>
         Spec(enclave)["slug"] is JsonValue v && v.TryGetValue(out string? slug) && slug.Trim().Length > 0 ? slug.Trim() : null;
 
@@ -50,7 +57,7 @@ public static partial class EnclaveRules
     /// <summary>Stores the draft on GraySpace as a version (the same one again when nothing changed) and records it.</summary>
     public static async Task<JsonNode?> Save(GraySpaceClient grayspace, Enclave enclave, string slug, CancellationToken ct)
     {
-        var result = await grayspace.Json(HttpMethod.Put, $"slices/{Uri.EscapeDataString(slug)}", Spec(enclave), ct);
+        var result = await grayspace.Json(HttpMethod.Put, $"enclaves/{Uri.EscapeDataString(slug)}", Spec(enclave), ct);
         enclave.Version = (string?)result?["version"];
         return result;
     }
@@ -62,12 +69,12 @@ public static partial class EnclaveRules
     {
         var slug = scenario.Slug.Length > 63 ? scenario.Slug[..63].TrimEnd('-') : scenario.Slug;
         if (slug == "base")
-            slug = "base-enclave";   // GraySpace keeps "base" for its own slice
+            slug = "base-enclave";   // GraySpace keeps "base" for its own enclave
         var letters = NotPrefix().Replace(slug, "").TrimStart("0123456789".ToCharArray());
         return new JsonObject
         {
             ["apiVersion"] = "grayspace/v1",
-            ["kind"] = "Slice",
+            ["kind"] = "Enclave",
             ["slug"] = slug,
             ["prefix"] = letters.Length == 0 ? "enclave" : letters[..Math.Min(8, letters.Length)],
             ["description"] = scenario.Name,
