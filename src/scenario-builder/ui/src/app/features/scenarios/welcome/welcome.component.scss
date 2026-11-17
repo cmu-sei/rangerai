@@ -7,9 +7,19 @@
   padding: 30px 34px 22px;
   border: 1px solid var(--sb-line);
   border-radius: 14px;
+  // A faint wash of the agent's and the person's colours from the top corners. A dark surface needs more of each
+  // colour for the same visible glow, so the dark theme mixes in more.
+  --welcome-agent-glow: light-dark(
+    color-mix(in srgb, var(--sb-agent) 7%, transparent),
+    color-mix(in srgb, var(--sb-agent) 15%, transparent)
+  );
+  --welcome-person-glow: light-dark(
+    color-mix(in srgb, var(--sb-person) 7%, transparent),
+    color-mix(in srgb, var(--sb-person) 13%, transparent)
+  );
   background:
-    radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--sb-agent) 7%, transparent) 0%, transparent 46%),
-    radial-gradient(90% 120% at 0% 0%, color-mix(in srgb, var(--sb-person) 7%, transparent) 0%, transparent 52%),
+    radial-gradient(120% 140% at 100% 0%, var(--welcome-agent-glow) 0%, transparent 46%),
+    radial-gradient(90% 120% at 0% 0%, var(--welcome-person-glow) 0%, transparent 52%),
     var(--sb-surface);
   animation: welcome-in 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
