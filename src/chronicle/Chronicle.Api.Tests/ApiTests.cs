@@ -142,20 +142,33 @@ public class ApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
         await http.PostAsync($"/api/chronicles/{id}/entries", Json(secret));
 
         using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-        // The response's headers may wait for its first event, so publish while the subscription is opening.
-        var opening = http.GetStreamAsync($"/api/chronicles/{id}/entries/stream?parts=world", cts.Token);
-        await Task.Delay(300, cts.Token);
+        using var stream = await http.GetStreamAsync($"/api/chronicles/{id}/entries/stream?parts=world", cts.Token);
+        using var reader = new StreamReader(stream);
+        // Nothing in the history is the participant's, so the stream is ready at once, caught up to entry 1.
+        Assert.Equal(("ready", "1"), await NextEvent(reader, cts.Token));
+
         var open = Entry.Add(id, Part.World, new Fact { Id = "open", Text = "public", Visibility = Audience.Participant }, Me, DateTimeOffset.UtcNow);
         await http.PostAsync($"/api/chronicles/{id}/entries", Json(open));
-        using var stream = await opening;
-        using var reader = new StreamReader(stream);
-
-        string? data = null;
-        while (data is null && await reader.ReadLineAsync(cts.Token) is { } line)
-            if (line.StartsWith("data: "))
-                data = line["data: ".Length..];
-        var entry = ChronicleJson.Deserialize<Entry>(data!);
+        var (type, data) = await NextEvent(reader, cts.Token);
+        Assert.Equal("entry", type);
+        var entry = ChronicleJson.Deserialize<Entry>(data);
         Assert.Equal(("open", 2L), (entry.ItemId, entry.Sequence!.Value));
+    }
+
+    /// <summary>The next server-sent event: its type and data.</summary>
+    private static async Task<(string Type, string Data)> NextEvent(StreamReader reader, CancellationToken ct)
+    {
+        string type = "message", data = "";
+        while (await reader.ReadLineAsync(ct) is { } line)
+        {
+            if (line.Length == 0)
+                return (type, data);
+            if (line.StartsWith("event: "))
+                type = line["event: ".Length..];
+            else if (line.StartsWith("data: "))
+                data = line["data: ".Length..];
+        }
+        throw new EndOfStreamException();
     }
 
     [Fact]

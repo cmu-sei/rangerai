@@ -35,7 +35,12 @@ builder.Services.AddHttpClient(GraySpaceClient.Client, client => client.Timeout 
 builder.Services.AddScoped<GraySpaceClient>();
 
 builder.Services.Configure<ChronicleOptions>(builder.Configuration.GetSection(ChronicleOptions.Section));
-builder.Services.AddHttpClient(ChronicleClient.Client, client => client.Timeout = TimeSpan.FromSeconds(30));
+// The Chronicle.Client library calls the API (named HttpClient "chronicle"); ChronicleClient is Scenario Builder's layer over it.
+Chronicle.Client.ServiceCollectionExtensions.AddChronicleClient(builder.Services, o =>
+{
+    builder.Configuration.GetSection(ChronicleOptions.Section).Bind(o);
+    o.App ??= ChronicleClient.App;
+});
 builder.Services.AddScoped<ChronicleClient>();
 builder.Services.AddScoped<ChroniclePublisher>();
 builder.Services.AddScoped<AsBuiltRelay>();

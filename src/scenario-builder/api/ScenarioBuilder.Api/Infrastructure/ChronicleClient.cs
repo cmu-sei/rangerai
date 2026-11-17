@@ -1,7 +1,5 @@
 // Copyright 2017 Carnegie Mellon University. All Rights Reserved. See LICENSE.md file for terms.
 
-using System.Net;
-using System.Text;
 using System.Text.Json.Nodes;
 using Microsoft.Extensions.Options;
 
@@ -25,70 +23,62 @@ public sealed class ChronicleException(int status, string message) : Exception(m
     public int Status { get; } = status;
 }
 
-/// <summary>The Chronicle API, as Scenario Builder publishes to it: records whole, entries one at a time.</summary>
-public sealed class ChronicleClient(IHttpClientFactory clients, IOptions<ChronicleOptions> options)
+/// <summary>
+/// The Chronicle API, as Scenario Builder publishes to it: records whole, entries one at a time. A thin layer over the
+/// Chronicle.Client library, which does the calling and retrying; this keeps Scenario Builder's JSON-shaped use of it
+/// and its errors in Scenario Builder's terms.
+/// </summary>
+public sealed class ChronicleClient(global::Chronicle.Client.ChronicleClient api, IOptions<ChronicleOptions> options)
 {
-    public const string Client = "chronicle";
+    /// <summary>The HttpClient's name, as the Chronicle.Client library registers it.</summary>
+    public const string Client = global::Chronicle.Client.ChronicleClient.HttpClientName;
+
+    /// <summary>The app Scenario Builder publishes as, by default.</summary>
+    public const string App = "scenario-builder";
 
     public string UiLink(string chronicleId) => $"{options.Value.UiUrl.TrimEnd('/')}/events/{Uri.EscapeDataString(chronicleId)}";
 
     /// <summary>The whole record as the designer sees it, history included; null when there's no such Chronicle.</summary>
-    public async Task<JsonObject?> Get(string chronicleId, CancellationToken ct)
-    {
-        var (status, body) = await Send(HttpMethod.Get, $"api/chronicles/{Uri.EscapeDataString(chronicleId)}?audience=designer", null, ct);
-        return status == HttpStatusCode.NotFound ? null : Ok(status, body) as JsonObject;
-    }
+    public Task<JsonObject?> Get(string chronicleId, CancellationToken ct) =>
+        Call(() => api.GetJsonAsync(chronicleId, global::Chronicle.Client.ChronicleView.Designer, ct));
 
-    public async Task Create(JsonObject record, CancellationToken ct)
-    {
-        var (status, body) = await Send(HttpMethod.Post, "api/chronicles", record, ct);
-        Ok(status, body);
-    }
+    public Task Create(JsonObject record, CancellationToken ct) => Call(() => api.CreateJsonAsync(record, ct));
 
     /// <summary>Appends one entry; returns it as stored, with its sequence.</summary>
-    public async Task<JsonObject?> Append(string chronicleId, JsonObject entry, CancellationToken ct)
-    {
-        var (status, body) = await Send(HttpMethod.Post, $"api/chronicles/{Uri.EscapeDataString(chronicleId)}/entries", entry, ct);
-        return Ok(status, body) as JsonObject;
-    }
+    public Task<JsonObject?> Append(string chronicleId, JsonObject entry, CancellationToken ct) =>
+        Call(() => api.PublishJsonAsync(chronicleId, entry, ct));
 
     /// <summary>Registers (or updates) one downstream agent; false when this Chronicle API has no subscribers yet (an older one answers 404).</summary>
     public async Task<bool> PutSubscriber(string chronicleId, string subscriberId, JsonObject body, CancellationToken ct)
     {
-        var (status, text) = await Send(HttpMethod.Put,
-            $"api/chronicles/{Uri.EscapeDataString(chronicleId)}/subscribers/{Uri.EscapeDataString(subscriberId)}", body, ct);
-        if (status is HttpStatusCode.NotFound or HttpStatusCode.MethodNotAllowed)
+        try
+        {
+            await Call(() => api.RegisterSubscriberJsonAsync(chronicleId, subscriberId, body, ct));
+            return true;
+        }
+        catch (ChronicleException e) when (e.Status is StatusCodes.Status404NotFound or StatusCodes.Status405MethodNotAllowed)
+        {
             return false;
-        Ok(status, text);
-        return true;
+        }
     }
 
     public string AgentModel => options.Value.AgentModel;
 
     public bool PublishOnCreate => options.Value.PublishOnCreate;
 
-    private async Task<(HttpStatusCode, string)> Send(HttpMethod method, string path, JsonNode? body, CancellationToken ct)
+    /// <summary>Makes the call, turning the library's errors into Scenario Builder's: 502 when the Chronicle API is down or failed.</summary>
+    private async Task<T> Call<T>(Func<Task<T>> call)
     {
-        using var request = new HttpRequestMessage(method, $"{options.Value.Url.TrimEnd('/')}/{path}");
-        if (body is not null)
-            request.Content = new StringContent(body.ToJsonString(), Encoding.UTF8, "application/json");
         try
         {
-            using var response = await clients.CreateClient(Client).SendAsync(request, ct);
-            return (response.StatusCode, await response.Content.ReadAsStringAsync(ct));
+            return await call();
         }
-        catch (Exception e) when (e is HttpRequestException || (e is TaskCanceledException && !ct.IsCancellationRequested))
+        catch (global::Chronicle.Client.ChronicleApiException e)
         {
-            throw new ChronicleException(StatusCodes.Status502BadGateway,
-                $"The Chronicle API at {options.Value.Url} didn't answer ({e.Message}). Check Chronicle:Url in the API's settings.");
+            throw e.IsUnavailable
+                ? new ChronicleException(StatusCodes.Status502BadGateway,
+                    e.Status is null ? $"{e.Message} Check Chronicle:Url in the API's settings." : e.Message)
+                : new ChronicleException((int)e.Status!.Value, e.Message);
         }
-    }
-
-    private static JsonNode? Ok(HttpStatusCode status, string body)
-    {
-        if ((int)status is >= 200 and < 300)
-            return body.Length == 0 ? null : JsonNode.Parse(body);
-        throw new ChronicleException((int)status >= 500 ? StatusCodes.Status502BadGateway : (int)status,
-            $"The Chronicle API refused it (HTTP {(int)status}): {(body.Length > 600 ? body[..600] : body)}");
     }
 }

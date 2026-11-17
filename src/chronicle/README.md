@@ -38,6 +38,23 @@ var findings = Validation.Check(record);
 | `Subscription`, `Topics` | What a subscriber asks for, and topic names for carriers that route by topic |
 | `ChronicleJson`, `ChronicleSchema` | The JSON form, and the JSON Schema generated from the types |
 
+## The Client
+
+`Chronicle.Client` is how a .NET app joins a Chronicle: subscribe to the parts it needs, publish what it did, report
+activity. It handles connecting, reconnecting, resuming, retrying and the spec's types; what the app does with an
+entry is the app's own code. Write an `IChronicleHandler` and register it, or `await foreach` over
+`SubscribeAsync`. See [`Chronicle.Client/README.md`](Chronicle.Client/README.md), and
+[`examples/GhostsSubscriber`](examples/GhostsSubscriber) for a working app shaped like GHOSTS. Scenario Builder
+publishes through it.
+
+```csharp
+await foreach (var entry in chronicle.SubscribeAsync(new Subscription
+    { ChronicleId = "harbor-ttx", Audience = Audience.Participant, Viewers = ["office-staff"], Parts = [Part.AsRun] }, ct))
+    await myApp.Handle(entry);
+
+await chronicle.AddAsync("harbor-ttx", Part.AsRun, new Observation { /* … */ }, reason: "An NPC reacted.");
+```
+
 ## The API
 
 `Chronicle.Api` stores Chronicles and carries their entries; it runs in Aspire as `chronicle-api` on
@@ -57,7 +74,7 @@ One controller per resource, in `Controllers/Api/`:
 | `EntriesController` | `GET /api/chronicles/{id}/entries` | The history, filtered |
 | | `GET /api/chronicles/{id}/entries/{sequence}` | One entry |
 | | `POST /api/chronicles/{id}/entries` | Publish: 201 stored, 200 if already stored (safe to retry), 409 `STALE` or `ID_TAKEN`, 422 another rule |
-| | `GET /api/chronicles/{id}/entries/stream` | Subscribe, as server-sent events: the history after `after`, then each new entry; resumes from `Last-Event-ID` |
+| | `GET /api/chronicles/{id}/entries/stream` | Subscribe, as server-sent events: `entry` events for the history after `after`, a `ready` event (data: the sequence caught up to), then each new entry; a `heartbeat` event every 15 s when quiet; resumes from `Last-Event-ID` |
 | `LiveController` | `GET /api/chronicles/{id}/live` | **WebSocket**: the live feed for an audience (see below) |
 | | `POST /api/chronicles/{id}/activity` | Report activity; with an `entry` it is notable and the entry is stored first |
 | | `GET /api/chronicles/{id}/activity` | Recent activity an audience may see (`limit`, default 200) |
@@ -156,6 +173,7 @@ python3 src/chronicle/tools/mock-from-scenario-builder.py --post
 ```bash
 dotnet test src/chronicle/Chronicle.Tests
 dotnet test src/chronicle/Chronicle.Api.Tests
+dotnet test src/chronicle/Chronicle.Client.Tests
 # After changing a type, regenerate the schemas and the sample, then review the diff:
 CHRONICLE_UPDATE=1 dotnet test src/chronicle/Chronicle.Tests
 dotnet test src/chronicle/Chronicle.Api.Tests

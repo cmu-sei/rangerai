@@ -18,4 +18,8 @@
     <PackageReference Include="UglyToad.PdfPig" Version="1.7.0-custom-5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\chronicle\Chronicle.Client\Chronicle.Client.csproj" />
+  </ItemGroup>
+
 </Project>

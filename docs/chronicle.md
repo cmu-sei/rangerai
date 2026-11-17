@@ -67,7 +67,7 @@ The Chronicle API stores Chronicles and carries their entries. Locally it runs i
 |---|---|
 | Chronicles | `GET /api/chronicles`, `POST /api/chronicles`, `GET /api/chronicles/{id}`, `GET /api/chronicles/{id}/findings`, `POST /api/chronicles/validate` |
 | Entries | `GET /api/chronicles/{id}/entries`, `GET /api/chronicles/{id}/entries/{sequence}`, `POST /api/chronicles/{id}/entries` |
-| Subscription | `GET /api/chronicles/{id}/entries/stream`: server-sent events, the history first and then each new entry |
+| Subscription | `GET /api/chronicles/{id}/entries/stream`: server-sent events, the history first, a `ready` event, then each new entry, with a heartbeat every 15 seconds |
 | Live | `GET /api/chronicles/{id}/live`: a WebSocket with the subscribers, activity, new entries and agents' words as they're written |
 | Activity | `POST /api/chronicles/{id}/activity` (with an `entry`, it's notable and stored), `GET /api/chronicles/{id}/activity` |
 | Subscribers | `GET /api/chronicles/{id}/subscribers`, `PUT`/`DELETE /api/chronicles/{id}/subscribers/{subscriberId}`, `POST …/{subscriberId}/run` |
@@ -80,6 +80,44 @@ Every read is an audience's view: `?audience=participant` (the default), `excon`
 
 ???+ warning "No authentication yet"
     The API takes the audience a caller asks for on trust. Don't expose it beyond a development range.
+
+## Connecting an App
+
+A .NET app connects with the C# library `Chronicle.Client`, in [`src/chronicle/Chronicle.Client`](https://github.com/cmu-sei/rangerai/tree/master/src/chronicle/Chronicle.Client). The library does the plumbing; the app keeps its own logic:
+
+| The library does | The app does |
+|---|---|
+| Connects, reconnects, and resumes after the last entry | Decides what to subscribe to: which Chronicle, audience, viewers and parts |
+| Reads entries into the spec's types | Decides what each entry means to it |
+| Builds entries: ids, times, authors, what a revise replaces | Decides what to publish, and when |
+| Retries what didn't get through, safely | Handles a conflict when someone else revised the item first |
+| Keeps a subscriber's place across restarts, if asked | Makes handling an entry twice harmless (delivery is at least once) |
+
+An app either writes one handler, which the library runs on every entry, or loops over a subscription itself:
+
+```csharp
+builder.Services.AddChronicleClient(builder.Configuration);
+builder.Services.AddChronicleSubscriber<NpcHandler>("office-staff", o =>
+{
+    o.ChronicleId = "harbor-ttx";
+    o.Audience = Audience.Participant;
+    o.Viewers = ["office-staff"];
+    o.Parts = [Part.World, Part.AsRun];
+});
+
+public sealed class NpcHandler(ChronicleClient chronicle) : IChronicleHandler
+{
+    public async Task HandleAsync(Entry entry, CancellationToken ct)
+    {
+        // The app's own logic. To publish back:
+        // await chronicle.AddAsync(entry.ChronicleId, Part.AsRun, new Observation { ... }, ct: ct);
+    }
+}
+```
+
+Scenario Builder publishes through it. [`src/chronicle/examples/GhostsSubscriber`](https://github.com/cmu-sei/rangerai/tree/master/src/chronicle/examples/GhostsSubscriber) is a working app shaped like GHOSTS: it subscribes as the simulated office staff, and when an inject reaches them, it reports what the NPCs did and records an observation. Apps in other languages use the API above and the JSON Schemas.
+
+There are two kinds of subscriber. An app that does its own work, as GHOSTS does, connects with the library. A subscriber registered with an agent is run by the Chronicle itself, which publishes the model's output for it; that needs no code in any app.
 
 ## Why It Matters for AI
 
@@ -95,5 +133,5 @@ A language model doesn't know your exercise. Give it the Chronicle and it stops 
 
 ## Where It Stands
 
-- **Today:** Scenario Builder writes the world and intent. GraySpace builds a range from them. GHOSTS runs the simulated users. The Chronicle spec is drafted, and the Chronicle API stores Chronicles, takes entries and streams them to subscribers.
-- **Next:** agreeing the spec's open decisions, authentication for the API, and every app publishing what it built, did and saw: Scenario Builder first, then GHOSTS subscribing.
+- **Today:** Scenario Builder writes the world and intent. GraySpace builds a range from them. GHOSTS runs the simulated users. The Chronicle spec is drafted, and the Chronicle API stores Chronicles, takes entries and streams them to subscribers. Apps connect through the `Chronicle.Client` library.
+- **Next:** agreeing the spec's open decisions, authentication for the API, and every app publishing what it built, did and saw through `Chronicle.Client`: GHOSTS subscribing first.

@@ -65,8 +65,10 @@ public sealed class EntriesController(ChronicleStore store) : ApiControllerBase
     }
 
     /// <summary>
-    /// Subscribes, as server-sent events: the history after <c>after</c>, then each new entry as it is stored. Each event
-    /// is an entry, with its sequence as the event id; a reconnecting client's Last-Event-ID resumes from there.
+    /// Subscribes, as server-sent events: the history after <c>after</c>, then each new entry as it is stored. Each
+    /// <c>entry</c> event is an entry, with its sequence as the event id; a reconnecting client's Last-Event-ID resumes
+    /// from there. A <c>ready</c> event (its data the sequence caught up to) follows the history, and a quiet stream
+    /// sends a <c>heartbeat</c> event every 15 seconds.
     /// </summary>
     [HttpGet("stream")]
     [Produces("text/event-stream")]
@@ -90,13 +92,45 @@ public sealed class EntriesController(ChronicleStore store) : ApiControllerBase
             foreach (var stored in Visible(record, subscription))
                 yield return Event(stored.Entry);
 
-            // The record was taken as hearing began, so anything newer arrives on the channel; skip what it already held.
+            // Caught up: from here on, entries arrive as they are stored. Sending it also sends the response's headers,
+            // so a subscriber with no history to hear isn't left waiting for them.
             var sent = Math.Max(subscription.AfterSequence, record.History.Count);
-            await foreach (var stored in reader.ReadAllAsync(ct))
-                if (stored.Entry.Sequence > sent && Wants(subscription, stored))
-                    yield return Event(stored.Entry);
+            yield return new SseItem<string>(sent.ToString(), "ready");
+
+            // The record was taken as hearing began, so anything newer arrives on the channel; skip what it already held.
+            // A quiet stream sends a heartbeat now and then, so a subscriber can tell a quiet Chronicle from a dead connection.
+            while (true)
+            {
+                bool more;
+                using (var wait = CancellationTokenSource.CreateLinkedTokenSource(ct))
+                {
+                    wait.CancelAfter(Heartbeat);
+                    try
+                    {
+                        more = await reader.WaitToReadAsync(wait.Token);
+                    }
+                    catch (OperationCanceledException) when (!ct.IsCancellationRequested)
+                    {
+                        more = true;
+                    }
+                }
+                if (!more)
+                    yield break;
+                var any = false;
+                while (reader.TryRead(out var stored))
+                {
+                    any = true;
+                    if (stored.Entry.Sequence > sent && Wants(subscription, stored))
+                        yield return Event(stored.Entry);
+                }
+                if (!any)
+                    yield return new SseItem<string>("", "heartbeat");
+            }
         }
     }
+
+    /// <summary>How long a quiet stream goes before it sends a heartbeat.</summary>
+    private static readonly TimeSpan Heartbeat = TimeSpan.FromSeconds(15);
 
     private static IEnumerable<Stored> Visible(ChronicleRecord record, Subscription subscription) =>
         Projection.Subjects(record).Select(s => new Stored(s.Entry, s.Subject)).Where(s => Wants(subscription, s));

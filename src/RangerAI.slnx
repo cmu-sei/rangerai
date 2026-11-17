@@ -3,6 +3,9 @@
     <Project Path="chronicle/Chronicle/Chronicle.csproj" />
     <Project Path="chronicle/Chronicle.Api/Chronicle.Api.csproj" />
     <Project Path="chronicle/Chronicle.Api.Tests/Chronicle.Api.Tests.csproj" />
+    <Project Path="chronicle/Chronicle.Client/Chronicle.Client.csproj" />
+    <Project Path="chronicle/Chronicle.Client.Tests/Chronicle.Client.Tests.csproj" />
+    <Project Path="chronicle/examples/GhostsSubscriber/GhostsSubscriber.csproj" />
     <Project Path="chronicle/Chronicle.Tests/Chronicle.Tests.csproj" />
   </Folder>
   <Folder Name="/scenario-builder/">

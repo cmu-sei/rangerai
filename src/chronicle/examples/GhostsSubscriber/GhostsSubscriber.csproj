@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <!-- An example, not a product: what a GHOSTS-like app writes to subscribe to a Chronicle and publish back. -->
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="11.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- An app outside this repository references the package instead: <PackageReference Include="Chronicle.Client" Version="0.1.0" /> -->
+    <ProjectReference Include="..\..\Chronicle.Client\Chronicle.Client.csproj" />
+  </ItemGroup>
+
+</Project>
