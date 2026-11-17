@@ -6,7 +6,7 @@ import { ChronicleSummary } from '../../core/chronicle.model';
 
 type SortKey = 'name' | 'scenarioType' | 'entries' | 'created';
 
-/** What Chronicle is, then every event it records as a small grid to search, sort and open. */
+/** What Chronicle is, then every event it records as a small grid to search, sort, open and archive. */
 @Component({
   selector: 'app-events-list',
   standalone: true,
@@ -37,12 +37,17 @@ export class EventsListComponent implements OnInit {
   protected readonly loaded = signal(false);
   protected readonly query = signal('');
   protected readonly sort = signal<{ key: SortKey; ascending: boolean }>({ key: 'created', ascending: false });
+  protected readonly showArchived = signal(false);
   protected readonly error = signal<string | null>(null);
+
+  protected readonly archivedCount = computed(() => this.events().filter(e => e.archived).length);
+  /** The events the grid can show: every one, or only those not archived. */
+  protected readonly shown = computed(() => this.events().filter(e => this.showArchived() || !e.archived));
 
   protected readonly rows = computed(() => {
     const words = this.query().trim().toLowerCase();
     const { key, ascending } = this.sort();
-    return this.events()
+    return this.shown()
       .filter(e => !words || [e.name, e.id, e.kind, e.scenarioType?.id ?? ''].some(v => v.toLowerCase().includes(words)))
       .sort((a, b) => (ascending ? 1 : -1) * compare(value(a, key), value(b, key)));
   });
@@ -63,6 +68,20 @@ export class EventsListComponent implements OnInit {
   /** The whole row opens the event; the name is also a real link, for the keyboard and new tabs. */
   protected open(event: ChronicleSummary): void {
     this.router.navigate(['/events', event.id]);
+  }
+
+  /** Archives an event, or brings it back; the row's own click doesn't open it. */
+  protected archive(event: ChronicleSummary, archived: boolean, click: Event): void {
+    click.stopPropagation();
+    this.error.set(null);
+    this.api.archive(event.id, archived).subscribe({
+      next: changed => this.events.update(all => all.map(e => (e.id === changed.id ? changed : e))),
+      error: e => this.error.set(errorMessage(e))
+    });
+  }
+
+  protected toggledArchived(event: Event): void {
+    this.showArchived.set((event.target as HTMLInputElement).checked);
   }
 
   /** A column sorts ascending first; the same column again reverses it. */

@@ -10,10 +10,19 @@ namespace Chronicle.Api.Controllers.Api;
 [Route("api/chronicles")]
 public sealed class ChroniclesController(ChronicleStore store) : ApiControllerBase
 {
-    /// <summary>Every Chronicle, newest first.</summary>
+    /// <summary>Every Chronicle, newest first; archived ones too, each marked, so a list can show or hide them.</summary>
     [HttpGet]
     [ProducesResponseType<IEnumerable<ChronicleSummary>>(StatusCodes.Status200OK)]
-    public IEnumerable<ChronicleSummary> List() => store.All().Select(ChronicleSummary.From);
+    public IEnumerable<ChronicleSummary> List() => store.All().Select(c => ChronicleSummary.From(c.Record, c.Archived));
+
+    /// <summary>Archives a Chronicle, hiding it from the list, or brings it back. Reads and publishes are unaffected.</summary>
+    [HttpPut("{id}/archive")]
+    [ProducesResponseType<ChronicleSummary>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ChronicleSummary>> Archive(string id, [FromBody] PutArchive body, CancellationToken ct) =>
+        await store.Archive(id, body.Archived, ct) && store.Get(id) is { } record
+            ? ChronicleSummary.From(record, body.Archived)
+            : ChronicleNotFound(id);
 
     /// <summary>One Chronicle, as an audience may see it.</summary>
     [HttpGet("{id}")]

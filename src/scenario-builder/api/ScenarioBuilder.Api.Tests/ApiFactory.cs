@@ -24,6 +24,9 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
 
     public string Database { get; }
 
+    /// <summary>Whether creating a scenario creates its Chronicle; off, so tests never reach a Chronicle they didn't fake.</summary>
+    public bool ChroniclePublishOnCreate { get; init; }
+
     /// <summary>The web the API fetches URL sources from; set it before the first client.</summary>
     public Func<HttpRequestMessage, HttpResponseMessage>? Web { get; init; }
 
@@ -32,6 +35,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("ConnectionStrings:Builder", $"Data Source={Database}");
         builder.UseSetting("ScenarioTypes:Directory", ScenarioTypesDirectory);
         builder.UseSetting("Libraries:Directory", LibrariesDirectory);
+        builder.UseSetting("Chronicle:PublishOnCreate", ChroniclePublishOnCreate ? "true" : "false");
         if (Web is { } web)
             builder.ConfigureServices(services =>
                 services.AddHttpClient(SourceText.WebClient).ConfigurePrimaryHttpMessageHandler(() => new FakeWeb(web)));

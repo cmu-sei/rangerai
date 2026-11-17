@@ -29,7 +29,11 @@
   <div class="tools">
     <input class="ch-field search" type="search" placeholder="Search by name, id or scenario type" aria-label="Search events"
       [value]="query()" (input)="searched($event)" />
-    <span class="count ch-label">{{ rows().length }} of {{ events().length }}</span>
+    <label class="archived-toggle">
+      <input type="checkbox" [checked]="showArchived()" (change)="toggledArchived($event)" />
+      Show archived{{ archivedCount() ? ' (' + archivedCount() + ')' : '' }}
+    </label>
+    <span class="count ch-label">{{ rows().length }} of {{ shown().length }}</span>
   </div>
 
   @if (error(); as error) {
@@ -45,26 +49,39 @@
               <button class="sort" type="button" (click)="sortBy(column.key)">{{ column.label }}</button>
             </th>
           }
+          <th scope="col" class="actions"><span class="visually-hidden">Actions</span></th>
         </tr>
       </thead>
       <tbody>
         @for (event of rows(); track event.id) {
-          <tr class="row" (click)="open(event)">
+          <tr class="row" [class.archived]="event.archived" (click)="open(event)">
             <td class="name">
               <a class="title" [routerLink]="['/events', event.id]" (click)="$event.stopPropagation()">{{ event.name }}</a>
               <span class="id">{{ event.id }}</span>
+              @if (event.archived) {
+                <span class="pill">Archived</span>
+              }
             </td>
             <td class="meta">{{ event.scenarioType?.id ?? '—' }}</td>
             <td class="meta">{{ event.entries }}</td>
             <td class="meta">{{ event.created | date: 'MMM d, y, HH:mm' }}</td>
+            <td class="actions">
+              @if (event.archived) {
+                <button class="ghost" type="button" [attr.aria-label]="'Restore ' + event.name" (click)="archive(event, false, $event)">Restore</button>
+              } @else {
+                <button class="ghost" type="button" [attr.aria-label]="'Archive ' + event.name" (click)="archive(event, true, $event)">Archive</button>
+              }
+            </td>
           </tr>
         } @empty {
           <tr>
-            <td class="empty" colspan="4">
+            <td class="empty" colspan="5">
               @if (!loaded()) {
                 Loading…
-              } @else if (events().length) {
+              } @else if (shown().length) {
                 No event matches. Clear the search.
+              } @else if (events().length) {
+                Every event is archived. Show archived ones to see them.
               } @else {
                 No events yet.
               }

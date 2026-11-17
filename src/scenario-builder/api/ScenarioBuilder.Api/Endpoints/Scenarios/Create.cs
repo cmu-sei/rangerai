@@ -16,11 +16,16 @@ public record ScenarioSummary(
         new(s.Id, s.Slug, s.Name, s.ScenarioTypeId, s.ScenarioTypeVersion, s.Owner, s.Stage, s.Created, s.Updated, s.Archived);
 }
 
-/// <summary>POST /scenarios — a new scenario on a scenario type's first stage. The caller becomes its owner.</summary>
+/// <summary>
+/// POST /scenarios — a new scenario on a scenario type's first stage. The caller becomes its owner. Its Chronicle (id:
+/// the slug) is created with it, so the Chronicle lists the scenario from the start; a Chronicle that doesn't answer
+/// doesn't stop the scenario, and the Finish page's publish creates the record then.
+/// </summary>
 public class CreateEndpoint : IEndpoint
 {
     public RouteHandlerBuilder Register(RouteGroupBuilder group, string tag) =>
-        group.MapPost("/scenarios", async (CreateScenario body, HttpContext http, ScenarioTypeCatalog scenarioTypes, BuilderDb db, CancellationToken ct) =>
+        group.MapPost("/scenarios", async (CreateScenario body, HttpContext http, ScenarioTypeCatalog scenarioTypes, BuilderDb db,
+            ChronicleClient chronicle, ChroniclePublisher publisher, ILogger<CreateEndpoint> log, CancellationToken ct) =>
         {
             var name = body.Name?.Trim();
             if (string.IsNullOrEmpty(name))
@@ -63,6 +68,26 @@ public class CreateEndpoint : IEndpoint
                     });
                 }
             await db.SaveChangesAsync(ct);
+
+            if (chronicle.PublishOnCreate)
+                await PublishToChronicle(scenario, scenarioType, db, publisher, log, ct);
             return Results.Created($"/api/scenarios/{scenario.Id}", ScenarioSummary.From(scenario));
         }).WithTags(tag);
+
+    private static async Task PublishToChronicle(Scenario scenario, ScenarioType scenarioType, BuilderDb db, ChroniclePublisher publisher,
+        ILogger log, CancellationToken ct)
+    {
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        timeout.CancelAfter(TimeSpan.FromSeconds(10));
+        try
+        {
+            var decisions = await db.Decisions.Where(d => d.ScenarioId == scenario.Id).ToListAsync(ct);
+            var doc = ScenarioDocument.Build(scenarioType, scenario, decisions);
+            await publisher.Publish(doc, scenario.Slug, scenario.Owner, scenario.Created, scenario.Updated, timeout.Token);
+        }
+        catch (Exception e) when (e is ChronicleException || (e is OperationCanceledException && !ct.IsCancellationRequested))
+        {
+            log.LogWarning("Scenario {Slug} was created, but its Chronicle wasn't: {Reason}", scenario.Slug, e.Message);
+        }
+    }
 }

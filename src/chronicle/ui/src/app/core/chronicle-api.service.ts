@@ -11,6 +11,11 @@ export class ChronicleApiService {
     return this.http.get<ChronicleSummary[]>('/api/chronicles');
   }
 
+  /** Archives an event, hiding it from the list, or brings it back. */
+  archive(id: string, archived: boolean): Observable<ChronicleSummary> {
+    return this.http.put<ChronicleSummary>(`/api/chronicles/${encodeURIComponent(id)}/archive`, { archived });
+  }
+
   /** One event, as an audience may see it. */
   getChronicle(id: string, audience: Audience): Observable<ChronicleRecord> {
     return this.http.get<ChronicleRecord>(`/api/chronicles/${encodeURIComponent(id)}`, { params: { audience } });

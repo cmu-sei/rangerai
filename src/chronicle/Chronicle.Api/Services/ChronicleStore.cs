@@ -19,6 +19,7 @@ public sealed class ChronicleStore(string connectionString, ILogger<ChronicleSto
     {
         public readonly SemaphoreSlim Lock = new(1, 1);
         public ChronicleRecord Record = record;
+        public bool Archived;
         public readonly List<Channel<Stored>> Subscribers = [];
     }
 
@@ -37,17 +38,19 @@ public sealed class ChronicleStore(string connectionString, ILogger<ChronicleSto
                 entry TEXT NOT NULL,
                 PRIMARY KEY (chronicle_id, sequence));
             """);
+        if (!HasColumn(db, "chronicles", "archived"))
+            Execute(db, "ALTER TABLE chronicles ADD COLUMN archived INTEGER NOT NULL DEFAULT 0");
 
-        var headers = new List<ChronicleRecord>();
+        var headers = new List<(ChronicleRecord Header, bool Archived)>();
         using (var read = db.CreateCommand())
         {
-            read.CommandText = "SELECT header FROM chronicles";
+            read.CommandText = "SELECT header, archived FROM chronicles";
             using var rows = read.ExecuteReader();
             while (rows.Read())
-                headers.Add(ChronicleJson.Deserialize<ChronicleRecord>(rows.GetString(0)));
+                headers.Add((ChronicleJson.Deserialize<ChronicleRecord>(rows.GetString(0)), rows.GetInt64(1) != 0));
         }
 
-        foreach (var header in headers)
+        foreach (var (header, archived) in headers)
         {
             var history = new List<Entry>();
             using var read = db.CreateCommand();
@@ -56,14 +59,40 @@ public sealed class ChronicleStore(string connectionString, ILogger<ChronicleSto
             using var rows = read.ExecuteReader();
             while (rows.Read())
                 history.Add(ChronicleJson.Deserialize<Entry>(rows.GetString(0)));
-            slots[header.Id] = new Slot(Projection.Rebuild(header with { History = history }));
+            slots[header.Id] = new Slot(Projection.Rebuild(header with { History = history })) { Archived = archived };
         }
         log.LogInformation("Loaded {Count} Chronicles", slots.Count);
     }
 
-    /// <summary>Every Chronicle, newest first.</summary>
-    public IReadOnlyList<ChronicleRecord> All() =>
-        [.. slots.Values.Select(s => s.Record).OrderByDescending(r => r.Created)];
+    /// <summary>Every Chronicle, newest first, archived ones included, each with whether it's archived.</summary>
+    public IReadOnlyList<(ChronicleRecord Record, bool Archived)> All() =>
+        [.. slots.Values.Select(s => (s.Record, s.Archived)).OrderByDescending(r => r.Record.Created)];
+
+    /// <summary>
+    /// Archives a Chronicle, which hides it from the list, or brings it back. Nothing else changes: it is still read,
+    /// published to and subscribed to as before. False if there is no such Chronicle.
+    /// </summary>
+    public async Task<bool> Archive(string id, bool archived, CancellationToken ct)
+    {
+        if (!slots.TryGetValue(id, out var slot))
+            return false;
+        await slot.Lock.WaitAsync(ct);
+        try
+        {
+            await using var db = Open();
+            await using var update = db.CreateCommand();
+            update.CommandText = "UPDATE chronicles SET archived = $a WHERE id = $id";
+            update.Parameters.AddWithValue("$a", archived ? 1 : 0);
+            update.Parameters.AddWithValue("$id", id);
+            await update.ExecuteNonQueryAsync(ct);
+            slot.Archived = archived;
+            return true;
+        }
+        finally
+        {
+            slot.Lock.Release();
+        }
+    }
 
     /// <summary>One Chronicle, in full; null if there is none.</summary>
     public ChronicleRecord? Get(string id) => slots.TryGetValue(id, out var slot) ? slot.Record : null;
@@ -189,6 +218,14 @@ public sealed class ChronicleStore(string connectionString, ILogger<ChronicleSto
         var db = new SqliteConnection(connectionString);
         db.Open();
         return db;
+    }
+
+    private static bool HasColumn(SqliteConnection db, string table, string column)
+    {
+        using var command = db.CreateCommand();
+        command.CommandText = $"SELECT COUNT(*) FROM pragma_table_info('{table}') WHERE name = $column";
+        command.Parameters.AddWithValue("$column", column);
+        return (long)command.ExecuteScalar()! > 0;
     }
 
     private static void Execute(SqliteConnection db, string sql)

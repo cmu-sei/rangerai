@@ -5,6 +5,10 @@ using System.Text;
 using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Chronicle.Api.Services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Chronicle.Api.Tests;
 
@@ -51,6 +55,31 @@ public class ApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
     {
         var list = JsonNode.Parse(await http.GetStringAsync("/api/chronicles"))!.AsArray();
         Assert.Contains(list, c => (string)c!["id"]! == "harbor-ttx");
+    }
+
+    [Fact]
+    public async Task A_Chronicle_is_archived_and_restored_and_stays_readable_and_publishable()
+    {
+        var id = await NewChronicle();
+        async Task<JsonNode> Listed() =>
+            JsonNode.Parse(await http.GetStringAsync("/api/chronicles"))!.AsArray().Single(c => (string)c!["id"]! == id)!;
+        Assert.False((bool)(await Listed())["archived"]!);
+
+        var archived = await http.PutAsync($"/api/chronicles/{id}/archive", new StringContent("""{ "archived": true }""", Encoding.UTF8, "application/json"));
+        Assert.Equal(HttpStatusCode.OK, archived.StatusCode);
+        Assert.True((bool)JsonNode.Parse(await archived.Content.ReadAsStringAsync())!["archived"]!);
+        Assert.True((bool)(await Listed())["archived"]!);
+        Assert.Equal(HttpStatusCode.OK, (await http.GetAsync($"/api/chronicles/{id}")).StatusCode);
+        var add = Entry.Add(id, Part.World, new Fact { Id = "f", Text = "one" }, Me, DateTimeOffset.UtcNow);
+        Assert.Equal(HttpStatusCode.Created, (await http.PostAsync($"/api/chronicles/{id}/entries", Json(add))).StatusCode);
+        var reloaded = new ChronicleStore(factory.Services.GetRequiredService<IConfiguration>().GetConnectionString("Chronicle")!, NullLogger<ChronicleStore>.Instance);
+        reloaded.Load();
+        Assert.True(reloaded.All().Single(c => c.Record.Id == id).Archived);
+
+        (await http.PutAsync($"/api/chronicles/{id}/archive", new StringContent("""{ "archived": false }""", Encoding.UTF8, "application/json"))).EnsureSuccessStatusCode();
+        Assert.False((bool)(await Listed())["archived"]!);
+        Assert.Equal(HttpStatusCode.NotFound,
+            (await http.PutAsync("/api/chronicles/nope/archive", new StringContent("""{ "archived": true }""", Encoding.UTF8, "application/json"))).StatusCode);
     }
 
     [Fact]

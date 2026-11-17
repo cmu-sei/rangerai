@@ -15,6 +15,8 @@ public sealed class ChronicleOptions
     public string UiUrl { get; set; } = "http://localhost:4320";
     /// <summary>The model the registered agents name, for display; the Chronicle's agent runner picks the one it calls.</summary>
     public string AgentModel { get; set; } = "gemma4:26b";
+    /// <summary>Whether a new scenario gets its Chronicle when it's created, so the Chronicle lists it from the start.</summary>
+    public bool PublishOnCreate { get; set; } = true;
 }
 
 /// <summary>A Chronicle call that didn't succeed: its status, and the API's own answer.</summary>
@@ -62,6 +64,8 @@ public sealed class ChronicleClient(IHttpClientFactory clients, IOptions<Chronic
     }
 
     public string AgentModel => options.Value.AgentModel;
+
+    public bool PublishOnCreate => options.Value.PublishOnCreate;
 
     private async Task<(HttpStatusCode, string)> Send(HttpMethod method, string path, JsonNode? body, CancellationToken ct)
     {

@@ -48,9 +48,10 @@ One controller per resource, in `Controllers/Api/`:
 
 | Controller | Route | What |
 |---|---|---|
-| `ChroniclesController` | `GET /api/chronicles` | Every Chronicle |
+| `ChroniclesController` | `GET /api/chronicles` | Every Chronicle, archived ones marked `archived` |
 | | `POST /api/chronicles` | Start one, or import one with its history (422 with findings if it breaks the rules) |
 | | `GET /api/chronicles/{id}` | One Chronicle, as an audience sees it |
+| | `PUT /api/chronicles/{id}/archive` | `{ "archived": true }` hides it from the list; `false` brings it back. Reads and publishes are unaffected |
 | | `GET /api/chronicles/{id}/findings` | The spec's validation findings |
 | | `POST /api/chronicles/validate` | Check a record; stores nothing |
 | `EntriesController` | `GET /api/chronicles/{id}/entries` | The history, filtered |

@@ -7,15 +7,17 @@ import { ChronicleSummary } from '../../core/chronicle.model';
 import { EventsListComponent } from './events-list.component';
 
 const event = (id: string, name: string, extra: Partial<ChronicleSummary> = {}): ChronicleSummary => ({
-  id, name, kind: 'exercise', scenarioType: { id: 'crucible-tabletop', version: '0.3.0' }, created: '2026-11-02T14:00:00Z', entries: 10, ...extra
+  id, name, kind: 'exercise', scenarioType: { id: 'crucible-tabletop', version: '0.3.0' }, created: '2026-11-02T14:00:00Z', entries: 10, archived: false, ...extra
 });
 
 const harbor = event('harbor-ttx', 'Harbor Ransomware Tabletop', { entries: 33, created: '2026-11-02T14:00:00Z' });
 const rail = event('rail-sim', 'Rail Freeze', { scenarioType: { id: 'small-unit-team-exercise' }, entries: 5, created: '2026-11-09T14:00:00Z' });
 
-async function render(getChronicles = () => of([harbor, rail])) {
+const old = event('old-drill', 'Old Drill', { archived: true, created: '2026-10-01T14:00:00Z' });
+
+async function render(getChronicles = () => of([harbor, rail]), archive = vi.fn()) {
   TestBed.configureTestingModule({
-    providers: [provideRouter([]), { provide: ChronicleApiService, useValue: { getChronicles } }]
+    providers: [provideRouter([]), { provide: ChronicleApiService, useValue: { getChronicles, archive } }]
   });
   const fixture = TestBed.createComponent(EventsListComponent);
   await fixture.whenStable();
@@ -66,6 +68,46 @@ describe('EventsListComponent', () => {
     entries.click();
     await fixture.whenStable();
     expect(names(root)).toEqual(['Harbor Ransomware Tabletop', 'Rail Freeze']);
+  });
+
+  it('hides archived events until asked, and marks them', async () => {
+    const { fixture, root } = await render(() => of([harbor, rail, old]));
+    expect(names(root)).toEqual(['Rail Freeze', 'Harbor Ransomware Tabletop']);
+    expect(root.querySelector('.archived-toggle')!.textContent).toContain('Show archived (1)');
+
+    const toggle = root.querySelector<HTMLInputElement>('.archived-toggle input')!;
+    toggle.checked = true;
+    toggle.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+    expect(names(root)).toEqual(['Rail Freeze', 'Harbor Ransomware Tabletop', 'Old Drill']);
+    expect(root.querySelector('tr.archived .pill')!.textContent).toBe('Archived');
+  });
+
+  it('archives an event without opening it, and restores one', async () => {
+    const archive = vi.fn((id: string, archived: boolean) => of({ ...(id === 'rail-sim' ? rail : old), archived }));
+    const { fixture, root } = await render(() => of([harbor, rail, old]), archive);
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+
+    root.querySelector<HTMLButtonElement>('button[aria-label="Archive Rail Freeze"]')!.click();
+    await fixture.whenStable();
+    expect(archive).toHaveBeenCalledWith('rail-sim', true);
+    expect(navigate).not.toHaveBeenCalled();
+    expect(names(root)).toEqual(['Harbor Ransomware Tabletop']);
+    expect(root.querySelector('.archived-toggle')!.textContent).toContain('Show archived (2)');
+
+    const toggle = root.querySelector<HTMLInputElement>('.archived-toggle input')!;
+    toggle.checked = true;
+    toggle.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+    root.querySelector<HTMLButtonElement>('button[aria-label="Restore Old Drill"]')!.click();
+    await fixture.whenStable();
+    expect(archive).toHaveBeenCalledWith('old-drill', false);
+    expect(root.querySelector('.archived-toggle')!.textContent).toContain('Show archived (1)');
+  });
+
+  it('says when every event is archived', async () => {
+    const { root } = await render(() => of([old]));
+    expect(root.textContent).toContain('Every event is archived.');
   });
 
   it('says when there are none, and when the API is down', async () => {

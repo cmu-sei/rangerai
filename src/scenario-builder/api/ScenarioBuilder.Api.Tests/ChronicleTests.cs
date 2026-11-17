@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json.Nodes;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -143,6 +144,34 @@ public class ChronicleTests
         Assert.Equal(["a-big-database-box"], WorldParser.Hosts(["a big database box"], []).Select(h => h.Hostname));
 
         static string Cap(string s) => char.ToUpperInvariant(s[0]) + s[1..];
+    }
+
+    [Fact]
+    public async Task Creating_a_scenario_creates_its_Chronicle_and_a_later_publish_adds_to_it()
+    {
+        using var factory = new ApiFactory { ChroniclePublishOnCreate = true };
+        var chronicle = new FakeChronicle();
+        using var app = With(factory, chronicle);
+        var client = Client(app);
+
+        var id = await CreateScenario(client, "Harbor Blackout");
+
+        var record = chronicle.Records["harbor-blackout"];
+        Assert.Equal(("Harbor Blackout", "exercise"), ((string)record["name"]!, (string)record["kind"]!));
+        var published = await Body(await client.PostAsync($"/api/scenarios/{id}/chronicle", null));
+        Assert.Equal("harbor-blackout", (string)published["chronicleId"]!);
+        Assert.Single(chronicle.Calls, c => c == "POST /api/chronicles");
+    }
+
+    [Fact]
+    public async Task A_Chronicle_that_does_not_answer_does_not_stop_a_new_scenario()
+    {
+        using var factory = new ApiFactory { ChroniclePublishOnCreate = true };
+        using var app = factory.WithWebHostBuilder(b => b.UseSetting("Chronicle:Url", "http://127.0.0.1:9"));
+
+        var id = await CreateScenario(Client(app), "Harbor Blackout");
+
+        Assert.True(id > 0);
     }
 
     [Fact]

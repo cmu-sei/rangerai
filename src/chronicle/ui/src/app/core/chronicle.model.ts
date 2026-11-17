@@ -16,6 +16,8 @@ export interface ChronicleSummary {
   scenarioType?: ScenarioTypeRef;
   created: string;
   entries: number;
+  /** Hidden from the list unless archived ones are shown; still read and published to as before. */
+  archived: boolean;
 }
 
 /** One item in a part. Each kind has its own fields; the list only needs a few common ones. */
