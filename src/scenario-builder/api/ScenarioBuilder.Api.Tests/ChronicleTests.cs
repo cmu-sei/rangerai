@@ -146,6 +146,25 @@ public class ChronicleTests
         static string Cap(string s) => char.ToUpperInvariant(s[0]) + s[1..];
     }
 
+    [Theory]
+    [InlineData("experiment", "experiment")]
+    [InlineData("individual-lab", "training")]
+    [InlineData(TestApi.SmallUnitType, "exercise")]
+    public async Task A_Chronicle_takes_its_kind_from_the_scenario_type(string scenarioTypeId, string kind)
+    {
+        using var factory = new ApiFactory { ChroniclePublishOnCreate = true };
+        var chronicle = new FakeChronicle();
+        using var app = With(factory, chronicle);
+        var client = Client(app);
+
+        await CreateScenario(client, "Harbor Blackout", scenarioTypeId);
+
+        var record = chronicle.Records["harbor-blackout"];
+        Assert.Equal(kind, (string)record["kind"]!);
+        Assert.Equal(scenarioTypeId, (string)record["scenarioType"]!["id"]!);
+        Assert.Null(record["scenarioType"]!["kind"]);
+    }
+
     [Fact]
     public async Task Creating_a_scenario_creates_its_Chronicle_and_a_later_publish_adds_to_it()
     {

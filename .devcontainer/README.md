@@ -515,6 +515,7 @@ The volume is named based on the project folder name (e.g., `my-project-data`) a
 | `grok/` | `~/.grok` | Grok CLI sessions, settings, and the `grok` binary itself |
 | `agentcore/` | `~/.agentcore` | AgentCore CLI config, `secrets.key` for project `.env.local` values, and logs |
 | `herdr/` | `~/.config/herdr` | Herdr configuration, saved layouts, and logs |
+| `gh/` | — (`GH_CONFIG_DIR`) | GitHub CLI login and config; run `gh auth login` once |
 | `litellm/` | — | LiteLLM proxy logs |
 | `open-webui/` | — | Open WebUI database, uploads, secret key, and logs |
 | `open-terminal/` | — | Open Terminal API key and logs |

@@ -34,6 +34,14 @@
         "version": {
           "type": "string",
           "minLength": 1
+        },
+        "kind": {
+          "description": "The kind of event the scenario type makes, as Chronicle records it. Absent means exercise.",
+          "enum": [
+            "training",
+            "exercise",
+            "experiment"
+          ]
         }
       }
     },

@@ -20,6 +20,8 @@
         "ghcr.io/devcontainers/features/dotnet:2": {
             "version": "11.0"
         },
+        // GitHub CLI (gh) for pull requests and the GitHub API. Its login lives on the data volume (GH_CONFIG_DIR below).
+        "ghcr.io/devcontainers/features/github-cli:1": {},
         "ghcr.io/devcontainers-extra/features/uv:1": {},
         "ghcr.io/devcontainers-extra/features/ripgrep:1": {},
         "ghcr.io/jsburckhardt/devcontainer-features/fd:1": {},
@@ -44,6 +46,8 @@
         "COLORTERM": "truecolor",
         "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
         "ASPIRE_CLI_TELEMETRY_OPTOUT": "1",
+        // Keeps `gh auth login` across rebuilds.
+        "GH_CONFIG_DIR": "/home/vscode/.data/gh",
         // On Linux, `dotnet dev-certs https --trust` (which `aspire run` calls on every F5) only
         // counts as trusted when its per-user dir is on SSL_CERT_DIR; without this it reports
         // PartiallyFailedToTrustTheCertificate.
