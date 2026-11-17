@@ -28,8 +28,9 @@ describe('WelcomeComponent', () => {
 
     expect(root.querySelectorAll('.steps li').length).toBe(4);
     expect(api.getScenarioType).toHaveBeenCalledWith('range', '2');
-    const meta = Array.from(root.querySelectorAll('.type-meta')).map(t => t.textContent?.trim());
-    expect(meta).toEqual(['2 stages · 3 questions', '1 stage · 1 question · Builds a range']);
+    const meta = Array.from(root.querySelectorAll('.type-meta')).map(m => Array.from(m.querySelectorAll('.chip')).map(c => c.textContent?.trim()));
+    expect(meta).toEqual([['2 stages', '3 questions'], ['1 stage', '1 question', 'Builds a range']]);
+    expect(root.querySelectorAll('.type.range').length).toBe(1);
     expect(root.querySelector('.type-description')?.textContent?.trim()).toBe('A team on a range.');
   });
 

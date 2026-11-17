@@ -21,14 +21,34 @@
           <p class="types-sub">It sets the stages and questions, and stays with the scenario once it’s made.</p>
           <ul class="type-list">
             @for (t of types(); track t.id) {
-              <li class="type">
-                <span class="type-name">{{ t.name }}</span>
-                <span class="type-meta">{{ t.stages.length }} {{ t.stages.length === 1 ? 'stage' : 'stages' }} · {{ questions(t) }} {{ questions(t) === 1 ? 'question' : 'questions' }}{{ t.topology ? ' · Builds a range' : '' }}</span>
-                @if (t.description) {
-                  <span class="type-description">{{ t.description }}</span>
-                } @else if (t.topology) {
-                  <span class="type-description">Includes a Topology page, to build and deploy the range the team works on.</span>
-                }
+              <li class="type" [class.range]="t.topology">
+                <span class="type-icon" aria-hidden="true">
+                  @if (t.topology) {
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="9" y="3" width="6" height="5" rx="1" /><rect x="3" y="16" width="6" height="5" rx="1" /><rect x="15" y="16" width="6" height="5" rx="1" />
+                      <path d="M12 8v4M6 16v-2h12v2" />
+                    </svg>
+                  } @else {
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 5h16a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-9l-4 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z" /><path d="M8 9h8M8 12h5" />
+                    </svg>
+                  }
+                </span>
+                <span class="type-text">
+                  <span class="type-name">{{ t.name }}</span>
+                  <span class="type-meta">
+                    <span class="chip">{{ t.stages.length }} {{ t.stages.length === 1 ? 'stage' : 'stages' }}</span>
+                    <span class="chip">{{ questions(t) }} {{ questions(t) === 1 ? 'question' : 'questions' }}</span>
+                    @if (t.topology) {
+                      <span class="chip accent">Builds a range</span>
+                    }
+                  </span>
+                  @if (t.description) {
+                    <span class="type-description">{{ t.description }}</span>
+                  } @else if (t.topology) {
+                    <span class="type-description">Includes a Topology page, to build and deploy the range the team works on.</span>
+                  }
+                </span>
               </li>
             }
           </ul>

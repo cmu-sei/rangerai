@@ -162,6 +162,26 @@ a.j-title:hover {
   color: var(--sb-ink);
 }
 
+.points {
+  margin: 10px 0 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  line-height: 1.55;
+  color: var(--sb-body);
+
+  li::marker {
+    font: 500 12px var(--sb-mono);
+    color: var(--sb-faint);
+  }
+
+  strong {
+    font-weight: 600;
+    color: var(--sb-ink);
+  }
+}
+
 .marks {
   margin: 12px 0 4px;
   padding: 10px 12px;

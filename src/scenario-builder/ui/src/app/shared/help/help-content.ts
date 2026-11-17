@@ -20,6 +20,8 @@ export interface Concept {
   id: string;
   title: string;
   body: string[];
+  /** A numbered list after the body, each point a bold lead and its explanation. */
+  points?: { lead: string; body: string }[];
 }
 
 export interface Term {
@@ -166,7 +168,7 @@ export const JOURNEY: { page: PageId; title: string; line: string }[] = [
   { page: 'summary', title: 'Summary', line: 'Read the draft back.' },
   { page: 'log', title: 'Decision Log', line: 'See who decided what.' },
   { page: 'topology', title: 'Topology', line: 'Build the range.' },
-  { page: 'finish', title: 'Finish', line: 'Take it out.' }
+  { page: 'finish', title: 'Finish', line: 'Take it with you.' }
 ];
 
 /** The ledger's three marks, as the Stated, Proposed and Open concept draws them. */
@@ -231,6 +233,18 @@ export const CONCEPTS: Concept[] = [
     body: [
       'A finding is something still open or worth a second look, such as an unanswered question or a missing draft.',
       'Findings never block you. Exports and documents made with findings open say they are drafts.'
+    ]
+  },
+  {
+    id: 'validation',
+    title: 'Why We Validate',
+    body: ['Why we include a validator, in order of importance:'],
+    points: [
+      { lead: 'It makes delegation possible.', body: 'We can hand work to an agent only if we can check the result. The validator checks names, times, triggers and IDs, and the reviewer checks the judgment calls.' },
+      { lead: 'It finds mistakes while they’re cheap to fix.', body: 'A broken trigger or an unknown host turns up at authoring time, with the exact location and a fix.' },
+      { lead: 'It lets the agent fix its own mistakes.', body: 'Each finding names the place and suggests a fix, so the agent corrects the mechanical errors itself. The person sees only what needs judgment.' },
+      { lead: 'It treats every author the same.', body: 'A document from a person, an agent, another team’s builder or a partner gets the same checks. Several builders can therefore share it as their common standard.' },
+      { lead: 'It needs no AI model.', body: 'The same document always gets the same answer, on any machine, including a closed, air-gapped range like the SOF Cyber Range.' }
     ]
   },
   {
@@ -312,5 +326,5 @@ export const WELCOME_STEPS: { title: string; body: string }[] = [
   { title: 'Bring What You Have', body: 'Notes, links, documents. The agent reads them first.' },
   { title: 'Answer Stage by Stage', body: 'Broad to specific, each with a recommended answer.' },
   { title: 'Read It Back', body: 'A drafted summary, and a log of who decided what.' },
-  { title: 'Take It Out', body: 'The scenario as JSON, documents, or sent to another app.' }
+  { title: 'Take It With You', body: 'The scenario as JSON, documents, or sent to another app.' }
 ];

@@ -125,7 +125,7 @@ export class GuideComponent {
     }
     const has = (...texts: string[]) => texts.some(t => t.toLowerCase().includes(words));
     const terms = this.glossary.filter(t => has(t.term, t.definition, t.where));
-    const concepts = this.concepts.filter(c => has(c.title, ...c.body));
+    const concepts = this.concepts.filter(c => has(c.title, ...c.body, ...(c.points ?? []).flatMap(pt => [pt.lead, pt.body])));
     const pages = Object.values(PAGES).filter(p => has(p.name, p.lead, ...p.steps, ...(p.notes ?? [])));
     return { terms, concepts, pages, count: terms.length + concepts.length + pages.length };
   });

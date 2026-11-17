@@ -104,6 +104,26 @@ describe('GuideComponent', () => {
     expect(text(root, '.nothing')).toContain('Nothing matches “zzzz”');
   });
 
+  it('explains why scenarios are validated, in order, and finds it by search', async () => {
+    const { fixture, help, root } = await render('/scenarios/1/questions');
+    help.show('how');
+    await settle(fixture);
+
+    const why = root.querySelector('[data-id="validation"]') as HTMLElement;
+    expect(text(why, '.c-title')).toBe('Why We Validate');
+    expect(Array.from(why.querySelectorAll('.points strong')).map(s => s.textContent)).toEqual([
+      'It makes delegation possible.',
+      'It finds mistakes while they’re cheap to fix.',
+      'It lets the agent fix its own mistakes.',
+      'It treats every author the same.',
+      'It needs no AI model.'
+    ]);
+
+    help.query.set('air-gapped');
+    await settle(fixture);
+    expect(text(root, '.results .c-title')).toBe('Why We Validate');
+  });
+
   it('opens with ? from anywhere but a text field, and closes with Esc', async () => {
     const { fixture, help } = await render('/');
     const press = (key: string, target: EventTarget = document.body) =>

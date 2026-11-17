@@ -44,6 +44,13 @@
                 @for (p of c.body; track $index) {
                   <p>{{ p }}</p>
                 }
+                @if (c.points; as points) {
+                  <ol class="points">
+                    @for (pt of points; track $index) {
+                      <li><strong>{{ pt.lead }}</strong> {{ pt.body }}</li>
+                    }
+                  </ol>
+                }
               </article>
             }
           }
@@ -159,6 +166,13 @@
                       <h4 class="c-title">{{ c.title }}</h4>
                       @for (p of c.body; track $index) {
                         <p>{{ p }}</p>
+                      }
+                      @if (c.points; as points) {
+                        <ol class="points">
+                          @for (pt of points; track $index) {
+                            <li><strong>{{ pt.lead }}</strong> {{ pt.body }}</li>
+                          }
+                        </ol>
                       }
                       @if (c.id === 'provenance') {
                         <ul class="marks">
