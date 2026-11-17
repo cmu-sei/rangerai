@@ -46,6 +46,14 @@
               What It Is
               <textarea class="sb-field" rows="3" [value]="k.description ?? ''" (input)="setSetting({ description: value($event) })"></textarea>
             </label>
+            <label class="field">
+              Kind of Event
+              <select class="sb-field" [value]="k.kind ?? 'exercise'" (change)="setSetting({ kind: kindOf($event) })">
+                <option value="training">Training</option>
+                <option value="exercise">Exercise</option>
+                <option value="experiment">Experiment (every participant is a machine)</option>
+              </select>
+            </label>
             <label class="check">
               <input type="checkbox" [checked]="!!k.topology" (change)="setSetting({ topology: checked($event) })" />
               Its scenarios build a range (a Topology page)

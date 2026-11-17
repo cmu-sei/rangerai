@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { AnswerType, ScenarioType, ScenarioTypeDetail, ScenarioTypeQuestion, ScenarioTypeStage } from '../../../core/models/builder.model';
+import { AnswerType, EventKind, ScenarioType, ScenarioTypeDetail, ScenarioTypeQuestion, ScenarioTypeStage } from '../../../core/models/builder.model';
 import { AdminApiService } from '../../../core/services/admin-api.service';
 import { errorMessage } from '../../../core/services/builder-api.service';
 import { TopBarComponent } from '../../../shared/components/top-bar/top-bar.component';
@@ -72,6 +72,10 @@ export class ScenarioTypePageComponent implements OnInit {
 
   protected checked(event: Event): boolean {
     return (event.target as HTMLInputElement).checked;
+  }
+
+  protected kindOf(event: Event): EventKind {
+    return (event.target as HTMLSelectElement).value as EventKind;
   }
 
   protected exportUrl(): string {

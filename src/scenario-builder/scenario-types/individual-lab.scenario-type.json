@@ -1,0 +1,446 @@
+{
+  "id": "individual-lab",
+  "version": "0.1.0",
+  "name": "Individual Training Lab",
+  "kind": "training",
+  "description": "One learner works through tasks on the range at their own pace, checked automatically, with no control cell.",
+  "topology": true,
+  "drafts": [
+    {
+      "field": "executiveSummary",
+      "dueAfterStage": 2,
+      "path": "/scenario/executiveSummary",
+      "visibility": "excon"
+    }
+  ],
+  "stages": [
+    {
+      "number": 0,
+      "title": "Learner and Setting",
+      "questions": [
+        {
+          "id": "intent",
+          "label": "Intent",
+          "text": "In plain English, what does this lab teach, and what does the learner do in it? (designers only)",
+          "why": "It is the yardstick every later answer is checked against.",
+          "answer": "text",
+          "path": "/engagement/intent",
+          "visibility": "designer"
+        },
+        {
+          "id": "learner",
+          "label": "Learner",
+          "text": "Who is the lab for: their job and what they need to be able to do afterwards?",
+          "why": "Every task is written for this person.",
+          "answer": "text",
+          "path": "/engagement/learner"
+        },
+        {
+          "id": "prerequisites",
+          "label": "Prerequisites",
+          "text": "What must a learner already know or have done? One per item.",
+          "why": "It sets where the lab starts and what it can skip.",
+          "answer": "list",
+          "path": "/engagement/prerequisites"
+        },
+        {
+          "id": "proficiency",
+          "label": "Proficiency",
+          "text": "How experienced is a typical learner with this topic?",
+          "why": "It sets how hard the scenario can push and how much help the controllers give.",
+          "answer": "text",
+          "path": "/engagement/proficiency"
+        },
+        {
+          "id": "timeSlot",
+          "label": "Time",
+          "text": "How long should a learner take, and is there a time limit?",
+          "why": "Tasks must fit in it, and a learner's range must last that long.",
+          "recommended": "About an hour, no hard limit",
+          "answer": "text",
+          "path": "/engagement/timeSlot"
+        },
+        {
+          "id": "delivery",
+          "label": "Delivery",
+          "text": "How is the lab taken?",
+          "why": "Self-paced labs need clearer instructions and checks than taught ones.",
+          "recommended": "Self-paced, on demand",
+          "answer": "choice",
+          "options": [
+            "Self-paced, on demand",
+            "Scheduled, with an instructor",
+            "Part of a course"
+          ],
+          "path": "/engagement/delivery"
+        },
+        {
+          "id": "world",
+          "label": "Real or Fictional World",
+          "text": "Does it use real country and organization names, or a fictional world?",
+          "why": "A fictional world avoids real-world sensitivities and lets the team speak freely.",
+          "recommended": "Fictional world",
+          "answer": "choice",
+          "options": [
+            "Real country names",
+            "Fictional world"
+          ],
+          "path": "/engagement/world"
+        },
+        {
+          "id": "recording",
+          "label": "Recording",
+          "text": "What is recorded about each learner, who sees it, and is AI used on it?",
+          "why": "Learners should know what is kept about them.",
+          "answer": "text",
+          "path": "/engagement/recording"
+        }
+      ]
+    },
+    {
+      "number": 1,
+      "title": "Learning Objectives and Checks",
+      "questions": [
+        {
+          "id": "objectives",
+          "label": "Learning Objectives",
+          "text": "What will the learner be able to do afterwards? One per item, each starting with a verb.",
+          "why": "The lab exists to teach these.",
+          "answer": "list",
+          "path": "/objectives",
+          "idPrefix": "LO"
+        },
+        {
+          "id": "checks",
+          "label": "How Each Is Checked",
+          "text": "How does the lab know each objective is met? One per item, in the same order as the objectives.",
+          "why": "A self-paced lab can only check what it can see.",
+          "answer": "list",
+          "path": "/scenario/standards"
+        },
+        {
+          "id": "checkMethod",
+          "label": "Check Method",
+          "text": "How are tasks checked?",
+          "why": "It decides what has to be built into the range.",
+          "recommended": "Automatic checks on the range",
+          "answer": "choice",
+          "options": [
+            "Automatic checks on the range",
+            "Learner submits an answer or flag",
+            "Instructor reviews",
+            "A mix"
+          ],
+          "path": "/engagement/checkMethod"
+        },
+        {
+          "id": "hints",
+          "label": "Hints",
+          "text": "What help does a stuck learner get?",
+          "why": "Hints keep learners moving without giving the answer away.",
+          "recommended": "Tiered hints, free",
+          "answer": "choice",
+          "options": [
+            "None",
+            "Tiered hints, free",
+            "Tiered hints that cost points",
+            "Full walkthrough on request"
+          ],
+          "path": "/engagement/hints"
+        },
+        {
+          "id": "retries",
+          "label": "Retries and Passing",
+          "text": "Can a learner retry a task or the whole lab, and what counts as a pass?",
+          "why": "It sets whether the lab is practice or an assessment.",
+          "answer": "text",
+          "path": "/engagement/retries"
+        },
+        {
+          "id": "feedback",
+          "label": "Feedback",
+          "text": "What does the learner see after each task and at the end?",
+          "why": "Feedback is where most of the learning happens.",
+          "answer": "text",
+          "path": "/scenario/feedback"
+        },
+        {
+          "id": "framework",
+          "label": "Framework",
+          "text": "Which framework, if any, do the objectives map to, such as NICE work roles or a course syllabus?",
+          "why": "It lets the lab count toward a qualification.",
+          "answer": "text",
+          "path": "/engagement/framework"
+        },
+        {
+          "id": "teachingPoints",
+          "label": "Teaching Points",
+          "text": "What should the learner take away even if they don't finish? One per item.",
+          "why": "They steer the review when the tasks don't go to plan.",
+          "answer": "list",
+          "path": "/teachingPoints"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Story and Steps",
+      "questions": [
+        {
+          "id": "problem",
+          "label": "One-Line Problem",
+          "text": "In one line, what does the learner face when the lab starts?",
+          "why": "The team hears this first, so it has to be clear and short.",
+          "answer": "text",
+          "path": "/scenario/problem"
+        },
+        {
+          "id": "description",
+          "label": "Participant Description",
+          "text": "In one paragraph a learner could read, what is the lab about?",
+          "why": "Catalogs, invitations and read-ins all start from it. It must not give the twist away.",
+          "answer": "text",
+          "path": "/scenario/description"
+        },
+        {
+          "id": "steps",
+          "label": "Steps",
+          "text": "What does the learner do, in order? One per item: what they do and what proves it was done.",
+          "why": "The steps are the lab; each needs a check.",
+          "answer": "list",
+          "path": "/scenario/steps",
+          "idPrefix": "S"
+        },
+        {
+          "id": "groundTruth",
+          "label": "Ground Truth",
+          "text": "List the answers and the facts the checks rely on, one per item (designers only).",
+          "why": "Only the controllers know the ground truth. Later checks use these facts to catch leaks.",
+          "answer": "list",
+          "path": "/groundTruth",
+          "idPrefix": "GT",
+          "visibility": "designer"
+        },
+        {
+          "id": "systems",
+          "label": "Systems in Play",
+          "text": "Which systems and tools does the learner use? One per item.",
+          "why": "Range builders and controllers prepare exactly these.",
+          "answer": "list",
+          "path": "/scenario/systems"
+        },
+        {
+          "id": "background",
+          "label": "Background Activity",
+          "text": "Does anything happen on the range while the learner works?",
+          "why": "Background noise makes a lab realistic but harder to check.",
+          "recommended": "Nothing; the range is quiet",
+          "answer": "choice",
+          "options": [
+            "Nothing; the range is quiet",
+            "Simulated users and traffic",
+            "Scripted attacks on a timer"
+          ],
+          "path": "/scenario/background"
+        },
+        {
+          "id": "keyEvents",
+          "label": "Key Events",
+          "text": "What events does the lab trigger, in order? One per item: when or on what, and what happens.",
+          "why": "They make sure every task gets tested, whatever the team does.",
+          "answer": "list",
+          "path": "/scenario/keyEvents",
+          "idPrefix": "E",
+          "visibility": "designer"
+        },
+        {
+          "id": "ending",
+          "label": "Ending",
+          "text": "How does the lab end, and on what?",
+          "why": "The controllers need to know when to call it.",
+          "answer": "text",
+          "path": "/scenario/ending"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Network and Range",
+      "questions": [
+        {
+          "id": "rangeReference",
+          "label": "Range Reference",
+          "text": "Which range does it build on: the provider, the enclave, and the base image or network, if known?",
+          "why": "The network module starts from this instead of from nothing.",
+          "recommended": "GraySpace; enclave and base to be chosen with the range team",
+          "answer": "text",
+          "path": "/network/rangeReference"
+        },
+        {
+          "id": "segments",
+          "label": "Network Segments",
+          "text": "Which network segments or enclaves does the scenario need, and what is each for? One per item.",
+          "why": "The network module builds one segment for each.",
+          "answer": "list",
+          "path": "/network/segments"
+        },
+        {
+          "id": "hosts",
+          "label": "Hosts",
+          "text": "Which hosts sit on each segment: role, operating system, rough count? One per item, such as \"OT network: historian, Windows Server 2019, 1\".",
+          "why": "It sizes the build and decides which images are needed.",
+          "answer": "list",
+          "path": "/network/hosts"
+        },
+        {
+          "id": "services",
+          "label": "Services",
+          "text": "Which services run on the range, and on which hosts? One per item, such as \"Email: mail01\".",
+          "why": "Services decide what the team defends and what the scenario's attacker uses.",
+          "answer": "list",
+          "path": "/network/services"
+        },
+        {
+          "id": "connectivity",
+          "label": "Connectivity",
+          "text": "What talks to what, and what reaches the internet?",
+          "why": "Routes and firewall rules decide which attack paths exist.",
+          "answer": "text",
+          "path": "/network/connectivity"
+        },
+        {
+          "id": "identity",
+          "label": "Identity and Accounts",
+          "text": "How are identities set up: domain, user accounts, service accounts?",
+          "why": "Accounts are often how the scenario's attacker gets in, and how the team traces them.",
+          "answer": "text",
+          "path": "/network/identity"
+        },
+        {
+          "id": "monitoring",
+          "label": "Defenses and Sensors",
+          "text": "What defends the network, and what can the team see with: firewalls, EDR, SIEM, packet capture, logs? One per item.",
+          "why": "The team can only find what its sensors record.",
+          "answer": "list",
+          "path": "/network/monitoring"
+        },
+        {
+          "id": "telemetry",
+          "label": "Telemetry",
+          "text": "What is recorded for the review? One per item: logs, network traffic, endpoint activity, chat.",
+          "why": "The review can only show what was recorded.",
+          "answer": "list",
+          "path": "/network/telemetry"
+        },
+        {
+          "id": "platforms",
+          "label": "Platforms",
+          "text": "Which websites, email, chat or social media must exist on the range? One per item.",
+          "why": "Simulated users need somewhere to work, and information injects need somewhere to appear.",
+          "answer": "list",
+          "path": "/network/platforms"
+        },
+        {
+          "id": "simulatedUsers",
+          "label": "Simulated Users",
+          "text": "Which simulated users should be on the network (NPCs): how many, in which roles, doing what? (controllers only)",
+          "why": "Background activity hides the attack the way real users would.",
+          "answer": "text",
+          "path": "/network/simulatedUsers",
+          "visibility": "excon"
+        },
+        {
+          "id": "personas",
+          "label": "Named Simulated Users",
+          "text": "Which simulated users matter to the story by name? One per item: 'Name: role, organization, what they do', such as 'Dana Whitlock: night-shift plant operator, Kessick Bay Water Authority, messages IT about the readings'.",
+          "why": "Named personas become GHOSTS NPCs and the people injects come from; the Chronicle gives each one its own view.",
+          "answer": "list",
+          "path": "/network/personas",
+          "visibility": "participant"
+        },
+        {
+          "id": "planted",
+          "label": "Planted Before Start",
+          "text": "What must be in place before the exercise starts: vulnerabilities, malware, files, log history? One per item (controllers only).",
+          "why": "The key events only work if these are there on the day.",
+          "answer": "list",
+          "path": "/network/planted",
+          "visibility": "excon"
+        },
+        {
+          "id": "buildLimits",
+          "label": "Build Limits",
+          "text": "What limits the build: scale, images that must be used, air-gapped, time to build?",
+          "why": "The network module has to fit inside these.",
+          "answer": "text",
+          "path": "/network/buildLimits"
+        },
+        {
+          "id": "perLearner",
+          "label": "One Range per Learner",
+          "text": "Does each learner get their own range, how long does it last, and how is it reset?",
+          "why": "Shared ranges let one learner spoil another's lab.",
+          "recommended": "Own range, destroyed after four hours of idle time",
+          "answer": "text",
+          "path": "/network/perLearner"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Support and Names",
+      "questions": [
+        {
+          "id": "support",
+          "label": "Support",
+          "text": "Who helps a learner who is stuck or whose range breaks, and how do they reach them?",
+          "why": "Self-paced does not mean unsupported.",
+          "answer": "text",
+          "path": "/engagement/support"
+        },
+        {
+          "id": "safety",
+          "label": "Safety and Stop",
+          "text": "What stops the lab for a real-world problem, and who can call it?",
+          "why": "Everyone must know how to stop, and how play restarts.",
+          "recommended": "The learner can stop at any time; support can end a range",
+          "answer": "text",
+          "path": "/engagement/safety"
+        },
+        {
+          "id": "exerciseName",
+          "label": "Exercise Name",
+          "text": "What is the exercise's name?",
+          "why": "Short and easy to say over a radio or a call, and not reused from an earlier exercise.",
+          "answer": "text",
+          "path": "/names/exercise",
+          "default": "scenarioName"
+        },
+        {
+          "id": "organizations",
+          "label": "Organizations",
+          "text": "Which organizations appear in the scenario, and whose side is each on: friendly, adversary or neutral? One per item, such as \"Harrow Port Authority: friendly\".",
+          "why": "Names stay the same in every event and document.",
+          "answer": "list",
+          "path": "/names/organizations"
+        },
+        {
+          "id": "fixedTerms",
+          "label": "Fixed Terms",
+          "text": "Which terms must everyone use the same way? One per item.",
+          "why": "Shared terms keep reports and events consistent.",
+          "answer": "list",
+          "path": "/vocabulary/fixed"
+        },
+        {
+          "id": "bannedTerms",
+          "label": "Banned Terms",
+          "text": "Which words must the scenario avoid? One per item.",
+          "why": "Some words give the twist away or touch real-world sensitivities.",
+          "answer": "list",
+          "path": "/vocabulary/banned"
+        }
+      ]
+    }
+  ]
+}

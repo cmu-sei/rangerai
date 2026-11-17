@@ -76,9 +76,39 @@ public class ScenarioTypeCatalogTests
     }
 
     [Fact]
-    public void Both_scenario_types_load_under_their_names()
+    public void Every_scenario_type_loads_under_its_name_and_kind()
     {
-        Assert.Equal(["Tabletop Exercise (TTX)", "Small Unit Team Exercise"], new ScenarioTypeCatalog(ApiFactory.ScenarioTypesDirectory).All.Select(k => k.Name));
+        Assert.Equal(
+            [("Tabletop Exercise (TTX)", null), ("Capture the Flag Competition", "exercise"), ("Experiment (All-Machine)", "experiment"),
+             ("Individual Training Lab", "training"), ("Multi-Team Live-Fire Exercise", "exercise"), ("Purple Team Detection Exercise", "exercise"),
+             ("Small Unit Team Exercise", null)],
+            new ScenarioTypeCatalog(ApiFactory.ScenarioTypesDirectory).All.Select(k => (k.Name, k.Kind)));
+    }
+
+    [Theory]
+    [InlineData("experiment")]
+    [InlineData("multi-team-live-fire")]
+    [InlineData("individual-lab")]
+    [InlineData("purple-team")]
+    [InlineData("ctf-competition")]
+    public void New_scenario_types_build_a_range_and_land_where_chronicle_and_the_range_drafter_read(string id)
+    {
+        var scenarioType = new ScenarioTypeCatalog(ApiFactory.ScenarioTypesDirectory).Find(id)!;
+
+        Assert.True(scenarioType.Topology);
+        Assert.Equal("Network and Range", scenarioType.Stages[3].Title);
+        foreach (var (question, path) in new[] { ("objectives", "/objectives"), ("hosts", "/network/hosts"), ("segments", "/network/segments"), ("services", "/network/services"),
+                     ("personas", "/network/personas"), ("organizations", "/names/organizations"), ("keyEvents", "/scenario/keyEvents"), ("groundTruth", "/groundTruth") })
+            Assert.Equal(path, scenarioType.Find(question)!.Value.Question.Path);
+        Assert.Equal("scenarioName", scenarioType.Find("exerciseName")!.Value.Question.Default);
+    }
+
+    [Fact]
+    public void Unknown_kind_fails_at_load()
+    {
+        var problem = ScenarioTypeCatalog.Problem(new ScenarioType("d", "1", "D", [new(0, "S", [new("a", "A?", "", null, AnswerType.Text, null, "/a")])], [], Kind: "simulation"));
+
+        Assert.Contains("training, exercise, experiment", problem);
     }
 
     [Fact]

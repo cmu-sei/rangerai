@@ -42,7 +42,12 @@ export interface ScenarioType extends ScenarioTypeSummary {
   topology?: boolean;
   /** What kind of exercise it is. */
   description?: string;
+  /** The kind of event its scenarios are, as Chronicle records it; none means exercise. */
+  kind?: EventKind;
 }
+
+/** Chronicle's kinds of event. An experiment is one where every participant is a machine. */
+export type EventKind = 'training' | 'exercise' | 'experiment';
 
 /**
  * What updating a scenario to the latest version of its scenario type would do. From and to are the same when it's

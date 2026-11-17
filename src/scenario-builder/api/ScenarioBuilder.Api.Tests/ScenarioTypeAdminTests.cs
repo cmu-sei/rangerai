@@ -71,7 +71,7 @@ public class ScenarioTypeAdminTests
         Assert.False((bool)tabletop["draftChanged"]!);
         Assert.False((bool)tabletop["retired"]!);
         Assert.Equal(0, (int)tabletop["scenarios"]!);
-        Assert.Equal([TabletopType, SmallUnitType], await Offered(admin));
+        Assert.Equal([TabletopType, "ctf-competition", "experiment", "individual-lab", "multi-team-live-fire", "purple-team", SmallUnitType], await Offered(admin));
     }
 
     [Fact]

@@ -1,0 +1,494 @@
+{
+  "id": "ctf-competition",
+  "version": "0.1.0",
+  "name": "Capture the Flag Competition",
+  "kind": "exercise",
+  "description": "Players or teams solve challenges or attack and defend services for points on a scoreboard.",
+  "topology": true,
+  "drafts": [
+    {
+      "field": "executiveSummary",
+      "dueAfterStage": 2,
+      "path": "/scenario/executiveSummary",
+      "visibility": "excon"
+    }
+  ],
+  "stages": [
+    {
+      "number": 0,
+      "title": "Players and Format",
+      "questions": [
+        {
+          "id": "intent",
+          "label": "Intent",
+          "text": "In plain English, what is this exercise for, and what happens in it? (exercise control only)",
+          "why": "It is the yardstick every later answer is checked against.",
+          "answer": "text",
+          "path": "/engagement/intent",
+          "visibility": "excon"
+        },
+        {
+          "id": "players",
+          "label": "Players",
+          "text": "Who are the players, and how are they eligible?",
+          "why": "Challenge difficulty and rules are written for them.",
+          "answer": "text",
+          "path": "/engagement/players"
+        },
+        {
+          "id": "teamFormat",
+          "label": "Team Format",
+          "text": "Do people play alone or in teams?",
+          "why": "It sets scoring, team size limits and how many ranges are needed.",
+          "recommended": "Teams of up to four",
+          "answer": "choice",
+          "options": [
+            "Individuals",
+            "Teams of up to four",
+            "Teams of any size"
+          ],
+          "path": "/engagement/teamFormat"
+        },
+        {
+          "id": "headcount",
+          "label": "Headcount",
+          "text": "How many players or teams do you expect?",
+          "why": "Infrastructure, support and challenge counts scale with it.",
+          "answer": "text",
+          "path": "/engagement/headcount"
+        },
+        {
+          "id": "proficiency",
+          "label": "Proficiency",
+          "text": "How experienced are the players, and how wide is the spread?",
+          "why": "It sets how hard the scenario can push and how much help the controllers give.",
+          "answer": "text",
+          "path": "/engagement/proficiency"
+        },
+        {
+          "id": "format",
+          "label": "Format",
+          "text": "What kind of CTF is it?",
+          "why": "It decides almost everything else about the build.",
+          "recommended": "Jeopardy",
+          "answer": "choice",
+          "options": [
+            "Jeopardy",
+            "Attack-defense",
+            "King of the hill",
+            "Mixed"
+          ],
+          "path": "/engagement/format"
+        },
+        {
+          "id": "timeSlot",
+          "label": "Time Slot",
+          "text": "How long does the exercise run, and when?",
+          "why": "The tasks, the events and the review all have to fit inside it.",
+          "recommended": "48 hours, online",
+          "answer": "text",
+          "path": "/engagement/timeSlot"
+        },
+        {
+          "id": "setting",
+          "label": "Setting",
+          "text": "Where do players play from?",
+          "why": "Online play needs public access and abuse protection.",
+          "recommended": "Online",
+          "answer": "choice",
+          "options": [
+            "On site",
+            "Online",
+            "Hybrid"
+          ],
+          "path": "/engagement/setting"
+        },
+        {
+          "id": "world",
+          "label": "Real or Fictional World",
+          "text": "Does it use real country and organization names, or a fictional world?",
+          "why": "A fictional world avoids real-world sensitivities and lets the team speak freely.",
+          "recommended": "Fictional world",
+          "answer": "choice",
+          "options": [
+            "Real country names",
+            "Fictional world"
+          ],
+          "path": "/engagement/world"
+        },
+        {
+          "id": "recording",
+          "label": "Handling and Recording",
+          "text": "What is recorded and published: scoreboard, write-ups, traffic, chat?",
+          "why": "It sets what the team can write down and what leaves the room.",
+          "answer": "text",
+          "path": "/engagement/recording"
+        }
+      ]
+    },
+    {
+      "number": 1,
+      "title": "Objectives, Scoring and Rules",
+      "questions": [
+        {
+          "id": "objectives",
+          "label": "Objectives",
+          "text": "What should players learn or show? One per item, each starting with a verb.",
+          "why": "Challenges are chosen to serve them.",
+          "answer": "list",
+          "path": "/objectives",
+          "idPrefix": "O"
+        },
+        {
+          "id": "successCriteria",
+          "label": "Success Criteria",
+          "text": "How will you know each objective is met? One per item, in the same order as the objectives.",
+          "why": "Solves alone don't always show learning.",
+          "answer": "list",
+          "path": "/scenario/standards"
+        },
+        {
+          "id": "scoring",
+          "label": "Scoring",
+          "text": "How are points awarded?",
+          "why": "Players play to the score.",
+          "recommended": "Dynamic: points fall as more solve it",
+          "answer": "choice",
+          "options": [
+            "Fixed points per challenge",
+            "Dynamic: points fall as more solve it",
+            "Attack-defense: offense, defense and uptime"
+          ],
+          "path": "/engagement/scoring"
+        },
+        {
+          "id": "tieBreak",
+          "label": "Tie-Break",
+          "text": "How are ties broken?",
+          "why": "Ties at the top always happen; decide before they do.",
+          "recommended": "Earliest to reach the score",
+          "answer": "text",
+          "path": "/engagement/tieBreak"
+        },
+        {
+          "id": "hints",
+          "label": "Hints",
+          "text": "Are there hints, and do they cost points?",
+          "why": "Hints keep beginners in the game.",
+          "recommended": "Hints that cost points",
+          "answer": "choice",
+          "options": [
+            "No hints",
+            "Free hints",
+            "Hints that cost points"
+          ],
+          "path": "/engagement/hints"
+        },
+        {
+          "id": "rulesOfEngagement",
+          "label": "Rules of Engagement",
+          "text": "What are the rules of play: what may not be attacked, flag sharing, automated tools, AI assistants?",
+          "why": "It keeps play realistic and stops the exercise turning into something it isn't.",
+          "answer": "text",
+          "path": "/engagement/rulesOfEngagement"
+        },
+        {
+          "id": "integrity",
+          "label": "Integrity",
+          "text": "How are cheating and flag sharing prevented or caught?",
+          "why": "A trusted scoreboard is the whole point of a competition.",
+          "answer": "text",
+          "path": "/engagement/integrity"
+        },
+        {
+          "id": "prizes",
+          "label": "Prizes and Eligibility",
+          "text": "Are there prizes, and who is eligible for them?",
+          "why": "Prizes raise the stakes for disputes and cheating.",
+          "answer": "text",
+          "path": "/engagement/prizes"
+        },
+        {
+          "id": "teachingPoints",
+          "label": "Teaching Points",
+          "text": "What should the team take away even if the exercise goes wrong? One per item (controllers only).",
+          "why": "They steer the review when the tasks don't go to plan.",
+          "answer": "list",
+          "path": "/teachingPoints"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Challenges",
+      "questions": [
+        {
+          "id": "description",
+          "label": "Participant Description",
+          "text": "In one paragraph a player could read, what is the story, if any?",
+          "why": "Catalogs, invitations and read-ins all start from it. It must not give the twist away.",
+          "answer": "text",
+          "path": "/scenario/description"
+        },
+        {
+          "id": "categories",
+          "label": "Categories",
+          "text": "Which challenge categories are there? One per item, such as \"Web\", \"Forensics\", \"Crypto\".",
+          "why": "Categories balance the board and the player mix.",
+          "answer": "list",
+          "path": "/scenario/categories"
+        },
+        {
+          "id": "challenges",
+          "label": "Challenges",
+          "text": "Which challenges are there? One per item: name, category, difficulty, points, author. (exercise control only)",
+          "why": "This is the board.",
+          "answer": "list",
+          "path": "/scenario/challenges",
+          "idPrefix": "C",
+          "visibility": "excon"
+        },
+        {
+          "id": "difficultyCurve",
+          "label": "Difficulty Curve",
+          "text": "How are challenges spread across difficulty, from first solve to hardest?",
+          "why": "Too hard and most players score nothing; too easy and the top is a tie.",
+          "answer": "text",
+          "path": "/scenario/difficultyCurve"
+        },
+        {
+          "id": "flagFormat",
+          "label": "Flag Format",
+          "text": "What do flags look like, and is each team's flag unique?",
+          "why": "Unique flags catch sharing.",
+          "recommended": "ctf{...}, unique per team",
+          "answer": "text",
+          "path": "/scenario/flagFormat"
+        },
+        {
+          "id": "groundTruth",
+          "label": "Ground Truth",
+          "text": "List each challenge's intended solution, one per item (exercise control only).",
+          "why": "Only the controllers know the ground truth. Later checks use these facts to catch leaks.",
+          "answer": "list",
+          "path": "/groundTruth",
+          "idPrefix": "GT",
+          "visibility": "excon"
+        },
+        {
+          "id": "keyEvents",
+          "label": "Release Schedule",
+          "text": "When are challenges released, in order? One per item: when, which challenges, and any announcement.",
+          "why": "They make sure every task gets tested, whatever the team does.",
+          "answer": "list",
+          "path": "/scenario/keyEvents",
+          "idPrefix": "E",
+          "visibility": "excon"
+        },
+        {
+          "id": "ending",
+          "label": "Ending",
+          "text": "How does it end: scoreboard freeze, final time, awards?",
+          "why": "The controllers need to know when to call it.",
+          "answer": "text",
+          "path": "/scenario/ending"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Network and Range",
+      "questions": [
+        {
+          "id": "rangeReference",
+          "label": "Range Reference",
+          "text": "Which range does it build on: the provider, the enclave, and the base image or network, if known?",
+          "why": "The network module starts from this instead of from nothing.",
+          "recommended": "GraySpace; enclave and base to be chosen with the range team",
+          "answer": "text",
+          "path": "/network/rangeReference"
+        },
+        {
+          "id": "segments",
+          "label": "Network Segments",
+          "text": "Which network segments or enclaves does the scenario need, and what is each for? One per item.",
+          "why": "The network module builds one segment for each.",
+          "answer": "list",
+          "path": "/network/segments"
+        },
+        {
+          "id": "hosts",
+          "label": "Hosts",
+          "text": "Which hosts sit on each segment: role, operating system, rough count? One per item, such as \"OT network: historian, Windows Server 2019, 1\".",
+          "why": "It sizes the build and decides which images are needed.",
+          "answer": "list",
+          "path": "/network/hosts"
+        },
+        {
+          "id": "services",
+          "label": "Services",
+          "text": "Which services run on the range, and on which hosts? One per item, such as \"Email: mail01\".",
+          "why": "Services decide what the team defends and what the scenario's attacker uses.",
+          "answer": "list",
+          "path": "/network/services"
+        },
+        {
+          "id": "connectivity",
+          "label": "Connectivity",
+          "text": "What talks to what, and what reaches the internet?",
+          "why": "Routes and firewall rules decide which attack paths exist.",
+          "answer": "text",
+          "path": "/network/connectivity"
+        },
+        {
+          "id": "identity",
+          "label": "Identity and Accounts",
+          "text": "How are identities set up: domain, user accounts, service accounts?",
+          "why": "Accounts are often how the scenario's attacker gets in, and how the team traces them.",
+          "answer": "text",
+          "path": "/network/identity"
+        },
+        {
+          "id": "monitoring",
+          "label": "Defenses and Sensors",
+          "text": "What defends the network, and what can the team see with: firewalls, EDR, SIEM, packet capture, logs? One per item.",
+          "why": "The team can only find what its sensors record.",
+          "answer": "list",
+          "path": "/network/monitoring"
+        },
+        {
+          "id": "telemetry",
+          "label": "Telemetry",
+          "text": "What is recorded for the review? One per item: logs, network traffic, endpoint activity, chat.",
+          "why": "The review can only show what was recorded.",
+          "answer": "list",
+          "path": "/network/telemetry"
+        },
+        {
+          "id": "platforms",
+          "label": "Platforms",
+          "text": "Which websites, email, chat or social media must exist on the range? One per item.",
+          "why": "Simulated users need somewhere to work, and information injects need somewhere to appear.",
+          "answer": "list",
+          "path": "/network/platforms"
+        },
+        {
+          "id": "simulatedUsers",
+          "label": "Simulated Users",
+          "text": "Which simulated users should be on the network (NPCs): how many, in which roles, doing what? (controllers only)",
+          "why": "Background activity hides the attack the way real users would.",
+          "answer": "text",
+          "path": "/network/simulatedUsers",
+          "visibility": "excon"
+        },
+        {
+          "id": "personas",
+          "label": "Named Simulated Users",
+          "text": "Which simulated users matter to the story by name? One per item: 'Name: role, organization, what they do', such as 'Dana Whitlock: night-shift plant operator, Kessick Bay Water Authority, messages IT about the readings'.",
+          "why": "Named personas become GHOSTS NPCs and the people injects come from; the Chronicle gives each one its own view.",
+          "answer": "list",
+          "path": "/network/personas",
+          "visibility": "participant"
+        },
+        {
+          "id": "planted",
+          "label": "Planted Before Start",
+          "text": "What must be in place before the exercise starts: vulnerabilities, malware, files, log history? One per item (controllers only).",
+          "why": "The key events only work if these are there on the day.",
+          "answer": "list",
+          "path": "/network/planted",
+          "visibility": "excon"
+        },
+        {
+          "id": "buildLimits",
+          "label": "Build Limits",
+          "text": "What limits the build: scale, images that must be used, air-gapped, time to build?",
+          "why": "The network module has to fit inside these.",
+          "answer": "text",
+          "path": "/network/buildLimits"
+        },
+        {
+          "id": "isolation",
+          "label": "Isolation Between Players",
+          "text": "Does each team get its own instance of a challenge, and what keeps players from attacking each other?",
+          "why": "Shared instances get broken by the first player to solve them.",
+          "recommended": "Own instance per team for anything a player can change",
+          "answer": "text",
+          "path": "/network/isolation"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Operations and Names",
+      "questions": [
+        {
+          "id": "controlCell",
+          "label": "Organizers",
+          "text": "Who runs the competition: organizers, challenge authors, infrastructure, support?",
+          "why": "Each role needs a named person before the exercise starts.",
+          "answer": "text",
+          "path": "/engagement/controlCell"
+        },
+        {
+          "id": "platform",
+          "label": "Scoreboard Platform",
+          "text": "Which scoreboard platform runs the competition?",
+          "why": "It decides scoring options, flag checks and how teams register.",
+          "answer": "text",
+          "path": "/engagement/platform"
+        },
+        {
+          "id": "support",
+          "label": "Player Support",
+          "text": "How do players get help or report a broken challenge?",
+          "why": "Broken challenges mid-competition need a fast path.",
+          "answer": "text",
+          "path": "/engagement/support"
+        },
+        {
+          "id": "safety",
+          "label": "Safety and Stop",
+          "text": "What stops the competition for a real-world problem or conduct issue, and who can call it?",
+          "why": "Everyone must know how to stop, and how play restarts.",
+          "recommended": "Organizers can pause play; a code of conduct names who to tell",
+          "answer": "text",
+          "path": "/engagement/safety"
+        },
+        {
+          "id": "exerciseName",
+          "label": "Exercise Name",
+          "text": "What is the exercise's name?",
+          "why": "Short and easy to say over a radio or a call, and not reused from an earlier exercise.",
+          "answer": "text",
+          "path": "/names/exercise",
+          "default": "scenarioName"
+        },
+        {
+          "id": "organizations",
+          "label": "Organizations",
+          "text": "Which organizations appear in the scenario, and whose side is each on: friendly, adversary or neutral? One per item, such as \"Harrow Port Authority: friendly\".",
+          "why": "Names stay the same in every event and document.",
+          "answer": "list",
+          "path": "/names/organizations"
+        },
+        {
+          "id": "fixedTerms",
+          "label": "Fixed Terms",
+          "text": "Which terms must everyone use the same way? One per item.",
+          "why": "Shared terms keep reports and events consistent.",
+          "answer": "list",
+          "path": "/vocabulary/fixed"
+        },
+        {
+          "id": "bannedTerms",
+          "label": "Banned Terms",
+          "text": "Which words must the scenario avoid? One per item.",
+          "why": "Some words give the twist away or touch real-world sensitivities.",
+          "answer": "list",
+          "path": "/vocabulary/banned"
+        }
+      ]
+    }
+  ]
+}

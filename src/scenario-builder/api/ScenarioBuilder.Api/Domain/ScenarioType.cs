@@ -31,10 +31,17 @@ public record DraftedField(string Field, int DueAfterStage, string Path, string?
 /// <summary>
 /// A type of scenario: its stages, questions and drafts, as a <c>*.scenario-type.json</c> file holds it.
 /// <see cref="Topology"/> gives its scenarios a Topology page, where the range is built and deployed.
-/// <see cref="Description"/> says what kind of exercise it is.
+/// <see cref="Description"/> says what kind of exercise it is. <see cref="Kind"/> is the kind of event its scenarios are,
+/// one of <see cref="Kinds"/>, as Chronicle records it; none means exercise.
 /// </summary>
-public partial record ScenarioType(string Id, string Version, string Name, List<ScenarioTypeStage> Stages, List<DraftedField> Drafts, bool Topology = false, string? Description = null)
+public partial record ScenarioType(string Id, string Version, string Name, List<ScenarioTypeStage> Stages, List<DraftedField> Drafts, bool Topology = false, string? Description = null, string? Kind = null)
 {
+    /// <summary>The kinds of event a scenario can be: Chronicle's EventKind. An experiment is one where every participant is a machine.</summary>
+    public static readonly string[] Kinds = ["training", "exercise", "experiment"];
+
+    /// <summary>The kind a scenario type with no <see cref="Kind"/> makes.</summary>
+    public const string DefaultKind = "exercise";
+
     /// <summary>Who may see a piece of a scenario: everyone, exercise control and designers, or designers only.</summary>
     public static readonly string[] Visibilities = ["participant", "excon", "designer"];
 
@@ -230,6 +237,8 @@ public sealed partial class ScenarioTypeCatalog
             return $"The scenario type id \"{scenarioType.Id}\" must be lower-case words joined by hyphens.";
         if (string.IsNullOrWhiteSpace(scenarioType.Name))
             return "Give the scenario type a name.";
+        if (scenarioType.Kind is not null && !ScenarioType.Kinds.Contains(scenarioType.Kind))
+            return $"The kind \"{scenarioType.Kind}\" must be one of {string.Join(", ", ScenarioType.Kinds)}.";
         if (scenarioType.Stages is null || (finished && scenarioType.Stages.Count == 0))
             return "a scenario type needs at least one stage.";
         var ids = new HashSet<string>();

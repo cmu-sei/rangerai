@@ -18,7 +18,7 @@ public static class ScenarioDocument
         var doc = new JsonObject
         {
             ["schemaVersion"] = SchemaVersion,
-            ["scenarioType"] = new JsonObject { ["id"] = scenarioType.Id, ["version"] = scenario.ScenarioTypeVersion },
+            ["scenarioType"] = new JsonObject { ["id"] = scenarioType.Id, ["version"] = scenario.ScenarioTypeVersion, ["kind"] = scenarioType.Kind ?? ScenarioType.DefaultKind },
             ["slug"] = scenario.Slug,
             ["name"] = scenario.Name,
             ["status"] = "draft",

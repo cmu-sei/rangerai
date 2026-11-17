@@ -1,0 +1,521 @@
+{
+  "id": "experiment",
+  "version": "0.1.0",
+  "name": "Experiment (All-Machine)",
+  "kind": "experiment",
+  "description": "Every participant is a machine: AI agents or automation play each side on the range, and runs are repeated and measured to answer a question.",
+  "topology": true,
+  "drafts": [
+    {
+      "field": "executiveSummary",
+      "dueAfterStage": 2,
+      "path": "/scenario/executiveSummary",
+      "visibility": "excon"
+    }
+  ],
+  "stages": [
+    {
+      "number": 0,
+      "title": "Question and Hypothesis",
+      "questions": [
+        {
+          "id": "intent",
+          "label": "Intent",
+          "text": "In plain English, what is this experiment for, and what happens in it? (exercise control only)",
+          "why": "It is the yardstick every later answer is checked against.",
+          "answer": "text",
+          "path": "/engagement/intent",
+          "visibility": "excon"
+        },
+        {
+          "id": "researchQuestion",
+          "label": "Research Question",
+          "text": "What question does the experiment answer?",
+          "why": "Every run, variable and measure exists to answer it.",
+          "answer": "text",
+          "path": "/engagement/researchQuestion"
+        },
+        {
+          "id": "hypothesis",
+          "label": "Hypothesis",
+          "text": "What do you expect to find, stated so a result could prove it wrong?",
+          "why": "A hypothesis that can't fail can't be tested.",
+          "answer": "text",
+          "path": "/engagement/hypothesis"
+        },
+        {
+          "id": "sponsor",
+          "label": "Sponsor and Decision",
+          "text": "Who wants the result, and what decision will it inform?",
+          "why": "It decides how certain the answer has to be and when it is needed.",
+          "answer": "text",
+          "path": "/engagement/sponsor"
+        },
+        {
+          "id": "priorWork",
+          "label": "Prior Work",
+          "text": "What earlier runs, experiments or published results does this build on?",
+          "why": "It avoids repeating work and gives a point of comparison.",
+          "answer": "text",
+          "path": "/engagement/priorWork"
+        },
+        {
+          "id": "timeSlot",
+          "label": "Time and Compute Budget",
+          "text": "How long may the experiment take, and what compute or model budget does it have?",
+          "why": "The number of runs and their length have to fit in it.",
+          "answer": "text",
+          "path": "/engagement/timeSlot"
+        },
+        {
+          "id": "world",
+          "label": "Real or Fictional World",
+          "text": "Does it use real country and organization names, or a fictional world?",
+          "why": "A fictional world avoids real-world sensitivities and lets the team speak freely.",
+          "recommended": "Fictional world",
+          "answer": "choice",
+          "options": [
+            "Real country names",
+            "Fictional world"
+          ],
+          "path": "/engagement/world"
+        },
+        {
+          "id": "recording",
+          "label": "Data Handling and Release",
+          "text": "How are the results and run data handled: classification, retention, who may publish them?",
+          "why": "It sets what can be logged and what leaves the range.",
+          "answer": "text",
+          "path": "/engagement/recording"
+        }
+      ]
+    },
+    {
+      "number": 1,
+      "title": "Design and Measures",
+      "questions": [
+        {
+          "id": "objectives",
+          "label": "Objectives",
+          "text": "What must the experiment establish? One per item.",
+          "why": "They turn the question into things a run can show.",
+          "answer": "list",
+          "path": "/objectives",
+          "idPrefix": "O"
+        },
+        {
+          "id": "measures",
+          "label": "Measures",
+          "text": "How is each objective measured? One per item, in the same order as the objectives.",
+          "why": "An objective without a measure can't be compared across runs.",
+          "answer": "list",
+          "path": "/scenario/standards"
+        },
+        {
+          "id": "independentVariables",
+          "label": "What Is Varied",
+          "text": "Which factors do you change between runs, and to which values? One per item, such as \"Defender model: A, B\".",
+          "why": "These are the causes the experiment tests.",
+          "answer": "list",
+          "path": "/scenario/independentVariables"
+        },
+        {
+          "id": "dependentVariables",
+          "label": "What Is Measured",
+          "text": "What do you measure in every run? One per item, such as \"Time to contain\".",
+          "why": "These are the effects; they must be recorded the same way each run.",
+          "answer": "list",
+          "path": "/scenario/dependentVariables"
+        },
+        {
+          "id": "controls",
+          "label": "Held Constant",
+          "text": "What is held the same across every run?",
+          "why": "Anything that drifts between runs muddies the result.",
+          "answer": "text",
+          "path": "/scenario/controls"
+        },
+        {
+          "id": "baseline",
+          "label": "Baseline",
+          "text": "What is the baseline or control condition each variation is compared to?",
+          "why": "Without a baseline a result has nothing to be better or worse than.",
+          "answer": "text",
+          "path": "/scenario/baseline"
+        },
+        {
+          "id": "design",
+          "label": "Experimental Design",
+          "text": "How are the runs laid out?",
+          "why": "It decides how many runs are needed and what can be concluded.",
+          "recommended": "Single factor, A/B",
+          "answer": "choice",
+          "options": [
+            "Single factor, A/B",
+            "Full factorial",
+            "Fractional factorial",
+            "Ablation",
+            "Parameter sweep"
+          ],
+          "path": "/engagement/design"
+        },
+        {
+          "id": "runs",
+          "label": "Runs and Repetitions",
+          "text": "How many runs of each condition, and why that many?",
+          "why": "Too few runs and chance decides the answer.",
+          "answer": "text",
+          "path": "/engagement/runs"
+        },
+        {
+          "id": "seeding",
+          "label": "Seeds and Reproducibility",
+          "text": "How is randomness controlled so a run can be repeated?",
+          "why": "A result no one can repeat is an anecdote.",
+          "recommended": "Seed recorded for every run",
+          "answer": "choice",
+          "options": [
+            "Fixed seeds per condition",
+            "Seed recorded for every run",
+            "Not controlled"
+          ],
+          "path": "/engagement/seeding"
+        },
+        {
+          "id": "stopConditions",
+          "label": "When a Run Stops",
+          "text": "What ends a run: a time limit, an objective reached, a failure?",
+          "why": "Runs that end differently can't be compared.",
+          "answer": "text",
+          "path": "/scenario/ending"
+        },
+        {
+          "id": "analysis",
+          "label": "Analysis",
+          "text": "How are the results compared, and what difference counts as real?",
+          "why": "Deciding this before the runs keeps the analysis honest.",
+          "answer": "text",
+          "path": "/scenario/analysis"
+        },
+        {
+          "id": "threatsToValidity",
+          "label": "Threats to Validity",
+          "text": "What could make the result wrong or not carry over to the real world? One per item.",
+          "why": "Naming them lets the design guard against them or the report admit them.",
+          "answer": "list",
+          "path": "/scenario/threatsToValidity",
+          "visibility": "excon"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Agents, Opposition and Ground Truth",
+      "questions": [
+        {
+          "id": "description",
+          "label": "Participant Description",
+          "text": "In one paragraph, what is the scenario the agents are dropped into?",
+          "why": "Catalogs, invitations and read-ins all start from it. It must not give the twist away.",
+          "answer": "text",
+          "path": "/scenario/description"
+        },
+        {
+          "id": "placeAndTime",
+          "label": "Place and Time",
+          "text": "Where and when is the scenario set: region, era, time of year?",
+          "why": "Places and dates stay consistent across every inject and document.",
+          "answer": "text",
+          "path": "/scenario/placeAndTime"
+        },
+        {
+          "id": "agents",
+          "label": "Agents",
+          "text": "Which agents take part? One per item: side, model or tool, version, and what it may use.",
+          "why": "The agents are the participants; they must be pinned exactly to repeat a run.",
+          "answer": "list",
+          "path": "/engagement/agents"
+        },
+        {
+          "id": "agentInstructions",
+          "label": "Agent Instructions",
+          "text": "What is each agent told: its role, goal and what it knows at the start?",
+          "why": "Instructions are part of the condition; changing them changes the experiment.",
+          "answer": "text",
+          "path": "/engagement/agentInstructions",
+          "visibility": "excon"
+        },
+        {
+          "id": "rulesOfEngagement",
+          "label": "Rules of Engagement",
+          "text": "What may the agents do, and not do, during a run?",
+          "why": "It keeps play realistic and stops the exercise turning into something it isn't.",
+          "answer": "text",
+          "path": "/engagement/rulesOfEngagement"
+        },
+        {
+          "id": "humanRole",
+          "label": "Human Role",
+          "text": "What do people do while a run is going?",
+          "why": "Even an all-machine run needs someone who can stop it.",
+          "recommended": "Watch, and may halt a run",
+          "answer": "choice",
+          "options": [
+            "Nothing until the run ends",
+            "Watch, and may halt a run",
+            "Inject events by hand"
+          ],
+          "path": "/engagement/humanRole"
+        },
+        {
+          "id": "adversary",
+          "label": "Adversary",
+          "text": "Who is the opposition, what does it want, and what is at stake for it? (exercise control only)",
+          "why": "The opposition plays to a goal, not at random.",
+          "answer": "text",
+          "path": "/scenario/adversary",
+          "visibility": "excon"
+        },
+        {
+          "id": "actorCapability",
+          "label": "Threat Actor Capability",
+          "text": "How capable is the threat actor? (exercise control only)",
+          "why": "It bounds what the adversary can plausibly do in play.",
+          "recommended": "Organized",
+          "answer": "choice",
+          "options": [
+            "Opportunistic",
+            "Organized",
+            "Top-tier"
+          ],
+          "path": "/scenario/actorCapability",
+          "visibility": "excon"
+        },
+        {
+          "id": "attackTechniques",
+          "label": "ATT&CK Techniques",
+          "text": "Which ATT&CK techniques does the adversary use? One per item, such as \"T1566 Phishing\" (exercise control only).",
+          "why": "Techniques tie the scenario to real behaviour, and to the injects and detections that test it.",
+          "answer": "list",
+          "path": "/scenario/attackTechniques",
+          "visibility": "excon"
+        },
+        {
+          "id": "groundTruth",
+          "label": "Ground Truth",
+          "text": "List what is really happening, one fact per item (controllers only).",
+          "why": "Only the controllers know the ground truth. Later checks use these facts to catch leaks.",
+          "answer": "list",
+          "path": "/groundTruth",
+          "idPrefix": "GT",
+          "visibility": "excon"
+        },
+        {
+          "id": "keyEvents",
+          "label": "Key Events",
+          "text": "What events are injected during a run, in order? One per item: when, what happens, and whether it is the same every run.",
+          "why": "They make sure every task gets tested, whatever the team does.",
+          "answer": "list",
+          "path": "/scenario/keyEvents",
+          "idPrefix": "E",
+          "visibility": "excon"
+        },
+        {
+          "id": "escalationCeiling",
+          "label": "Escalation Ceiling",
+          "text": "What is the most an agent may do: the blast radius no run may exceed?",
+          "why": "Past this point the team stops learning.",
+          "answer": "text",
+          "path": "/scenario/escalationCeiling",
+          "visibility": "excon"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Network and Range",
+      "questions": [
+        {
+          "id": "rangeReference",
+          "label": "Range Reference",
+          "text": "Which range does it build on: the provider, the enclave, and the base image or network, if known?",
+          "why": "The network module starts from this instead of from nothing.",
+          "recommended": "GraySpace; enclave and base to be chosen with the range team",
+          "answer": "text",
+          "path": "/network/rangeReference"
+        },
+        {
+          "id": "segments",
+          "label": "Network Segments",
+          "text": "Which network segments or enclaves does the scenario need, and what is each for? One per item.",
+          "why": "The network module builds one segment for each.",
+          "answer": "list",
+          "path": "/network/segments"
+        },
+        {
+          "id": "hosts",
+          "label": "Hosts",
+          "text": "Which hosts sit on each segment: role, operating system, rough count? One per item, such as \"OT network: historian, Windows Server 2019, 1\".",
+          "why": "It sizes the build and decides which images are needed.",
+          "answer": "list",
+          "path": "/network/hosts"
+        },
+        {
+          "id": "services",
+          "label": "Services",
+          "text": "Which services run on the range, and on which hosts? One per item, such as \"Email: mail01\".",
+          "why": "Services decide what the team defends and what the scenario's attacker uses.",
+          "answer": "list",
+          "path": "/network/services"
+        },
+        {
+          "id": "connectivity",
+          "label": "Connectivity",
+          "text": "What talks to what, and what reaches the internet?",
+          "why": "Routes and firewall rules decide which attack paths exist.",
+          "answer": "text",
+          "path": "/network/connectivity"
+        },
+        {
+          "id": "identity",
+          "label": "Identity and Accounts",
+          "text": "How are identities set up: domain, user accounts, service accounts?",
+          "why": "Accounts are often how the scenario's attacker gets in, and how the team traces them.",
+          "answer": "text",
+          "path": "/network/identity"
+        },
+        {
+          "id": "monitoring",
+          "label": "Defenses and Sensors",
+          "text": "What defends the network, and what can the team see with: firewalls, EDR, SIEM, packet capture, logs? One per item.",
+          "why": "The team can only find what its sensors record.",
+          "answer": "list",
+          "path": "/network/monitoring"
+        },
+        {
+          "id": "telemetry",
+          "label": "Telemetry",
+          "text": "What is recorded for the review? One per item: logs, network traffic, endpoint activity, chat.",
+          "why": "The review can only show what was recorded.",
+          "answer": "list",
+          "path": "/network/telemetry"
+        },
+        {
+          "id": "platforms",
+          "label": "Platforms",
+          "text": "Which websites, email, chat or social media must exist on the range? One per item.",
+          "why": "Simulated users need somewhere to work, and information injects need somewhere to appear.",
+          "answer": "list",
+          "path": "/network/platforms"
+        },
+        {
+          "id": "simulatedUsers",
+          "label": "Simulated Users",
+          "text": "Which simulated users should be on the network (NPCs): how many, in which roles, doing what? (controllers only)",
+          "why": "Background activity hides the attack the way real users would.",
+          "answer": "text",
+          "path": "/network/simulatedUsers",
+          "visibility": "excon"
+        },
+        {
+          "id": "personas",
+          "label": "Named Simulated Users",
+          "text": "Which simulated users matter to the story by name? One per item: 'Name: role, organization, what they do', such as 'Dana Whitlock: night-shift plant operator, Kessick Bay Water Authority, messages IT about the readings'.",
+          "why": "Named personas become GHOSTS NPCs and the people injects come from; the Chronicle gives each one its own view.",
+          "answer": "list",
+          "path": "/network/personas",
+          "visibility": "participant"
+        },
+        {
+          "id": "planted",
+          "label": "Planted Before Start",
+          "text": "What must be in place before the exercise starts: vulnerabilities, malware, files, log history? One per item (controllers only).",
+          "why": "The key events only work if these are there on the day.",
+          "answer": "list",
+          "path": "/network/planted",
+          "visibility": "excon"
+        },
+        {
+          "id": "buildLimits",
+          "label": "Build Limits",
+          "text": "What limits the build: scale, images that must be used, air-gapped, time to build?",
+          "why": "The network module has to fit inside these.",
+          "answer": "text",
+          "path": "/network/buildLimits"
+        },
+        {
+          "id": "resetBetweenRuns",
+          "label": "Reset Between Runs",
+          "text": "How is the range put back to the same state before each run?",
+          "why": "Leftovers from one run contaminate the next.",
+          "answer": "text",
+          "path": "/network/resetBetweenRuns"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Control, Safety and Names",
+      "questions": [
+        {
+          "id": "controlCell",
+          "label": "Control Cell",
+          "text": "Who runs the experiment, who watches the runs, and who may halt one?",
+          "why": "Each role needs a named person before the exercise starts.",
+          "answer": "text",
+          "path": "/engagement/controlCell"
+        },
+        {
+          "id": "safety",
+          "label": "Safety and Stop",
+          "text": "What halts a run for a real-world problem, such as an agent reaching outside the range, and who can do it?",
+          "why": "Everyone must know how to stop, and how play restarts.",
+          "recommended": "Automatic halt on any traffic leaving the range; the experiment lead can halt any run",
+          "answer": "text",
+          "path": "/engagement/safety"
+        },
+        {
+          "id": "containment",
+          "label": "Containment",
+          "text": "What stops an agent from reaching anything outside the range: egress rules, credential scope, tool limits?",
+          "why": "Agents act faster than people can watch; containment has to be built in.",
+          "answer": "text",
+          "path": "/engagement/containment"
+        },
+        {
+          "id": "exerciseName",
+          "label": "Exercise Name",
+          "text": "What is the exercise's name?",
+          "why": "Short and easy to say over a radio or a call, and not reused from an earlier exercise.",
+          "answer": "text",
+          "path": "/names/exercise",
+          "default": "scenarioName"
+        },
+        {
+          "id": "organizations",
+          "label": "Organizations",
+          "text": "Which organizations appear in the scenario, and whose side is each on: friendly, adversary or neutral? One per item, such as \"Harrow Port Authority: friendly\".",
+          "why": "Names stay the same in every event and document.",
+          "answer": "list",
+          "path": "/names/organizations"
+        },
+        {
+          "id": "fixedTerms",
+          "label": "Fixed Terms",
+          "text": "Which terms must everyone use the same way? One per item.",
+          "why": "Shared terms keep reports and events consistent.",
+          "answer": "list",
+          "path": "/vocabulary/fixed"
+        },
+        {
+          "id": "bannedTerms",
+          "label": "Banned Terms",
+          "text": "Which words must the scenario avoid? One per item.",
+          "why": "Some words give the twist away or touch real-world sensitivities.",
+          "answer": "list",
+          "path": "/vocabulary/banned"
+        }
+      ]
+    }
+  ]
+}
