@@ -30,9 +30,10 @@ mkdir -p "$HOME/.local/bin"
 ln -sfn "$SCRIPT_DIR/setup.sh" "$HOME/.local/bin/setup-devcontainer"
 
 # Aspire CLI, installed as this user (not root) so `aspire run` can write next to its binary.
-# Keep the version in step with Aspire.AppHost.Sdk in src/apphost/RangerAI.AppHost.csproj.
+# Keep the version in step with the Aspire.Hosting.* packages in src/apphost/RangerAI.AppHost.csproj: since
+# Aspire 17 the AppHost takes its dashboard and DCP from this CLI, so F5 needs it too.
 echo "Installing Aspire CLI..."
-dotnet tool install -g Aspire.Cli --version 13.6.4 || dotnet tool update -g Aspire.Cli --version 13.6.4
+dotnet tool install -g Aspire.Cli --version 17.0.0 || dotnet tool update -g Aspire.Cli --version 17.0.0
 
 # Create and trust the HTTPS dev certificate, so the Aspire dashboard doesn't warn
 # "No trusted development certificate". Trust relies on SSL_CERT_DIR in devcontainer.json.

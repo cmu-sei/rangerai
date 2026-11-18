@@ -1,13 +1,14 @@
 // Orchestrates RangerAI's projects for local development: F5 in VS Code (or `dotnet run` here)
 // starts every resource below and opens the Aspire dashboard with their logs and status.
-// To add a project: reference it in RangerAI.AppHost.csproj (for .NET) and add it here.
+// To add a project: add it here (.NET projects by path, with AddDotnetProject).
 
 var builder = DistributedApplication.CreateBuilder(args);
 
 // ---- Chronicle (src/chronicle) ----
 // The Chronicle API: apps publish entries and subscribe to them. Its "http" launch profile
 // puts it on :5285; in Development it imports the sample Chronicles in src/chronicle/samples.
-var chronicleApi = builder.AddProject<Projects.Chronicle_Api>("chronicle-api", launchProfileName: "http")
+var chronicleApi = builder.AddDotnetProject("chronicle-api", "../chronicle/Chronicle.Api/Chronicle.Api.csproj",
+        options => options.LaunchProfileName = "http")
     .WithHttpHealthCheck("/health")
     .WithUrl("/swagger", "Swagger UI");
 
@@ -28,7 +29,8 @@ builder.AddExecutable("chronicle-ui", "npm", "../chronicle/ui",
 // appsettings.json hard-code them: API :5280, UI :4310, fake model :5299.
 
 // .NET API. Runs its "http" launch profile, so Aspire fronts it on :5280.
-var scenarioApi = builder.AddProject<Projects.ScenarioBuilder_Api>("scenario-builder-api", launchProfileName: "http")
+var scenarioApi = builder.AddDotnetProject("scenario-builder-api", "../scenario-builder/api/ScenarioBuilder.Api/ScenarioBuilder.Api.csproj",
+        options => options.LaunchProfileName = "http")
     .WithHttpHealthCheck("/api/scenario-types");
 
 // Angular UI via `npm start` (its prestart builds the agent's browser bundle). ng serve

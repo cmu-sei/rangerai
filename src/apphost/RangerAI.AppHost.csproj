@@ -1,4 +1,4 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.6.5">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,14 +6,15 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>rangerai-apphost</UserSecretsId>
-    <!-- Dashboard and DCP come from NuGet, so F5 needs no Aspire CLI install. -->
-    <NoWarn>$(NoWarn);ASPIRE010</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Each project the AppHost runs. Add future .NET projects here and in AppHost.cs. -->
-    <ProjectReference Include="../chronicle/Chronicle.Api/Chronicle.Api.csproj" />
-    <ProjectReference Include="../scenario-builder/api/ScenarioBuilder.Api/ScenarioBuilder.Api.csproj" />
+    <!-- Keep these in step with the Aspire CLI version in .devcontainer/scripts/postcreate.sh: since Aspire 17,
+         the dashboard and DCP come from the installed CLI. -->
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="17.0.0" />
+    <PackageReference Include="Aspire.Hosting.Dotnet" Version="17.0.0" />
   </ItemGroup>
+
+  <!-- .NET projects are added by path in AppHost.cs (AddDotnetProject); they need no ProjectReference here. -->
 
 </Project>

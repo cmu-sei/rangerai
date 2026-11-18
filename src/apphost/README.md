@@ -17,9 +17,10 @@ The UIs expect `node_modules` already installed in `chronicle/ui`, `scenario-bui
 
 ## Adding a project
 
-- **.NET:** add a `<ProjectReference>` in `RangerAI.AppHost.csproj`, then
-  `builder.AddProject<Projects.Your_Project>("name")` in `AppHost.cs`.
+- **.NET:** `builder.AddDotnetProject("name", "../path/To/Your.csproj")` in `AppHost.cs`, by path; no
+  `<ProjectReference>` is needed. For a launch profile, add `options => options.LaunchProfileName = "http"`.
 - **Node/npm:** `builder.AddJavaScriptApp("name", "../path", "script")` or `AddNodeApp(...)`.
 - **Python:** add the `Aspire.Hosting.Python` package and use `AddPythonApp` / `AddUvicornApp`.
 
-Keep the `Aspire.AppHost.Sdk`/`Aspire.Hosting.*` versions in step with `.devcontainer/features/aspire`.
+Keep the `Aspire.Hosting.*` package versions in step with the Aspire CLI version in
+`.devcontainer/scripts/postcreate.sh`: since Aspire 17 the AppHost takes its dashboard and DCP from the installed CLI.
