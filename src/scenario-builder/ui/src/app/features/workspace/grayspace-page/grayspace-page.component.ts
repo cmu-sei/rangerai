@@ -13,6 +13,7 @@ import { MeService } from '../../../core/services/me.service';
 import { labelFor } from '../../../shared/labels/question-label';
 import { WorkspaceStore } from '../workspace.store';
 import { EnclaveDiagramComponent } from './enclave-diagram/enclave-diagram.component';
+import { OVERVIEW } from '../topology-page/topology-page.component';
 
 /** One GraySpace decision: what it settles, the Terrain API routes behind it, and the network answers that feed it. */
 interface Decision {
@@ -49,6 +50,8 @@ const DOCKER_INTERNAL_HOSTS = new Set(['172.17.0.1', 'host.docker.internal', 'ga
 export class GraySpacePageComponent {
   private readonly document = inject(DOCUMENT);
   protected readonly store = inject(WorkspaceStore);
+  /** For the back link: show every target, rather than come straight back here. */
+  protected readonly overview = OVERVIEW;
   private readonly api = inject(BuilderApiService);
   private readonly me = inject(MeService);
 

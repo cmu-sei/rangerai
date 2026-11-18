@@ -11,8 +11,12 @@
   <form class="create" (submit)="$event.preventDefault(); create()">
     <input class="sb-field name" placeholder="Name a new scenario" aria-label="Scenario name" [value]="name()" (input)="typed($event)" />
     <select class="sb-field scenario-type" aria-label="Scenario type" [value]="scenarioTypeId()" (change)="picked($event)">
-      @for (scenarioType of scenarioTypes(); track scenarioType.id) {
-        <option [value]="scenarioType.id" [selected]="scenarioType.id === scenarioTypeId()">{{ scenarioType.name }}</option>
+      @for (group of scenarioTypeGroups(); track group.kind) {
+        <optgroup [label]="group.label">
+          @for (scenarioType of group.types; track scenarioType.id) {
+            <option [value]="scenarioType.id" [selected]="scenarioType.id === scenarioTypeId()">{{ scenarioType.name }}</option>
+          }
+        </optgroup>
       }
     </select>
     <button class="sb-button primary" type="submit" [disabled]="!name().trim() || !scenarioTypeId()">Create</button>
@@ -52,7 +56,7 @@
                 <span class="pill">Archived</span>
               }
             </td>
-            <td class="meta">{{ scenarioTypeName(scenario.scenarioTypeId) }}</td>
+            <td class="meta" [class]="scenarioTypeKind(scenario.scenarioTypeId)">{{ scenarioTypeName(scenario.scenarioTypeId) }}</td>
             <td class="stage">Stage {{ scenario.stage }}</td>
             <td class="meta">{{ scenario.owner }}</td>
             <td class="meta when">{{ scenario.updated | date: 'MMM d, HH:mm' }}</td>

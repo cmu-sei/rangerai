@@ -1,16 +1,16 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { NEVER, of } from 'rxjs';
 import { BuilderApiService } from '../../../core/services/builder-api.service';
 import { ScenarioType } from '../../../core/models/builder.model';
 import { GraySpaceStatus } from '../../../core/models/grayspace.model';
 import { WorkspaceStore } from '../workspace.store';
-import { TopologyPageComponent } from './topology-page.component';
+import { OVERVIEW, TopologyPageComponent } from './topology-page.component';
 
 const scenarioType = (topology?: boolean): ScenarioType => ({ id: 'k', version: '1', name: 'K', stages: [], drafts: [], ...(topology === undefined ? {} : { topology }) });
 
-async function render(k: ScenarioType, grayspace: GraySpaceStatus | null = { connected: false }, deployments?: { target: string }[]) {
+async function render(k: ScenarioType, grayspace: GraySpaceStatus | null = { connected: false }, deployments?: { target: string }[], state?: object) {
   TestBed.configureTestingModule({
     providers: [
       provideRouter([]),
@@ -18,9 +18,12 @@ async function render(k: ScenarioType, grayspace: GraySpaceStatus | null = { con
       { provide: BuilderApiService, useValue: { getGraySpace: () => grayspace ? of(grayspace) : NEVER, pull: () => of(deployments ? { deployments } : {}) } }
     ]
   });
+  const router = TestBed.inject(Router);
+  vi.spyOn(router, 'currentNavigation').mockReturnValue(state ? ({ extras: { state } } as ReturnType<Router['currentNavigation']>) : null);
+  const navigate = vi.spyOn(router, 'navigate').mockResolvedValue(true);
   const fixture = TestBed.createComponent(TopologyPageComponent);
   await fixture.whenStable();
-  return fixture.nativeElement as HTMLElement;
+  return Object.assign(fixture.nativeElement as HTMLElement, { navigate });
 }
 
 describe('TopologyPageComponent', () => {
@@ -51,9 +54,22 @@ describe('TopologyPageComponent', () => {
     expect(await states(null)).toEqual(['Checking…', 'Not connected']);
   });
 
-  it('grays out the other targets once a deployment is built for one', async () => {
+  it('goes straight on to the target a deployment is built for, in place of this page', async () => {
     const root = await render(scenarioType(true), { connected: true, answering: true }, [{ target: 'grayspace' }]);
 
+    expect(root.navigate).toHaveBeenCalledWith(['grayspace'], expect.objectContaining({ replaceUrl: true }));
+  });
+
+  it('stays, with the targets, when no deployment is built yet', async () => {
+    const root = await render(scenarioType(true), { connected: true, answering: true });
+
+    expect(root.navigate).not.toHaveBeenCalled();
+  });
+
+  it('grays out the other targets once a deployment is built for one, when opened from its screen to see them all', async () => {
+    const root = await render(scenarioType(true), { connected: true, answering: true }, [{ target: 'grayspace' }], OVERVIEW);
+
+    expect(root.navigate).not.toHaveBeenCalled();
     const cards = Array.from(root.querySelectorAll('.target'));
     expect(cards.map(c => c.classList.contains('unavailable'))).toEqual([false, true, true, true]);
     expect(Array.from(root.querySelectorAll<HTMLAnchorElement>('.target a')).map(a => a.getAttribute('href'))).toEqual(['/grayspace']);

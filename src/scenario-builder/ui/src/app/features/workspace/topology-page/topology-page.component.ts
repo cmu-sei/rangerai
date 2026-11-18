@@ -1,14 +1,18 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal, untracked } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { GraySpaceStatus } from '../../../core/models/grayspace.model';
 import { BuilderApiService } from '../../../core/services/builder-api.service';
 import { WorkspaceStore } from '../workspace.store';
+
+/** Navigation state a target screen's back link sets, to stay on this page rather than go straight back. */
+export const OVERVIEW = { overview: true };
 
 /**
  * Where the range a scenario needs is built and deployed, for a scenario type that has a topology.
  * GraySpace deploys; Updraft opens a read-only screen of its choices, and the others aren't built yet.
  * Once a deployment is built for one, the scenario's pull document names it and the others are grayed out:
- * a scenario deploys to one target for now.
+ * a scenario deploys to one target for now. With nothing else to choose, the page goes straight on to that target's screen,
+ * unless it was opened from there to see them all (the target screen's back link says so with {@link OVERVIEW}).
  */
 @Component({
   selector: 'app-topology-page',
@@ -33,11 +37,23 @@ export class TopologyPageComponent {
 
   constructor() {
     const api = inject(BuilderApiService);
+    const router = inject(Router);
+    const route = inject(ActivatedRoute);
+    const overview = !!router.currentNavigation()?.extras.state?.['overview'];
     api.getGraySpace().subscribe({ next: s => this.grayspace.set(s), error: () => this.grayspace.set({ connected: false }) });
     effect(() => {
       const id = this.store.scenarioId();
       if (id) {
-        untracked(() => api.pull(id).subscribe(doc => this.built.set((doc['deployments'] as { target: string }[] | undefined)?.[0]?.target ?? null)));
+        untracked(() =>
+          api.pull(id).subscribe(doc => {
+            const built = (doc['deployments'] as { target: string }[] | undefined)?.[0]?.target ?? null;
+            this.built.set(built);
+            const open = this.targets.find(t => t.id === built)?.open;
+            if (open && !overview) {
+              router.navigate([open], { relativeTo: route, replaceUrl: true });
+            }
+          })
+        );
       }
     });
   }

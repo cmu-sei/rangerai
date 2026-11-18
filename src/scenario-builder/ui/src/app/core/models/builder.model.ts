@@ -10,6 +10,8 @@ export interface ScenarioTypeSummary {
   id: string;
   version: string;
   name: string;
+  /** The kind of event its scenarios are, as Chronicle records it; none means exercise. */
+  kind?: EventKind;
 }
 
 export interface ScenarioTypeQuestion {
@@ -42,8 +44,6 @@ export interface ScenarioType extends ScenarioTypeSummary {
   topology?: boolean;
   /** What kind of exercise it is. */
   description?: string;
-  /** The kind of event its scenarios are, as Chronicle records it; none means exercise. */
-  kind?: EventKind;
 }
 
 /** Chronicle's kinds of event. An experiment is one where every participant is a machine. */

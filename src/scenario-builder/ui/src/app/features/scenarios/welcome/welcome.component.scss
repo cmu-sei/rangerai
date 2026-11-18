@@ -26,8 +26,12 @@
 
 .top {
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
-  gap: 36px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+// No column gap, so the divider before the types lands at 50%, on the middle line between the steps below.
+.intro {
+  padding-right: 36px;
 }
 
 @keyframes welcome-in {
@@ -117,85 +121,78 @@
   color: var(--sb-muted);
 }
 
-.type-list {
+.groups {
   display: grid;
-  gap: 8px;
-  margin: 12px 0 0;
+  gap: 14px;
+  margin: 14px 0 0;
+}
+
+.group {
+  --group-accent: var(--sb-person);
+
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 12px;
+
+  &.experiment {
+    --group-accent: var(--sb-agent);
+  }
+
+  &.training {
+    --group-accent: var(--sb-pass);
+  }
+
+  dt {
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+    padding-top: 2px;
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.group-name {
+  font: 500 10.5px/1.2 var(--sb-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--group-accent);
+}
+
+.group-count {
+  font: 500 10.5px/1.2 var(--sb-mono);
+  color: var(--sb-faint);
+}
+
+.group-summary {
+  margin: 0;
+  color: var(--sb-muted);
+  line-height: 1.45;
+}
+
+.type-list {
+  margin: 4px 0 0;
   padding: 0;
   list-style: none;
 }
 
 .type {
-  --type-accent: var(--sb-person);
-  --type-soft: var(--sb-person-soft);
-  --type-ink: var(--sb-person-ink);
-
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 12px 14px;
-  border: 1px solid var(--sb-line);
-  border-left: 3px solid var(--type-accent);
-  border-radius: 10px;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--type-accent) 6%, transparent), transparent 70%),
-    color-mix(in srgb, var(--sb-surface) 70%, transparent);
-
-  &.range {
-    --type-accent: var(--sb-pass);
-    --type-soft: var(--sb-pass-soft);
-    --type-ink: var(--sb-pass);
-  }
-}
-
-.type-icon {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--type-soft);
-  color: var(--type-accent);
-}
-
-.type-text {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-}
-
-.type-name {
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.55;
   color: var(--sb-ink);
-}
 
-.type-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.chip {
-  padding: 3px 7px;
-  border: 1px solid var(--sb-line);
-  border-radius: var(--sb-pill);
-  font: 500 10px/1.2 var(--sb-mono);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--sb-muted);
-  background: var(--sb-surface);
-
-  &.accent {
-    border-color: color-mix(in srgb, var(--type-accent) 35%, transparent);
-    background: var(--type-soft);
-    color: var(--type-ink);
+  &[title] {
+    cursor: help;
   }
-}
 
-.type-description {
-  color: var(--sb-body);
-  line-height: 1.5;
+  &::before {
+    content: '–';
+    margin-right: 7px;
+    color: var(--group-accent);
+  }
 }
 
 .end {
@@ -207,6 +204,11 @@
 @media (max-width: 860px) {
   .top {
     grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .intro {
+    padding-right: 0;
   }
 
   .types {

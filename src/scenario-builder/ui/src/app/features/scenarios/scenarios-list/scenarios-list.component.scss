@@ -169,9 +169,8 @@ td.name {
   color: var(--sb-muted);
 }
 
-.stage {
-  color: var(--sb-person);
-  font-weight: 500;
+td.stage {
+  color: var(--sb-muted);
   font-size: var(--sb-small);
 }
 
@@ -181,6 +180,19 @@ td.name {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  // The scenario type in its kind of event's colour, as the welcome shows it.
+  &.training {
+    color: var(--sb-pass);
+  }
+
+  &.exercise {
+    color: var(--sb-person);
+  }
+
+  &.experiment {
+    color: var(--sb-agent);
+  }
 }
 
 td.actions {

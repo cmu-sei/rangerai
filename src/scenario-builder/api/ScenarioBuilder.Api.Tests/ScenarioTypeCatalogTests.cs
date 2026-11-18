@@ -3,6 +3,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using Microsoft.Extensions.DependencyInjection;
 using ScenarioBuilder.Api.Domain;
 using ScenarioBuilder.Api.Infrastructure;
 
@@ -223,6 +224,9 @@ public class ScenarioTypeCatalogTests
 
         var list = await client.GetFromJsonAsync<JsonArray>("/api/scenario-types");
         Assert.Equal("crucible-tabletop", (string)list![0]!["id"]!);
+        // Every type says its kind, the default where its file has none.
+        Assert.Equal("exercise", (string)list[0]!["kind"]!);
+        Assert.Equal("training", (string)list.Single(k => (string)k!["id"]! == "individual-lab")!["kind"]!);
 
         var scenarioType = await client.GetFromJsonAsync<JsonObject>("/api/scenario-types/crucible-tabletop");
         var actorType = scenarioType!["stages"]![2]!["questions"]!.AsArray().Single(q => (string)q!["id"]! == "actorType")!;
@@ -231,6 +235,33 @@ public class ScenarioTypeCatalogTests
         var missing = await client.GetAsync("/api/scenario-types/nope");
         Assert.Equal(HttpStatusCode.NotFound, missing.StatusCode);
         Assert.Equal("SCENARIO_TYPE_UNKNOWN", (string)(await missing.Content.ReadFromJsonAsync<JsonObject>())!["code"]!);
+    }
+
+    [Fact]
+    public async Task A_new_default_scenario_type_reaches_an_existing_installation_without_touching_the_others()
+    {
+        using var first = new ApiFactory();
+        await first.Client().GetFromJsonAsync<JsonArray>("/api/scenario-types");
+        var all = new ScenarioTypeCatalog(ApiFactory.ScenarioTypesDirectory).All.Select(k => k.Id).Order().ToList();
+        // An installation from before the newer defaults: only Tabletop and Small Unit, Tabletop's draft edited by an admin.
+        using (var scope = first.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<BuilderDb>();
+            var older = new[] { TestApi.TabletopType, TestApi.SmallUnitType };
+            db.PublishedScenarioTypes.RemoveRange(db.PublishedScenarioTypes.Where(p => !older.Contains(p.ScenarioTypeId)));
+            db.ScenarioTypes.RemoveRange(db.ScenarioTypes.Where(k => !older.Contains(k.ScenarioTypeId)));
+            db.ScenarioTypes.Single(k => k.ScenarioTypeId == TestApi.TabletopType).Draft = "edited";
+            await db.SaveChangesAsync();
+        }
+
+        using var second = new ApiFactory(first.Database);
+        var list = (await second.Client().GetFromJsonAsync<JsonArray>("/api/scenario-types"))!;
+
+        Assert.Equal(all, list.Select(k => (string)k!["id"]!).Order());
+        using var check = second.Services.CreateScope();
+        var after = check.ServiceProvider.GetRequiredService<BuilderDb>();
+        Assert.Equal("edited", after.ScenarioTypes.Single(k => k.ScenarioTypeId == TestApi.TabletopType).Draft);
+        Assert.Single(after.PublishedScenarioTypes.Where(p => p.ScenarioTypeId == TestApi.TabletopType));
     }
 
     /// <summary>A directory holding one small scenario type, broken in the way asked for.</summary>

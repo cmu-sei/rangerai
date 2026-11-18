@@ -4,12 +4,13 @@ using ScenarioBuilder.Api.Domain;
 
 namespace ScenarioBuilder.Api.Endpoints.ScenarioTypes;
 
-public record ScenarioTypeSummary(string Id, string Version, string Name);
+/// <summary>One offered scenario type. <see cref="Kind"/> is always set: one with none of its own is <see cref="ScenarioType.DefaultKind"/>.</summary>
+public record ScenarioTypeSummary(string Id, string Version, string Name, string Kind);
 
 /// <summary>GET /scenario-types — the scenario types a scenario can be created from: each one's latest version, retired ones left out.</summary>
 public class ListEndpoint : IEndpoint
 {
     public RouteHandlerBuilder Register(RouteGroupBuilder group, string tag) =>
-        group.MapGet("/scenario-types", (ScenarioTypeCatalog scenarioTypes) => scenarioTypes.Offered.Select(k => new ScenarioTypeSummary(k.Id, k.Version, k.Name)))
+        group.MapGet("/scenario-types", (ScenarioTypeCatalog scenarioTypes) => scenarioTypes.Offered.Select(k => new ScenarioTypeSummary(k.Id, k.Version, k.Name, k.Kind ?? ScenarioType.DefaultKind)))
             .WithTags(tag);
 }

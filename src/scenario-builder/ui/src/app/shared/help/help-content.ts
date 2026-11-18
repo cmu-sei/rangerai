@@ -326,5 +326,5 @@ export const WELCOME_STEPS: { title: string; body: string }[] = [
   { title: 'Bring What You Have', body: 'Notes, links, documents. The agent reads them first.' },
   { title: 'Answer Stage by Stage', body: 'Broad to specific, each with a recommended answer.' },
   { title: 'Read It Back', body: 'A drafted summary, and a log of who decided what.' },
-  { title: 'Take It With You', body: 'The scenario as JSON, documents, or sent to another app.' }
+  { title: 'Take It With You', body: 'As JSON, documents, or sent to another app.' }
 ];

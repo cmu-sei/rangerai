@@ -4,6 +4,7 @@ import { AnswerValue } from '../../../core/models/builder.model';
 import { labelFor } from '../../../shared/labels/question-label';
 import { WorkspaceStore } from '../workspace.store';
 import { UPDRAFT_SAMPLE } from './updraft-sample';
+import { OVERVIEW } from '../topology-page/topology-page.component';
 
 /** One Updraft decision: what it settles, the CLI commands behind it, and the network answers that feed it. */
 interface Decision {
@@ -29,6 +30,8 @@ interface Decision {
 })
 export class UpdraftPageComponent {
   protected readonly store = inject(WorkspaceStore);
+  /** For the back link: show every target, rather than come straight back here. */
+  protected readonly overview = OVERVIEW;
   protected readonly sample = UPDRAFT_SAMPLE;
 
   protected readonly decisions: Decision[] = [

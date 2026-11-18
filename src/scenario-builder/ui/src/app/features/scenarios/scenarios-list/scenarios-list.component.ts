@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } 
 import { DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { BuilderApiService, errorMessage } from '../../../core/services/builder-api.service';
-import { ScenarioTypeSummary, ScenarioSummary } from '../../../core/models/builder.model';
+import { EventKind, ScenarioTypeSummary, ScenarioSummary } from '../../../core/models/builder.model';
+import { byKind } from '../../../core/models/event-kinds';
 import { TopBarComponent } from '../../../shared/components/top-bar/top-bar.component';
 import { WelcomeComponent } from '../welcome/welcome.component';
 
@@ -34,6 +35,8 @@ export class ScenariosListComponent implements OnInit {
 
   protected readonly scenarios = signal<ScenarioSummary[]>([]);
   protected readonly scenarioTypes = signal<ScenarioTypeSummary[]>([]);
+  /** The new-scenario picker's options, grouped by kind of event. */
+  protected readonly scenarioTypeGroups = computed(() => byKind(this.scenarioTypes()));
   protected readonly name = signal('');
   protected readonly scenarioTypeId = signal('');
   protected readonly query = signal('');
@@ -86,6 +89,12 @@ export class ScenariosListComponent implements OnInit {
   protected ariaSort(key: SortKey): string | null {
     const sort = this.sort();
     return sort.key === key ? (sort.ascending ? 'ascending' : 'descending') : null;
+  }
+
+  /** Its scenario type's kind of event, for the colour the welcome gives it; none for a type no longer offered. */
+  protected scenarioTypeKind(id: string): EventKind | null {
+    const scenarioType = this.scenarioTypes().find(k => k.id === id);
+    return scenarioType ? (scenarioType.kind ?? 'exercise') : null;
   }
 
   protected scenarioTypeName(id: string): string {

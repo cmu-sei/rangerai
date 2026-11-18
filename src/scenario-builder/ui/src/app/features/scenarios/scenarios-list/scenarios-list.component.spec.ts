@@ -18,7 +18,10 @@ const old = scenario(3, 'Old Drill', { archived: true, updated: '2026-09-01T09:0
 async function render() {
   const api = {
     getScenarios: vi.fn(() => of([rail, harbor, old])),
-    getScenarioTypes: () => of([{ id: 'crucible-tabletop', version: '0.1.0', name: 'Crucible tabletop exercise' }]),
+    getScenarioTypes: () => of([
+      { id: 'crucible-tabletop', version: '0.1.0', name: 'Crucible tabletop exercise', kind: 'exercise' as const },
+      { id: 'lab', version: '0.1.0', name: 'Solo lab', kind: 'training' as const }
+    ]),
     getScenarioType: () => of({ id: 'crucible-tabletop', version: '0.1.0', name: 'Crucible tabletop exercise', drafts: [], stages: [] }),
     createScenario: vi.fn(() => of(scenario(9, 'New One'))),
     archive: vi.fn((id: number, archived: boolean) => of({ ...[harbor, rail, old].find(s => s.id === id)!, archived }))
@@ -106,6 +109,23 @@ describe('ScenariosListComponent', () => {
 
     expect(root.querySelector('[role="alert"]')!.textContent).toContain("Only lee, the scenario's owner, can archive it.");
     expect(names(root)).toEqual(['Harbor Blackout', 'Rail Freeze']);
+  });
+
+  it('groups the new-scenario picker by kind of event, training first, and starts on the first type listed by the API', async () => {
+    const { root } = await render();
+    const picker = root.querySelector<HTMLSelectElement>('select[aria-label="Scenario type"]')!;
+
+    const groups = Array.from(picker.querySelectorAll('optgroup')).map(g => [g.label, ...Array.from(g.querySelectorAll('option')).map(o => o.textContent?.trim())]);
+    expect(groups).toEqual([['Training', 'Solo lab'], ['Exercises', 'Crucible tabletop exercise']]);
+    expect(picker.value).toBe('crucible-tabletop');
+  });
+
+  it('colours each scenario type by its kind of event', async () => {
+    const { root } = await render();
+
+    const cells = Array.from(root.querySelectorAll('tbody td.meta')).filter(td => td.textContent?.trim() === 'Crucible tabletop exercise');
+    expect(cells.length).toBeGreaterThan(0);
+    expect(cells.every(td => td.classList.contains('exercise'))).toBe(true);
   });
 
   it('opens a new scenario on its Context page', async () => {

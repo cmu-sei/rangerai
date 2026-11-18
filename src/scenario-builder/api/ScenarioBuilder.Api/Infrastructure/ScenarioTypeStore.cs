@@ -39,12 +39,16 @@ public static class ScenarioTypeStore
         return $"{major}.{minor + 1}.0";
     }
 
+    /// <summary>
+    /// Publishes each scenario type in <paramref name="directory"/> whose id the database has never had, so a default added
+    /// after install still arrives. One it already has is left alone: an admin may have edited, published or retired it.
+    /// </summary>
     public static async Task Seed(BuilderDb db, string directory, CancellationToken ct)
     {
-        if (await db.ScenarioTypes.AnyAsync(ct))
-            return;
+        var existing = (await db.ScenarioTypes.Select(k => k.ScenarioTypeId).ToListAsync(ct)).ToHashSet();
         foreach (var scenarioType in ScenarioTypeCatalog.ReadDirectory(directory))
-            await Publish(db, null, scenarioType, scenarioType.Version, By, ct);
+            if (!existing.Contains(scenarioType.Id))
+                await Publish(db, null, scenarioType, scenarioType.Version, By, ct);
     }
 
     /// <summary>Fills <paramref name="catalog"/> with every published version, oldest first, and marks the retired scenario types.</summary>
