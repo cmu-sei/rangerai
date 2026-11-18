@@ -30,6 +30,8 @@ describe('AppSwitcherComponent', () => {
 
     expect(names(root)).toEqual(['Chronicle']);
     expect(root.querySelector('a.row')!.getAttribute('href')).toBe('http://localhost:4320');
+    expect(root.querySelector('a.row')!.getAttribute('target')).toBe('_blank');
+    expect(root.querySelector('a.row')!.getAttribute('rel')).toBe('noopener');
   });
 
   it('is hidden when no other app has a URL', async () => {

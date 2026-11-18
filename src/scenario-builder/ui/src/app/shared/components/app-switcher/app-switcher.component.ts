@@ -23,7 +23,7 @@ import { AppsService, RangerApp } from '../../../core/services/apps.service';
         <nav class="menu" aria-label="Ranger apps">
           <div class="title">Ranger apps</div>
           @for (app of others(); track app.id) {
-            <a class="row" [href]="app.url!">
+            <a class="row" [href]="app.url!" target="_blank" rel="noopener">
               <span class="badge" aria-hidden="true">{{ initial(app) }}</span>
               <span class="name">{{ app.name }}</span>
             </a>
