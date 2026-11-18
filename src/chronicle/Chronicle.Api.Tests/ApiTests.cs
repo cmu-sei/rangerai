@@ -234,6 +234,7 @@ public class ApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
         Assert.Equal(["scenario-builder", "grayspace", "chronicle", "ghosts"], apps.Select(a => (string)a!["id"]!));
         Assert.Equal(["Scenario Builder", "GraySpace", "Chronicle", "GHOSTS"], apps.Select(a => (string)a!["name"]!));
         Assert.Equal("http://localhost:4320", (string)apps[2]!["url"]!);
-        Assert.Null(apps[1]!["url"]);
+        Assert.Equal("http://localhost:3000/", (string)apps[1]!["url"]!);
+        Assert.Null(apps[3]!["url"]);
     }
 }
