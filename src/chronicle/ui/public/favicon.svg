@@ -3,5 +3,5 @@
        it doesn't depend on fonts. After changing this file, bump ?v= in src/index.html: browsers cache favicons past
        a hard refresh. -->
   <rect width="32" height="32" rx="9" fill="#f0524d" />
-  <path d="M21.2 10.2A7.6 7.6 0 1 0 21.2 21.8" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" />
+  <path d="M21.8 9.5A8.5 8.5 0 1 0 21.8 22.5" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" />
 </svg>
