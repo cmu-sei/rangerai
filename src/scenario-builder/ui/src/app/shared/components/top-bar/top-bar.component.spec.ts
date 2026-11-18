@@ -1,12 +1,14 @@
 import { ApplicationRef, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Me } from '../../../core/models/builder.model';
 import { MeService } from '../../../core/services/me.service';
 import { TopBarComponent } from './top-bar.component';
 
 async function render(me: Me | null) {
-  TestBed.configureTestingModule({ providers: [provideRouter([]), { provide: MeService, useValue: { me: signal(me) } }] });
+  TestBed.configureTestingModule({ providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting(), { provide: MeService, useValue: { me: signal(me) } }] });
   const fixture = TestBed.createComponent(TopBarComponent);
   await fixture.whenStable();
   return fixture.nativeElement as HTMLElement;

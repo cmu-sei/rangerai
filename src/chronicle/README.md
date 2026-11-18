@@ -82,6 +82,7 @@ One controller per resource, in `Controllers/Api/`:
 | | `PUT /api/chronicles/{id}/subscribers/{subscriberId}` | Register or replace a subscriber, optionally with an agent |
 | | `DELETE /api/chronicles/{id}/subscribers/{subscriberId}` | Remove one |
 | | `POST /api/chronicles/{id}/subscribers/{subscriberId}/run` | Run its agent in the background: 202 `{runId, subscriberId}`; 409 `NO_AGENT` |
+| `AppsController` | `GET /api/apps` | The Ranger apps for the top bar's switcher, as `Apps` in appsettings.json lists them (`Id`, `Name`, and `Url` if it has one) |
 | | `GET /api/chronicles/{id}/context` | A view as text a model can read, with `items`, `total`, `withheld`, `tokens`, `sample` |
 | `SchemaController` | `GET /api/schema/record`, `GET /api/schema/entry` | The JSON Schemas |
 

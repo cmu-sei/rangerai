@@ -1,15 +1,17 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ThemeService } from '../core/theme.service';
+import { AppSwitcherComponent } from './app-switcher.component';
 
-/** The product, top left, as the Scenario Builder's bar does, and light or dark on the right. */
+/** The other Ranger apps and the product, top left, as the Scenario Builder's bar does, and light or dark on the right. */
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, AppSwitcherComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <header class="bar">
+      <app-switcher self="chronicle" />
       <a class="brand" routerLink="/"><span class="mark" aria-hidden="true"></span>Chronicle</a>
       <button type="button" class="theme" [attr.aria-label]="themeLabel()" [title]="themeLabel()" (click)="theme.toggle()">
         @if (theme.theme() === 'dark') {
@@ -22,7 +24,7 @@ import { ThemeService } from '../core/theme.service';
   styles: [`
     :host { display: block; flex: none; }
     .bar {
-      display: flex; align-items: center; gap: 14px; height: 48px; padding: 0 16px;
+      display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 16px;
       background: var(--ch-surface); border-bottom: 1px solid var(--ch-line);
     }
     .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--ch-ink); text-decoration: none; }

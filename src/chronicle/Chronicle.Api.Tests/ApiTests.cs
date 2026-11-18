@@ -226,4 +226,14 @@ public class ApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
         var schema = JsonNode.Parse(await http.GetStringAsync("/api/schema/entry"))!;
         Assert.Equal("urn:ranger:chronicle:entry:v0", (string)schema["$id"]!);
     }
+
+    [Fact]
+    public async Task The_Ranger_apps_are_listed_as_appsettings_lists_them()
+    {
+        var apps = JsonNode.Parse(await http.GetStringAsync("/api/apps"))!.AsArray();
+        Assert.Equal(["scenario-builder", "grayspace", "chronicle", "ghosts"], apps.Select(a => (string)a!["id"]!));
+        Assert.Equal(["Scenario Builder", "GraySpace", "Chronicle", "GHOSTS"], apps.Select(a => (string)a!["name"]!));
+        Assert.Equal("http://localhost:4320", (string)apps[2]!["url"]!);
+        Assert.Null(apps[1]!["url"]);
+    }
 }

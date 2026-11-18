@@ -3,15 +3,17 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MeService } from '../../../core/services/me.service';
 import { ThemeService } from '../../../core/services/theme.service';
 import { HelpService } from '../../help/help.service';
+import { AppSwitcherComponent } from '../app-switcher/app-switcher.component';
 
-/** The thin bar across the top: the product, where you are, whatever the page puts on the right, the Guide, and light or dark. */
+/** The thin bar across the top: the other Ranger apps, the product, where you are, whatever the page puts on the right, the Guide, and light or dark. */
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, AppSwitcherComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <header class="bar">
+      <app-switcher self="scenario-builder" />
       <a class="brand" routerLink="/">
         <span class="mark" aria-hidden="true"></span>
         Scenario Builder
