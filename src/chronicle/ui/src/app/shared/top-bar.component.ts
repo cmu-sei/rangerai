@@ -1,32 +1,19 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MeService } from '../core/me.service';
-import { ThemeService } from '../core/theme.service';
 import { AppSwitcherComponent } from './app-switcher.component';
+import { ProfileMenuComponent } from './profile-menu.component';
 
-/** The other Ranger apps and the product, top left, as the Scenario Builder's bar does; light or dark, and who is signed in, on the right. */
+/** The other Ranger apps and the product, top left, and the person's menu (light or dark, Sign out) on the right, as Scenario Builder's bar has. */
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [RouterLink, AppSwitcherComponent],
+  imports: [RouterLink, AppSwitcherComponent, ProfileMenuComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <header class="bar">
       <app-switcher self="chronicle" />
       <a class="brand" routerLink="/"><span class="mark" aria-hidden="true"></span>Chronicle</a>
-      <button type="button" class="theme" [attr.aria-label]="themeLabel()" [title]="themeLabel()" (click)="theme.toggle()">
-        @if (theme.theme() === 'dark') {
-          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3" /><path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1" /></svg>
-        } @else {
-          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 9.6A5.6 5.6 0 0 1 6.4 2.5a5.6 5.6 0 1 0 7.1 7.1Z" /></svg>
-        }
-      </button>
-      @if (me()?.signedIn) {
-        <form class="user" method="post" action="/api/auth/logout">
-          <span class="name" [title]="'Signed in as ' + me()!.user">{{ me()!.user }}</span>
-          <button type="submit" class="sign-out">Sign out</button>
-        </form>
-      }
+      <app-profile-menu />
     </header>`,
   styles: [`
     :host { display: block; flex: none; }
@@ -36,24 +23,7 @@ import { AppSwitcherComponent } from './app-switcher.component';
     }
     .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--ch-ink); text-decoration: none; }
     .mark { width: 14px; height: 14px; border-radius: 4px; background: var(--ch-coral); }
-    .theme {
-      display: grid; place-items: center; width: 28px; height: 28px; margin-left: auto; padding: 0;
-      border: 1px solid var(--ch-line); border-radius: 50%; background: var(--ch-surface); color: var(--ch-muted); cursor: pointer;
-      transition: border-color 120ms, color 120ms, background 120ms;
-      &:hover { border-color: var(--ch-coral); color: var(--ch-coral); background: var(--ch-coral-soft); }
-      svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-    }
-    .user { display: flex; align-items: center; gap: 6px; margin: 0 0 0 4px; padding-left: 8px; border-left: 1px solid var(--ch-line); }
-    .name { font-size: var(--ch-small); color: var(--ch-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 16ch; }
-    .sign-out {
-      padding: 4px 8px; border: none; border-radius: 999px; background: none;
-      font: 500 var(--ch-small) var(--ch-font); color: var(--ch-muted); cursor: pointer;
-      &:hover { color: var(--ch-ink); background: var(--ch-coral-soft); }
-    }
+    app-profile-menu { margin-left: auto; }
   `]
 })
-export class TopBarComponent {
-  protected readonly theme = inject(ThemeService);
-  protected readonly me = inject(MeService).me;
-  protected readonly themeLabel = computed(() => (this.theme.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'));
-}
+export class TopBarComponent {}

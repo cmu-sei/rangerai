@@ -1,4 +1,4 @@
-import { ApplicationRef, signal } from '@angular/core';
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
@@ -25,25 +25,10 @@ describe('TopBarComponent', () => {
     expect(adminLink(await render(null))).toBeUndefined();
   });
 
-  it('offers Sign out, as a form post, only when signed in with Keycloak', async () => {
-    const signedIn = await render({ user: 'lee', admin: false, signedIn: true });
-    const form = signedIn.querySelector<HTMLFormElement>('form.user')!;
-    expect(form.getAttribute('method')).toBe('post');
-    expect(form.getAttribute('action')).toBe('/api/auth/logout');
-    expect(form.querySelector('.name')!.textContent).toBe('lee');
-    TestBed.resetTestingModule();
-    expect((await render({ user: 'dev', admin: true })).querySelector('form.user')).toBeNull();
-  });
-
-  it('switches between light and dark', async () => {
-    localStorage.setItem('sb-theme', 'light');
-    const root = await render(null);
-    const button = root.querySelector<HTMLButtonElement>('button.theme')!;
-    expect(button.getAttribute('aria-label')).toBe('Switch to dark mode');
-    button.click();
-    await TestBed.inject(ApplicationRef).whenStable();
-    expect(document.documentElement.dataset['theme']).toBe('dark');
-    expect(button.getAttribute('aria-label')).toBe('Switch to light mode');
-    localStorage.removeItem('sb-theme');
+  it('ends with Admin, then the Guide, then the person', async () => {
+    const root = await render({ user: 'admin', admin: true, signedIn: true });
+    const order = [...root.querySelectorAll('.tools > a.admin, .tools > button.guide, .tools > app-profile-menu')].map(e => e.className || e.tagName.toLowerCase());
+    expect(order).toEqual(['admin', 'guide', 'app-profile-menu']);
+    expect(root.querySelector('header > button.theme')).toBeNull();
   });
 });
