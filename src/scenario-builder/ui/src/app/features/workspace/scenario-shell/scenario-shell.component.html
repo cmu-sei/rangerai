@@ -1,7 +1,7 @@
 <app-top-bar [crumb]="store.name()">
   <nav class="pages" aria-label="Pages" data-tour="pages">
     @for (page of pages(); track page.path) {
-      <a [routerLink]="page.path" routerLinkActive="active" ariaCurrentWhenActive="page">{{ page.label }}</a>
+      <a [routerLink]="page.path" routerLinkActive="active" ariaCurrentWhenActive="page" [attr.data-label]="page.label">{{ page.label }}</a>
     }
   </nav>
 </app-top-bar>
