@@ -51,6 +51,13 @@ public class ApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
     }
 
     [Fact]
+    public async Task The_version_is_the_csprojs_number_alone()
+    {
+        var version = (string)JsonNode.Parse(await http.GetStringAsync("/api/version"))!["version"]!;
+        Assert.Equal(typeof(Program).Assembly.GetName().Version!.ToString(3), version);
+    }
+
+    [Fact]
     public async Task The_sample_is_seeded_and_listed()
     {
         var list = JsonNode.Parse(await http.GetStringAsync("/api/chronicles"))!.AsArray();

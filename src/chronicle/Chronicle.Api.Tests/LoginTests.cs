@@ -62,13 +62,14 @@ public class LoginTests(ApiFactory factory) : IClassFixture<ApiFactory>
         app.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
 
     [Fact]
-    public async Task Without_a_session_or_token_calls_are_refused_but_the_switcher_and_health_still_answer()
+    public async Task Without_a_session_or_token_calls_are_refused_but_the_switcher_version_and_health_still_answer()
     {
         using var app = WithLogin();
         var client = Client(app);
         Assert.Equal(HttpStatusCode.Unauthorized, (await client.GetAsync("/api/me")).StatusCode);
         Assert.Equal(HttpStatusCode.Unauthorized, (await client.GetAsync("/api/chronicles")).StatusCode);
         Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/api/apps")).StatusCode);
+        Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/api/version")).StatusCode);
         Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/health")).StatusCode);
     }
 
