@@ -16,5 +16,6 @@ public class VersionEndpoint : IEndpoint
 
     public RouteHandlerBuilder Register(RouteGroupBuilder group, string tag) =>
         group.MapGet("/version", () => new VersionView(Number))
+            .AllowAnonymous()
             .WithTags("Version");
 }

@@ -36,20 +36,37 @@ builder.Services.AddScoped<GraySpaceClient>();
 
 builder.Services.Configure<ChronicleOptions>(builder.Configuration.GetSection(ChronicleOptions.Section));
 // The Chronicle.Client library calls the API (named HttpClient "chronicle"); ChronicleClient is Scenario Builder's layer over it.
-Chronicle.Client.ServiceCollectionExtensions.AddChronicleClient(builder.Services, o =>
+var chronicleHttp = Chronicle.Client.ServiceCollectionExtensions.AddChronicleClient(builder.Services, o =>
 {
     builder.Configuration.GetSection(ChronicleOptions.Section).Bind(o);
     o.App ??= ChronicleClient.App;
 });
+// A Chronicle with a Keycloak login takes Scenario Builder's own token (Chronicle:Token), from a service account.
+builder.Services.Configure<ChronicleTokenOptions>(builder.Configuration.GetSection(ChronicleTokenOptions.Section));
+if (builder.Configuration.GetSection(ChronicleTokenOptions.Section).Get<ChronicleTokenOptions>() is { Enabled: true })
+{
+    builder.Services.AddHttpClient(ChronicleToken.Client, client => client.Timeout = TimeSpan.FromSeconds(20));
+    builder.Services.AddSingleton<ChronicleToken>();
+    builder.Services.AddTransient<ChronicleTokenHandler>();
+    chronicleHttp.AddHttpMessageHandler<ChronicleTokenHandler>();
+}
 builder.Services.AddScoped<ChronicleClient>();
 builder.Services.AddScoped<ChroniclePublisher>();
 builder.Services.AddScoped<AsBuiltRelay>();
 builder.Services.Configure<EnclaveDraftOptions>(builder.Configuration.GetSection(EnclaveDraftOptions.Section));
 
+// Keycloak login, when Authorization:Authority is set.
+var login = builder.AddLogin();
+var loginOptions = builder.Configuration.GetSection(LoginOptions.Section).Get<LoginOptions>() ?? new LoginOptions();
+
 builder.AddApiEndpoints();
 
 // OpenAPI document at /openapi/v1.json, browsable at /swagger (Development only).
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    if (login)
+        options.AddKeycloakSecurity(loginOptions);
+});
 
 var app = builder.Build();
 
@@ -71,10 +88,15 @@ if (app.Environment.IsDevelopment())
     {
         options.SwaggerEndpoint("/openapi/v1.json", "Scenario Builder API v1");
         options.DocumentTitle = "Scenario Builder API";
+        if (login)
+            options.UseKeycloakLogin(loginOptions);
     });
 }
 
-app.MapApiEndpoints();
+if (login)
+    app.UseLogin();
+
+app.MapApiEndpoints(requireUser: login);
 app.Run();
 
 public partial class Program;

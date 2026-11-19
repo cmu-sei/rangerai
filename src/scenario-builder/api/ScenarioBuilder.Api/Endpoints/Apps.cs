@@ -10,5 +10,6 @@ public class AppsEndpoint : IEndpoint
 {
     public RouteHandlerBuilder Register(RouteGroupBuilder group, string tag) =>
         group.MapGet("/apps", (IConfiguration config) => config.GetSection("Apps").Get<List<RangerApp>>() ?? [])
+            .AllowAnonymous()
             .WithTags("Apps");
 }

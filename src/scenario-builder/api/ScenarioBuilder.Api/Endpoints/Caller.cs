@@ -1,11 +1,15 @@
 // Copyright 2017 Carnegie Mellon University. All Rights Reserved. See LICENSE.md file for terms.
 
+using Microsoft.Extensions.Options;
 using ScenarioBuilder.Api.Domain;
+using ScenarioBuilder.Api.Infrastructure;
 
 namespace ScenarioBuilder.Api.Endpoints;
 
 /// <summary>
-/// Who is calling. The user comes from the auth proxy's <c>X-Forwarded-User</c>, or is <c>dev</c> without one.
+/// Who is calling. With a Keycloak login (<c>Authorization:Authority</c>) the user is the session's, named by
+/// <c>Authorization:UserClaim</c>, and headers can't say otherwise. Without one, the user comes from the auth proxy's
+/// <c>X-Forwarded-User</c>, or is <c>dev</c> without one.
 /// The agent's API client always sends <c>X-Via: agent</c>. That isn't security, since the agent acts as the
 /// same user, but the model can't set headers, so the authority rules built on it hold whichever model runs.
 /// </summary>
@@ -17,7 +21,10 @@ public record Caller(string User, Via Via)
 
     public static Caller From(HttpContext context)
     {
-        var user = context.Request.Headers["X-Forwarded-User"].ToString().Trim();
+        var login = context.RequestServices.GetService<IOptions<LoginOptions>>()?.Value;
+        var user = login is { Active: true }
+            ? login.UserOf(context.User) ?? throw new InvalidOperationException("No signed-in user: the endpoint should require one.")
+            : context.Request.Headers["X-Forwarded-User"].ToString().Trim();
         var via = string.Equals(context.Request.Headers["X-Via"].ToString().Trim(), "agent", StringComparison.OrdinalIgnoreCase)
             ? Via.Agent
             : Via.Person;

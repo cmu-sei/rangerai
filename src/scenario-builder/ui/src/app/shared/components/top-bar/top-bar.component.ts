@@ -36,6 +36,12 @@ import { AppSwitcherComponent } from '../app-switcher/app-switcher.component';
       @if (me()?.admin) {
         <a class="admin" routerLink="/admin" routerLinkActive="active">Admin</a>
       }
+      @if (me()?.signedIn) {
+        <form class="user" method="post" action="/api/auth/logout">
+          <span class="name" [title]="'Signed in as ' + me()!.user">{{ me()!.user }}</span>
+          <button type="submit" class="sign-out">Sign out</button>
+        </form>
+      }
     </header>`,
   styles: [`
     :host { display: block; flex: none; }
@@ -75,6 +81,13 @@ import { AppSwitcherComponent } from '../app-switcher/app-switcher.component';
       padding: 4px 8px; border-radius: var(--sb-pill); font-size: var(--sb-small); font-weight: 500;
       color: var(--sb-muted); text-decoration: none;
       &:hover, &.active { color: var(--sb-ink); background: var(--sb-canvas); }
+    }
+    .user { display: flex; align-items: center; gap: 6px; margin: 0; padding-left: 6px; border-left: 1px solid var(--sb-line); }
+    .name { font-size: var(--sb-small); color: var(--sb-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 16ch; }
+    .sign-out {
+      padding: 4px 8px; border: none; border-radius: var(--sb-pill); background: none;
+      font: 500 var(--sb-small) var(--sb-font); color: var(--sb-muted); cursor: pointer;
+      &:hover { color: var(--sb-ink); background: var(--sb-canvas); }
     }
   `]
 })

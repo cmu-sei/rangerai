@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { MeService } from '../core/me.service';
 import { ThemeService } from '../core/theme.service';
 import { AppSwitcherComponent } from './app-switcher.component';
 
-/** The other Ranger apps and the product, top left, as the Scenario Builder's bar does, and light or dark on the right. */
+/** The other Ranger apps and the product, top left, as the Scenario Builder's bar does; light or dark, and who is signed in, on the right. */
 @Component({
   selector: 'app-top-bar',
   standalone: true,
@@ -20,6 +21,12 @@ import { AppSwitcherComponent } from './app-switcher.component';
           <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 9.6A5.6 5.6 0 0 1 6.4 2.5a5.6 5.6 0 1 0 7.1 7.1Z" /></svg>
         }
       </button>
+      @if (me()?.signedIn) {
+        <form class="user" method="post" action="/api/auth/logout">
+          <span class="name" [title]="'Signed in as ' + me()!.user">{{ me()!.user }}</span>
+          <button type="submit" class="sign-out">Sign out</button>
+        </form>
+      }
     </header>`,
   styles: [`
     :host { display: block; flex: none; }
@@ -36,9 +43,17 @@ import { AppSwitcherComponent } from './app-switcher.component';
       &:hover { border-color: var(--ch-coral); color: var(--ch-coral); background: var(--ch-coral-soft); }
       svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
     }
+    .user { display: flex; align-items: center; gap: 6px; margin: 0 0 0 4px; padding-left: 8px; border-left: 1px solid var(--ch-line); }
+    .name { font-size: var(--ch-small); color: var(--ch-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 16ch; }
+    .sign-out {
+      padding: 4px 8px; border: none; border-radius: 999px; background: none;
+      font: 500 var(--ch-small) var(--ch-font); color: var(--ch-muted); cursor: pointer;
+      &:hover { color: var(--ch-ink); background: var(--ch-coral-soft); }
+    }
   `]
 })
 export class TopBarComponent {
   protected readonly theme = inject(ThemeService);
+  protected readonly me = inject(MeService).me;
   protected readonly themeLabel = computed(() => (this.theme.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'));
 }

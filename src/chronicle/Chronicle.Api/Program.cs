@@ -26,8 +26,16 @@ builder.Services.AddSingleton<AgentRunner>();
 builder.Services.Configure<AgentOptions>(builder.Configuration.GetSection("Agents"));
 builder.Services.AddHttpClient(AgentRunner.Client, c => c.Timeout = TimeSpan.FromMinutes(5));
 
+// Keycloak login, when Authorization:Authority is set.
+var login = builder.AddLogin();
+var loginOptions = builder.Configuration.GetSection(LoginOptions.Section).Get<LoginOptions>() ?? new LoginOptions();
+
 // OpenAPI document at /openapi/v1.json, browsable at /swagger (Development only).
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    if (login)
+        options.AddKeycloakSecurity(loginOptions);
+});
 
 var app = builder.Build();
 
@@ -42,6 +50,9 @@ app.UseExceptionHandler();
 app.UseWebSockets(new WebSocketOptions { KeepAliveInterval = TimeSpan.FromSeconds(20) });
 app.UseStatusCodePages();
 
+if (login)
+    app.UseLogin();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -49,11 +60,16 @@ if (app.Environment.IsDevelopment())
     {
         options.SwaggerEndpoint("/openapi/v1.json", "Chronicle API v1");
         options.DocumentTitle = "Chronicle API";
+        if (login)
+            options.UseKeycloakLogin(loginOptions);
     });
 }
 
 app.MapHealthChecks("/health");
-app.MapControllers();
+// With a login, every controller needs a signed-in user or an app's token unless it says AllowAnonymous.
+var controllers = app.MapControllers();
+if (login)
+    controllers.RequireAuthorization();
 app.Run();
 
 public partial class Program;

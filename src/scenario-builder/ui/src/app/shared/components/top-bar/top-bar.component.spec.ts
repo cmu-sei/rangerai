@@ -25,6 +25,16 @@ describe('TopBarComponent', () => {
     expect(adminLink(await render(null))).toBeUndefined();
   });
 
+  it('offers Sign out, as a form post, only when signed in with Keycloak', async () => {
+    const signedIn = await render({ user: 'lee', admin: false, signedIn: true });
+    const form = signedIn.querySelector<HTMLFormElement>('form.user')!;
+    expect(form.getAttribute('method')).toBe('post');
+    expect(form.getAttribute('action')).toBe('/api/auth/logout');
+    expect(form.querySelector('.name')!.textContent).toBe('lee');
+    TestBed.resetTestingModule();
+    expect((await render({ user: 'dev', admin: true })).querySelector('form.user')).toBeNull();
+  });
+
   it('switches between light and dark', async () => {
     localStorage.setItem('sb-theme', 'light');
     const root = await render(null);

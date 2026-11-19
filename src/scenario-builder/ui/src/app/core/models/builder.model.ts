@@ -214,6 +214,8 @@ export interface DocumentView {
 export interface Me {
   user: string;
   admin: boolean;
+  /** Signed in with Keycloak, so there's a session to sign out of. */
+  signedIn?: boolean;
 }
 
 export interface ApiVersion {

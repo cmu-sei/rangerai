@@ -17,9 +17,12 @@ public static class EndpointBuilders
         return builder;
     }
 
-    public static IEndpointRouteBuilder MapApiEndpoints(this IEndpointRouteBuilder builder)
+    public static IEndpointRouteBuilder MapApiEndpoints(this IEndpointRouteBuilder builder, bool requireUser = false)
     {
         var group = builder.MapGroup("/api").DisableAntiforgery();
+        // With a login, every endpoint needs a signed-in user unless it says AllowAnonymous.
+        if (requireUser)
+            group.RequireAuthorization();
         using var scope = builder.ServiceProvider.CreateScope();
         foreach (var type in EndpointTypes())
         {
