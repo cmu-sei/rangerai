@@ -126,12 +126,14 @@ export class SubscribersComponent {
       }
       const m = event.message;
       switch (m.type) {
-        case 'hello':
-          this.subscribers.set(m.subscribers);
-          this.feed.set([...m.activity].reverse().slice(0, FEED));
+        case 'hello': {
+          const activity = m.activity ?? [];
+          this.subscribers.set(m.subscribers ?? []);
+          this.feed.set([...activity].reverse().slice(0, FEED));
           this.runs.set({});
-          for (const a of m.activity) this.track(a);
+          for (const a of activity) this.track(a);
           return;
+        }
         case 'subscriber':
           this.subscribers.update(list => {
             const at = list.findIndex(s => s.id === m.subscriber.id);

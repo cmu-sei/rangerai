@@ -1,7 +1,7 @@
 @if (behind()) {
   @if (plan(); as p) {
     <div class="notice" role="status">
-      <span>{{ store.scenarioType()?.name }} {{ p.to }} is published; this scenario is on {{ p.from }}.</span>
+      <span>{{ store.scenarioType()?.name }} {{ p.to }} is available. This scenario uses {{ p.from }}.</span>
       @if (owner()) {
         <button class="sb-button" type="button" (click)="open.set(!open())">{{ open() ? 'Hide the update' : 'Review the update' }}</button>
       } @else {
@@ -22,7 +22,7 @@
               <li><strong>{{ d.label }}</strong>: {{ d.why }}</li>
             }
           </ul>
-          <p class="hint">Each stays in the Decision Log with what it said.</p>
+          <p class="hint">You can still read these answers in the Decision Log.</p>
         }
         @if (p.added.length) {
           <h3>New Questions</h3>
@@ -33,7 +33,7 @@
           </ul>
         }
         @if (p.draftsDropped.length) {
-          <h3>Drafted Text Dropped</h3>
+          <h3>Drafts removed by this update</h3>
           <ul>
             @for (f of p.draftsDropped; track f) {
               <li>{{ spaced(f) }}</li>
@@ -41,7 +41,7 @@
           </ul>
         }
         @if (p.stageTo !== p.stageFrom) {
-          <p>The open stage moves from {{ p.stageFrom }} to {{ p.stageTo }}, the last stage {{ p.to }} has.</p>
+          <p>The open stage moves from {{ p.stageFrom }} to {{ p.stageTo }}, the final stage in version {{ p.to }}.</p>
         }
         @if (error(); as error) {
           <p class="error" role="alert">{{ error }}</p>

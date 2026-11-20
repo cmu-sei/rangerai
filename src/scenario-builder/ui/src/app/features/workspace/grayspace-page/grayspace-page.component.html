@@ -300,7 +300,7 @@
             @if (images().length) {
               <table>
                 <caption>Images</caption>
-                <thead><tr><th scope="col">Image</th><th scope="col">Type</th><th scope="col">OS</th><th scope="col">Size</th><th scope="col">What It Is</th></tr></thead>
+                <thead><tr><th scope="col">Image</th><th scope="col">Type</th><th scope="col">OS</th><th scope="col">Size</th><th scope="col">Description</th></tr></thead>
                 <tbody>
                   @for (image of images(); track image.name) {
                     <tr>
@@ -364,7 +364,7 @@
           @case ('roles') {
             @if (roles().length) {
               <table>
-                <thead><tr><th scope="col">Role</th><th scope="col">What It Sets Up</th><th scope="col">OS Families</th><th scope="col">Needs</th></tr></thead>
+                <thead><tr><th scope="col">Role</th><th scope="col">Description</th><th scope="col">OS Families</th><th scope="col">Required variables</th></tr></thead>
                 <tbody>
                   @for (role of roles(); track role.name) {
                     <tr>
@@ -392,7 +392,7 @@
                 }
               </div>
             } @empty {
-              <p class="aside">No host takes a role with settings yet.</p>
+              <p class="aside">The selected host roles have no settings to configure.</p>
             }
           }
           @case ('dns') {
@@ -432,7 +432,7 @@
                   }
                 </tbody>
               </table>
-              <p class="aside">Setting conditions isn’t built yet.</p>
+              <p class="aside">Link conditions are read-only.</p>
             } @else {
               <ng-container [ngTemplateOutlet]="missing" [ngTemplateOutletContext]="{ part: 'map' }" />
             }
@@ -440,7 +440,7 @@
           @case ('deploy') {
             <ol class="steps">
               <li>
-                <div><span class="step-name">Validate</span><span class="step-text">GraySpace checks the draft: errors and warnings, each with where it is and a suggested fix.</span></div>
+                <div><span class="step-name">Validate</span><span class="step-text">Lists errors and warnings in the draft, with their locations and suggested fixes.</span></div>
                 <button class="sb-button" type="button" [disabled]="!connected() || !!busy()" data-testid="step-validate" (click)="validate()">Validate</button>
               </li>
               <li>
@@ -448,13 +448,13 @@
                 <button class="sb-button" type="button" [disabled]="!connected() || !!busy()" data-testid="step-save" (click)="save()">Save</button>
               </li>
               <li>
-                <div><span class="step-name">Plan</span><span class="step-text">Saves, then a job previews the addresses it would take, the plan and the capacity it needs.</span></div>
+                <div><span class="step-name">Plan</span><span class="step-text">Saves the draft and previews the addresses and capacity the instance would use.</span></div>
                 <button class="sb-button" type="button" [disabled]="!connected() || !!busy()" data-testid="step-plan" (click)="plan()">Plan</button>
               </li>
               <li>
                 <div>
                   <span class="step-name">Create Instance</span>
-                  <span class="step-text">Runs a version of the enclave under a prefix; another prefix runs a second copy.</span>
+                  <span class="step-text">Creates an instance of the selected version. Use a different prefix for each copy.</span>
                   <span class="fields inline">
                     <input class="sb-field" [placeholder]="'prefix (' + (spec()?.prefix ?? '') + ')'" aria-label="Instance prefix" [value]="instancePrefix()" (input)="instancePrefix.set(value($event))" />
                     <select class="sb-field" aria-label="Enclave version" (change)="instanceVersion.set(value($event))">
@@ -485,7 +485,7 @@
                       <pre class="log" aria-label="Plan result">{{ job.result | json }}</pre>
                     }
                   } @else {
-                    <span class="step-text">No job yet. Plan, create or destroy starts one, and its log shows here.</span>
+                    <span class="step-text">Plan an enclave, create an instance or destroy an instance to see the job log.</span>
                   }
                 </div>
                 <span class="buttons">
@@ -495,11 +495,11 @@
                 </span>
               </li>
               <li>
-                <div><span class="step-name">Act on It</span><span class="step-text">Link conditions, DNS records and host power on a ready instance. Not built yet.</span></div>
+                <div><span class="step-name">Instance actions</span><span class="step-text">Controls for link conditions, DNS records and host power are unavailable.</span></div>
                 <button class="sb-button" type="button" disabled>Run action</button>
               </li>
               <li>
-                <div><span class="step-name">Destroy</span><span class="step-text">Takes the instance down and undoes its actions; GraySpace keeps the record.</span></div>
+                <div><span class="step-name">Destroy</span><span class="step-text">Destroys the instance and reverses its actions. GraySpace keeps the instance record.</span></div>
                 <button class="sb-button" type="button" [disabled]="!connected() || !!busy() || !enclave()?.instanceId || follow()?.instance?.state === 'destroyed'" data-testid="step-destroy" (click)="destroy()">Destroy instance</button>
               </li>
             </ol>
@@ -510,7 +510,7 @@
               @if (list.length) {
                 <table class="findings">
                   <caption>Findings</caption>
-                  <thead><tr><th scope="col">Severity</th><th scope="col">Where</th><th scope="col">What</th><th scope="col">Suggested</th></tr></thead>
+                  <thead><tr><th scope="col">Severity</th><th scope="col">Location</th><th scope="col">Issue</th><th scope="col">Suggested fix</th></tr></thead>
                   <tbody>
                     @for (f of list; track $index) {
                       <tr [class.is-error]="f.severity === 'error'">

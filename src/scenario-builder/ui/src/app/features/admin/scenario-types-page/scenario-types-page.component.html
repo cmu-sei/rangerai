@@ -4,7 +4,7 @@
   <header class="head">
     <div>
       <h1>Scenario Types</h1>
-      <p class="sub">A scenario type is the interview a scenario goes through: its stages and questions. New scenarios get its latest published version and stay on it.</p>
+      <p class="sub">A scenario type defines the stages and questions. New scenarios use the latest published version. Existing scenarios keep their version until the owner updates them.</p>
     </div>
     <label class="sb-button import">
       Import
@@ -19,15 +19,15 @@
       <input class="sb-field" placeholder="Red Team Exercise" [value]="name()" (input)="name.set(value($event))" />
     </label>
     <label class="field">
-      What It Is
+      Description
       <textarea class="sb-field" rows="3" [value]="description()" (input)="description.set(value($event))"
-        placeholder="A few sentences, such as: a small team attacks a mock enterprise over two days, and is scored on what it finds."></textarea>
+        placeholder="Describe who takes part, what they do and how they are assessed."></textarea>
     </label>
     <div class="row">
       <label class="field">
         Start From
         <select class="sb-field" (change)="basedOn.set(value($event))">
-          <option value="" [selected]="!basedOn()">Nothing</option>
+          <option value="" [selected]="!basedOn()">Blank scenario type</option>
           @for (k of scenarioTypes() ?? []; track k.id) {
             @if (k.latestVersion) {
               <option [value]="k.id" [selected]="k.id === basedOn()">{{ k.name }}</option>
@@ -41,23 +41,23 @@
           @for (m of models(); track m) {
             <option [value]="m" [selected]="m === model()">{{ m }}</option>
           }
-          <option value="" [selected]="!model()">No model: I'll write it</option>
+          <option value="" [selected]="!model()">Write manually</option>
         </select>
       </label>
       <label class="check">
         <input type="checkbox" [checked]="topology()" (change)="topology.set(checked($event))" />
-        Its scenarios build a range (a Topology page)
+        Include a Topology page for range deployment
       </label>
     </div>
     <div class="go">
       <button class="sb-button primary" type="submit" [disabled]="!name().trim()">{{ model() ? 'Draft' : 'Create' }}</button>
       <span class="hint">
         @if (model()) {
-          {{ model() }} plans the stages and writes their questions. Nothing is offered until you publish.
+          {{ model() }} drafts the stages and questions for you to review before publishing.
         } @else if (basedOn()) {
-          It starts as a copy to edit. Nothing is offered until you publish.
+          You can edit the copy before publishing it.
         } @else {
-          It starts empty, for you to add stages and questions.
+          Add stages and questions after creating the type.
         }
       </span>
     </div>

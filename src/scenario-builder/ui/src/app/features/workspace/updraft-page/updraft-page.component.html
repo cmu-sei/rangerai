@@ -2,7 +2,7 @@
   <header class="head">
     <a class="back" routerLink=".." [state]="overview">Topology</a>
     <h1>Deploy to Updraft</h1>
-    <p class="sample" role="note">Not connected to Updraft</p>
+    <p class="sample" role="note">Read-only preview. Not connected to Updraft.</p>
   </header>
 
   <!-- Read-only: a disabled fieldset disables every control inside it. -->
@@ -60,12 +60,12 @@
                 <label>Slot broker <input class="sb-field" type="url" placeholder="UPDRAFT_BROKER_URL" /></label>
               </div>
               <dl class="facts">
-                <dt>Settings from</dt><dd><code>~/.updraft/env</code>; real environment variables win</dd>
+                <dt>Settings from</dt><dd><code>~/.updraft/env</code>; environment variables take precedence</dd>
                 <dt>Gitea token</dt>
                 <dd>
                   @for (source of sample.token; track source; let last = $last) {
                     <code>{{ source }}</code>{{ last ? '' : ' or ' }}
-                  }; never on argv or stdout
+                  }. The token stays out of command arguments and output.
                 </dd>
                 <dt>Labs cloned to</dt><dd><code>{{ sample.labsDir }}/&lt;owner&gt;/&lt;repo&gt;</code></dd>
                 <dt>Your labs</dt><dd>Unknown until connected</dd>
@@ -133,7 +133,7 @@
                 <label>Name <input class="sb-field" placeholder="host name" /></label>
                 <label>Image
                   <select class="sb-field">
-                    <option>A library or own image</option>
+                    <option>An image from the library or this lab</option>
                     @for (image of sample.publicImages; track image.alias) {
                       <option>{{ image.alias }}</option>
                     }
@@ -180,7 +180,7 @@
                 <li>
                   <div>
                     <span class="step-name">Deploy</span>
-                    <span class="step-text">Applies the lab with Terraform as a projection, then gives its Guacamole link. Its mode and availability zone are kept for later deploys.</span>
+                    <span class="step-text">Terraform deploys the lab as a projection. Updraft provides the Guacamole link and saves the mode and availability zone for later deployments.</span>
                     <span class="fields inline">
                       <input class="sb-field" [value]="sample.projection" aria-label="Projection name" />
                       <input class="sb-field" placeholder="mode" aria-label="Mode" />
@@ -204,7 +204,7 @@
                   <button class="sb-button" type="button">Check status</button>
                 </li>
                 <li>
-                  <div><span class="step-name">Down</span><span class="step-text">Destroys the projection with Terraform, and forgets its mode, availability zone and players.</span></div>
+                  <div><span class="step-name">Down</span><span class="step-text">Terraform destroys the projection. Updraft clears the saved mode, availability zone and player list.</span></div>
                   <button class="sb-button" type="button">Take down</button>
                 </li>
               </ol>
@@ -227,7 +227,7 @@
                 <li>
                   <div>
                     <span class="step-name">Publish</span>
-                    <span class="step-text">Checks the lab is valid, committed and pushed and that every image is in the library or public, tags the version, and opens a PR to the library. A re-run resumes.</span>
+                    <span class="step-text">Updraft validates the lab and checks that you’ve pushed all changes and that each image is public or in the library. It then tags the version and opens a library pull request. If interrupted, run Publish again to resume.</span>
                     <span class="fields inline">
                       <input class="sb-field" placeholder="the next version" aria-label="Version" />
                     </span>

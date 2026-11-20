@@ -24,7 +24,7 @@ import { ProposalView } from '../../../../core/models/builder.model';
           <div class="reason">Waiting for the owner.</div>
         }
       } @else {
-        <div class="status">{{ proposal().status === 'applied' ? 'Applied' : 'Discarded' }} ({{ proposal().status }})</div>
+        <div class="status">{{ proposal().status === 'applied' ? 'Applied' : 'Discarded' }}</div>
       }
     </div>`,
   styles: [`

@@ -1,12 +1,15 @@
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero-inner">
     <h1 id="hero-title">Chronicle</h1>
-    <p class="deck">One living record of an event, <em>from the first idea to the last lesson.</em></p>
+    <p class="deck">
+      Chronicle is a publish/subscribe service for Crucible events. Apps publish entries to a shared event record
+      and subscribe to the updates they need.
+    </p>
     <p class="lede">
-      Today an exercise lives in pieces: a scenario document, a network build, injects in a spreadsheet, activity in
-      logs, lessons in someone's notes. <strong>Chronicle keeps one record for the whole event</strong>, whether
-      training, exercise or experiment. Apps publish what they built, did and saw, and subscribe to the parts they need.
-      When the event ends, the record <em>is</em> the event: complete, attributable, and ready to seed the next one.
+      During an outage drill, an exercise control app can subscribe to planned notices in <strong>Intent</strong>.
+      When it sends a notice, it can publish the delivery to <strong>As Run</strong>. If the incoming shift says
+      it never got the message, the team can compare the plan with the delivery record and use
+      <strong>Lessons</strong> to document what should change at the next handover.
     </p>
     <ol class="stages">
       @for (stage of stages; track stage.n) {
@@ -23,11 +26,11 @@
 <section class="sheet" aria-labelledby="events-title">
   <header class="head">
     <h2 id="events-title">Events</h2>
-    <p class="sub">Each event has one Chronicle. Open one to see its five parts and the history that made them.</p>
+    <p class="sub">Select an event to see its record and who contributed each entry.</p>
   </header>
 
   <div class="tools">
-    <input class="ch-field search" type="search" placeholder="Search by name, id or scenario type" aria-label="Search events"
+    <input class="ch-field search" type="search" placeholder="Search by name, ID or scenario type" aria-label="Search events"
       [value]="query()" (input)="searched($event)" />
     <label class="archived-toggle">
       <input type="checkbox" [checked]="showArchived()" (change)="toggledArchived($event)" />
@@ -79,9 +82,9 @@
               @if (!loaded()) {
                 Loading…
               } @else if (shown().length) {
-                No event matches. Clear the search.
+                No matching events. Try a different search.
               } @else if (events().length) {
-                Every event is archived. Show archived ones to see them.
+                Every event is archived. Select “Show archived” to see the list.
               } @else {
                 No events yet.
               }

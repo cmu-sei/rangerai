@@ -1,7 +1,7 @@
 <section class="sheet">
   <header class="head">
     <h1>Executive Summary</h1>
-    <p class="sub">Drafted from what's been decided once stage {{ dueAfter() }} is answered. Stage {{ dueAfter() }} can close once it's written.</p>
+    <p class="sub">Save a summary before closing stage {{ dueAfter() }}. You can write it yourself or have the agent draft it from your answers.</p>
   </header>
 
   @if (isGateStage() && store.progress(); as progress) {
@@ -9,7 +9,7 @@
   }
 
   <div class="editor">
-    <textarea class="sb-field" rows="16" placeholder="Nothing drafted yet." [value]="text()" (input)="typed($event)" aria-label="Executive summary"></textarea>
+    <textarea class="sb-field" rows="16" placeholder="Write an executive summary…" [value]="text()" (input)="typed($event)" aria-label="Executive summary"></textarea>
     <div class="actions">
       <span class="state">{{ text() === saved() ? (saved() ? 'Saved' : '') : 'Unsaved changes' }}</span>
       <button class="sb-button primary" type="button" [disabled]="text() === saved() || !text().trim()" (click)="save()">Save</button>

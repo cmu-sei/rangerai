@@ -53,7 +53,7 @@ describe('ScenarioTypesPageComponent', () => {
   it('creates a scenario type and opens it for the chosen model to draft', async () => {
     const { fixture, root, admin, navigate } = await render();
     const [start, model] = Array.from(root.querySelectorAll<HTMLSelectElement>('.create select'));
-    expect(Array.from(start.options).map(o => o.textContent?.trim())).toEqual(['Nothing', 'Tabletop Exercise (TTX)']);
+    expect(Array.from(start.options).map(o => o.textContent?.trim())).toEqual(['Blank scenario type', 'Tabletop Exercise (TTX)']);
 
     type(root.querySelector<HTMLInputElement>('.create input:not([type])')!, ' Red Team Exercise ');
     type(root.querySelector<HTMLTextAreaElement>('.create textarea')!, 'A team attacks a mock enterprise.');

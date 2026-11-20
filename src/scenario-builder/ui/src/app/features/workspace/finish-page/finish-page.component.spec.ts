@@ -164,12 +164,12 @@ describe('FinishPageComponent', () => {
 
   it('points admins to the admin area when no library serves the scenario type', async () => {
     const admin = await render([]);
-    expect(admin.root.textContent).toContain('No template library serves this scenario type yet.');
-    expect(byText(admin.root, 'a', 'Make one in Admin')!.getAttribute('href')).toBe('/admin');
+    expect(admin.root.textContent).toContain('No document templates are available for this scenario type.');
+    expect(byText(admin.root, 'a', 'Manage template libraries')!.getAttribute('href')).toBe('/admin');
 
     TestBed.resetTestingModule();
     const person = await render([], { user: 'lee', admin: false });
-    expect(person.root.textContent).toContain('Ask an admin to make one.');
-    expect(byText(person.root, 'a', 'Make one in Admin')).toBeUndefined();
+    expect(person.root.textContent).toContain('Ask an admin to publish a template for this type.');
+    expect(byText(person.root, 'a', 'Manage template libraries')).toBeUndefined();
   });
 });

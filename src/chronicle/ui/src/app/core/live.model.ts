@@ -50,7 +50,7 @@ export interface Subscriber {
 
 /** What the live WebSocket sends. */
 export type LiveMessage =
-  | { type: 'hello'; chronicleId: string; audience: Audience; subscribers: Subscriber[]; activity: Activity[] }
+  | { type: 'hello'; chronicleId: string; audience: Audience; subscribers?: Subscriber[]; activity?: Activity[] }
   | { type: 'entry'; entry: Entry }
   | { type: 'activity'; activity: Activity }
   | { type: 'subscriber'; subscriber: Subscriber }

@@ -2,13 +2,16 @@
   <section class="welcome" aria-labelledby="welcome-title">
     <div class="top">
       <div class="intro">
-        <p class="eyebrow">Welcome</p>
-        <h2 class="headline" id="welcome-title">Design an exercise by answering questions, <em>not by writing documents.</em></h2>
+        <h2 class="headline" id="welcome-title">Build the exercise around the training objective</h2>
         <p class="lede">
-          The builder walks you through the process, starting with the big picture and working down to the details. At
-          each step, an AI agent suggests answers you can use or change. You can also tell it to decide, and it will build
-          the entire scenario using sensible defaults. Everything can be edited later — you’re never starting from
-          scratch.
+          A scenario defines what your team will practice, under what conditions and how you’ll judge the result.
+        </p>
+        <p class="lede">
+          It defines the network topology that range builders such as GraySpace can create or customize.
+          The scenario gives GHOSTS agents their roles and tasks. For each exercise inject, you can choose who
+          delivers it, when it reaches participants and what response evaluators should look for.
+          Publish the plan to Chronicle so evaluators can compare what
+          happened with the original objective.
         </p>
         <div class="end">
           <button type="button" class="sb-button primary" (click)="help.dismissWelcome()">Got it</button>
@@ -18,8 +21,8 @@
 
       @if (groups().length) {
         <div class="types">
-          <h3 class="types-head">Which Scenario Type?</h3>
-          <p class="types-sub">It sets the stages and questions, and stays with the scenario once it’s made.</p>
+          <h3 class="types-head">Choosing a scenario type</h3>
+          <p class="types-sub">The type determines which questions you’ll answer. Once you create the scenario, its type is fixed.</p>
           <dl class="groups">
             @for (g of groups(); track g.kind) {
               <div class="group" [class]="g.kind">

@@ -23,7 +23,7 @@
         <p class="description">{{ record.description }}</p>
       }
       <dl class="facts">
-        <div><dt class="ch-label">Id</dt><dd class="mono">{{ record.id }}</dd></div>
+        <div><dt class="ch-label">Event ID</dt><dd class="mono">{{ record.id }}</dd></div>
         @if (record.scenarioType; as type) {
           <div><dt class="ch-label">Scenario Type</dt><dd class="mono">{{ type.id }}{{ type.version ? ' v' + type.version : '' }}</dd></div>
         }
@@ -31,7 +31,7 @@
         <div><dt class="ch-label">Entries</dt><dd class="entry-count">{{ record.history.length }}</dd></div>
         <div><dt class="ch-label">Schema</dt><dd class="mono">v{{ record.schemaVersion }}</dd></div>
         @if (record.seededFrom?.length) {
-          <div><dt class="ch-label">Seeded From</dt><dd class="mono">{{ record.seededFrom!.join(', ') }}</dd></div>
+          <div><dt class="ch-label">Based on</dt><dd class="mono">{{ record.seededFrom!.join(', ') }}</dd></div>
         }
       </dl>
 
@@ -41,7 +41,7 @@
           @for (c of contributors(); track c.app.key) {
             <span class="author-pill" [style.--app]="c.app.color" [attr.data-app]="c.app.key">
               <span class="swatch" aria-hidden="true"></span>{{ c.name }}
-              @if (c.agent) {<span class="agent-mark" title="Includes entries an AI agent made">AI</span>}
+              @if (c.agent) {<span class="agent-mark" title="Includes entries written by an AI agent">AI</span>}
               <span class="n">{{ c.entries }}</span>
             </span>
           }
@@ -58,9 +58,9 @@
       </div>
       <p class="audience-note">
         @switch (audience()) {
-          @case ('participant') { What the training audience may see. Ground truth stays hidden. }
-          @case ('excon') { Exercise control: the ground truth, the plan and every build. }
-          @case ('designer') { Everything, including the designers' own notes. }
+          @case ('participant') { Shows only items shared with participants. }
+          @case ('excon') { Includes participant items and material reserved for exercise control, such as the ground truth. }
+          @case ('designer') { Shows all items, including private design notes. }
         }
       </p>
     </div>
@@ -146,7 +146,7 @@
                 }
               </ul>
             } @else {
-              <p class="none">Nothing here yet{{ audience() !== 'designer' ? ', or nothing this audience may see' : '' }}.</p>
+              <p class="none">{{ audience() === 'designer' ? 'No items yet.' : 'No items visible to this audience.' }}</p>
             }
           </section>
         }
@@ -180,7 +180,7 @@
               }
             </ul>
           } @else {
-            <p class="none">No entries this audience may see.</p>
+            <p class="none">No entries visible to this audience.</p>
           }
         </section>
       </aside>

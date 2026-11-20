@@ -3,7 +3,6 @@
 <section class="sheet">
   <header class="head">
     <h1>Scenarios</h1>
-    <p class="sub">Each scenario starts with the context you have, then walks through its scenario type's questions, stage by stage.</p>
   </header>
 
   <app-welcome [scenarioTypes]="scenarioTypes()" />
@@ -71,7 +70,13 @@
         } @empty {
           <tr>
             <td class="empty" colspan="6">
-              {{ scenarios().length ? 'No scenario matches. Clear the search, or show archived ones.' : 'No scenarios yet. Name one above to start.' }}
+              @if (!scenarios().length) {
+                No scenarios yet. Enter a name and choose a type to create one.
+              } @else if (showArchived()) {
+                No matching scenarios. Try another search.
+              } @else {
+                No matching scenarios. Try another search or select “Show archived”.
+              }
             </td>
           </tr>
         }
