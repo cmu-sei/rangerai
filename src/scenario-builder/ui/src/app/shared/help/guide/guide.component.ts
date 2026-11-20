@@ -99,7 +99,7 @@ export class GuideComponent {
     const last = stage.number === scenario.scenarioType.stages.at(-1)?.number;
     const line =
       state === 'done' ? 'You can still edit answers in this stage.'
-      : state === 'locked' ? `Complete stage ${stage.number - 1} to unlock this stage.`
+      : state === 'locked' ? this.unlockLine(scenario.openStage, stage.number - 1)
       : last ? 'Complete the final stage by answering its questions and saving any required draft.'
       : 'Answer the questions and save any required draft to open the next stage.';
     const label = state === 'done' ? 'Closed' : state === 'open' ? 'Open now' : 'Locked';
@@ -177,5 +177,12 @@ export class GuideComponent {
 
   private state(stage: number, open: number): StageState {
     return stage < open ? 'done' : stage === open ? 'open' : 'locked';
+  }
+
+  /** What unlocks a locked stage: every stage before it, starting with the one that is open. */
+  private unlockLine(open: number, before: number): string {
+    return open >= before
+      ? `Complete stage ${before} to unlock this stage.`
+      : `Complete stages ${open} to ${before} to unlock this stage.`;
   }
 }

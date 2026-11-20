@@ -18,7 +18,12 @@
           [lastStage]="progress.lastStage"
           (advance)="advance()" />
       } @else if (stage.number > progress.stage) {
-        <p class="note">Complete stage {{ stage.number - 1 }} to unlock this stage.</p>
+        <!-- Every stage up to this one must close first, starting with the one that is open. -->
+        @if (stage.number - 1 === progress.stage) {
+          <p class="note">Complete stage {{ progress.stage }} to unlock this stage.</p>
+        } @else {
+          <p class="note">Complete stages {{ progress.stage }} to {{ stage.number - 1 }} to unlock this stage.</p>
+        }
       } @else {
         <p class="note done">Closed.</p>
       }
