@@ -3,9 +3,9 @@
     <h1>Topology</h1>
     @if (store.scenarioType()?.topology) {
       @if (built()) {
-        <p class="sub">This scenario’s deployment is built for {{ builtName() }}. A scenario deploys to one of these for now.</p>
+        <p class="sub">This scenario uses {{ builtName() }}. Each scenario can deploy to one platform.</p>
       } @else {
-        <p class="sub">Build the range from this scenario’s network answers, then deploy it to one of these.</p>
+        <p class="sub">Use your network answers to configure a GraySpace range or preview an Updraft lab.</p>
       }
     }
   </header>

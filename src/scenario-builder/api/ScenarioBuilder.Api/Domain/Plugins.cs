@@ -14,7 +14,7 @@ public static class Plugins
         new("gallery", "Gallery", "Deliver injects and news to participants."),
         new("player", "Player", "Give each team its exercise workspace."),
         new("steamfitter", "Steamfitter", "Run scripted tasks on range machines."),
-        new("ghosts", "GHOSTS", "Bring the range to life with simulated users.")
+        new("ghosts", "GHOSTS", "Simulate user activity on the range.")
     ];
 
     public static PluginInfo? Find(string id) => All.FirstOrDefault(p => p.Id == id);

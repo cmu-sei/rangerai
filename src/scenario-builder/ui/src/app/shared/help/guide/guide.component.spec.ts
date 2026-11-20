@@ -74,7 +74,7 @@ describe('GuideComponent', () => {
     await settle(fixture);
 
     expect(text(root, '.stage-state')).toBe('Locked');
-    expect(text(root, '.stage-line')).toBe('It opens once stage 1 is answered.');
+    expect(text(root, '.stage-line')).toBe('Complete stage 1 to unlock this stage.');
   });
 
   it('maps the journey with the designer’s place, leaving out Topology for a type without one', async () => {
@@ -112,11 +112,11 @@ describe('GuideComponent', () => {
     const why = root.querySelector('[data-id="validation"]') as HTMLElement;
     expect(text(why, '.c-title')).toBe('Why We Validate');
     expect(Array.from(why.querySelectorAll('.points strong')).map(s => s.textContent)).toEqual([
-      'It makes delegation possible.',
-      'It finds mistakes while they’re cheap to fix.',
-      'It lets the agent fix its own mistakes.',
-      'It treats every author the same.',
-      'It needs no AI model.'
+      'Review agent decisions.',
+      'Catch errors during design.',
+      'Correct errors.',
+      'Check outside contributions.',
+      'Validate offline.'
     ]);
 
     help.query.set('air-gapped');

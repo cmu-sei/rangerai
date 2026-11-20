@@ -25,8 +25,8 @@
 <div class="log" #log aria-live="polite">
   @if (agent.items().length === 0 && !agent.error()) {
     <div class="intro">
-      <p>The agent walks you through this stage's questions one at a time, recommending an answer for each. You can also answer any row yourself.</p>
-      <p>Say "you decide" at any point and it makes every remaining decision itself, to the end.</p>
+      <p>The agent suggests an answer to each question in this stage. You can also enter answers on the Questions page.</p>
+      <p>Type “you decide” to have the agent answer all remaining questions across all stages.</p>
       <div class="intro-actions">
         <button class="sb-button primary" type="button" [disabled]="agent.busy() || !agent.models().length" (click)="start()">Start with the agent</button>
         <button class="sb-button ghost" type="button" (click)="help.show('how', 'agent')">How the agent works</button>
@@ -67,13 +67,13 @@
 </div>
 
 @if (agent.error(); as error) {
-  <div class="banner" role="alert">{{ error }} Every page still works by hand.</div>
+  <div class="banner" role="alert">{{ error }} You can still enter answers on the Questions page.</div>
 }
 <footer class="input">
   <textarea
     class="sb-field box"
     rows="2"
-    placeholder="Tell the agent something, or answer in your own words"
+    placeholder="Message the agent or enter your answer"
     [value]="draft()"
     [disabled]="agent.busy() || !!agent.error()"
     (input)="typed($event)"

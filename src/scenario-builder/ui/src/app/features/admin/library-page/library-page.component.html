@@ -6,7 +6,7 @@
       <div>
         <h1>{{ library.name }}</h1>
         <p class="sub">
-          {{ library.latestVersion ? 'Version ' + library.latestVersion + ' is what scenarios get.' : 'Publish to offer these templates.' }}
+          {{ library.latestVersion ? 'Scenarios use version ' + library.latestVersion + '.' : 'Publish this library to make its templates available.' }}
           @if (library.draftChanged) {
             <span class="changed">Draft changes</span>
           }
@@ -37,7 +37,7 @@
           <textarea class="sb-field" rows="2" [value]="description()" (input)="typedDescription($event)"></textarea>
         </label>
         <fieldset>
-          <legend class="label">Serves</legend>
+          <legend class="label">Scenario types</legend>
           @for (scenarioType of scenarioTypes(); track scenarioType.id) {
             <label class="scenario-type">
               <input type="checkbox" [checked]="scenarioTypeIds().includes(scenarioType.id)" (change)="toggleScenarioType(scenarioType.id, $any($event.target).checked)" />

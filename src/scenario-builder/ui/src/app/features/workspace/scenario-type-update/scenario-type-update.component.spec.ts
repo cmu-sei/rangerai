@@ -52,7 +52,7 @@ describe('ScenarioTypeUpdateComponent', () => {
   it('tells the owner a newer version is out, and reviews what changes', async () => {
     const { fixture, root } = await render(plan);
 
-    expect(root.textContent).toContain('Red Team Dream 0.2.0 is published; this scenario is on 0.1.0.');
+    expect(root.textContent).toContain('Red Team Dream 0.2.0 is available. This scenario uses 0.1.0.');
     button(root, 'Review the update')!.click();
     await fixture.whenStable();
 

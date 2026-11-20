@@ -97,7 +97,7 @@ try {
   });
   await page.reload();
   await page.click('app-proposal-card button:has-text("Apply")', WAIT);
-  await page.waitForFunction(() => document.querySelector('app-proposal-card')?.textContent?.includes('applied'), null, WAIT);
+  await page.waitForSelector('app-proposal-card [data-status="applied"]', WAIT);
   const audience = (await api(`/scenarios/${id}/progress`)).answered.find(a => a.id === 'audienceType');
   if (audience.value !== 'Mixed' || audience.who !== 'stated') throw new Error(`audienceType is ${JSON.stringify(audience)}`);
   await page.click('button.stage >> nth=0');

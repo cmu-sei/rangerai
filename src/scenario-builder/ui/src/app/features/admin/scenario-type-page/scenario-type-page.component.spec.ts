@@ -51,7 +51,7 @@ describe('ScenarioTypePageComponent', () => {
     expect(Array.from(root.querySelectorAll<HTMLInputElement>('.stage-head .title')).map(i => i.value)).toEqual(['Target', 'Story']);
     expect(root.querySelector<HTMLTextAreaElement>('.question textarea')!.value).toBe('What does the team attack?');
     expect(root.textContent).toContain('No questions yet.');
-    expect(root.querySelector('.sub')!.textContent).toContain('Version 0.1.0 is what new scenarios get.');
+    expect(root.querySelector('.sub')!.textContent).toContain('Published version 0.1.0');
     expect(button(root, 'Publish').disabled).toBe(true);
     expect(root.querySelector<HTMLAnchorElement>('a[download]')!.getAttribute('href')).toBe('/api/admin/scenario-types/red-team/export');
   });

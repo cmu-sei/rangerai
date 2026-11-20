@@ -49,6 +49,19 @@ describe('SubscribersComponent', () => {
     expect(root.querySelector('[data-subscriber="ghosts"] .n b')?.textContent).toBe('2');
   });
 
+  it('shows the empty states when a hello omits subscribers and activity', async () => {
+    const { send, root } = await render();
+    await send({ type: 'message', message: {
+      type: 'hello', chronicleId: 'salt', audience: 'excon', subscribers: [dana],
+      activity: [{ id: 'a1', chronicleId: 'salt', source: 'ghosts', kind: 'login', at: record.created, visibility: 'excon' }]
+    } });
+    await send({ type: 'message', message: { type: 'hello', chronicleId: 'salt', audience: 'participant' } });
+
+    expect(root.querySelector('[data-subscriber]')).toBeNull();
+    expect(root.querySelector('.cards .none')?.textContent).toContain('No agent subscriptions are visible to this audience.');
+    expect(root.querySelector('[data-feed]')?.textContent?.trim()).toBe('No activity reported for this view.');
+  });
+
   it('slides activity into the feed, names the actor, and counts it against GHOSTS', async () => {
     const { send, root } = await render();
     await send({ type: 'message', message: { type: 'hello', chronicleId: 'salt', audience: 'excon', subscribers: [dana, ghosts], activity: [] } });

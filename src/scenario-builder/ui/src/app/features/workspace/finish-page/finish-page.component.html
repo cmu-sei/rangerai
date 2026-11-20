@@ -1,9 +1,9 @@
 <section class="sheet">
   <header class="head">
     <h1>Finish</h1>
-    <p class="sub">Take the scenario out of the builder as its JSON, as documents, or into another app. All of it works at any stage.</p>
+    <p class="sub">Export the scenario or publish it to Chronicle at any stage.</p>
     @if (findings() > 0) {
-      <p class="draft">Draft: {{ findings() }} {{ findings() === 1 ? 'finding' : 'findings' }} open. Each export and document says so.</p>
+      <p class="draft">{{ findings() }} open {{ findings() === 1 ? 'finding' : 'findings' }}. Exports and documents are marked as drafts.</p>
     }
   </header>
 
@@ -17,7 +17,7 @@
       <div class="row">
         <div class="what">
           <span class="name">Scenario JSON{{ store.schemaVersion() ? ' (in Crucible Scenario Format Schema v' + store.schemaVersion() + ')' : '' }}</span>
-          <span class="meta">Exactly what the pull API gives every consumer.</span>
+          <span class="meta">Contains the same data as the pull API.</span>
         </div>
         <div class="actions">
           <button class="sb-button ghost" type="button" [attr.aria-expanded]="shown() === 'json'" (click)="toggle('json')">{{ shown() === 'json' ? 'Hide JSON' : 'Show JSON' }}</button>
@@ -27,7 +27,7 @@
       <div class="row">
         <div class="what">
           <span class="name">Scenario Markdown</span>
-          <span class="meta">The same scenario to read: every answer by stage, with who gave it and why.</span>
+          <span class="meta">Lists answers by stage, with the author and reason for each.</span>
         </div>
         <div class="actions">
           <button class="sb-button ghost" type="button" [attr.aria-expanded]="shown() === 'markdown'" (click)="toggle('markdown')">{{ shown() === 'markdown' ? 'Hide Markdown' : 'Show Markdown' }}</button>
@@ -62,11 +62,11 @@
         </ul>
       } @else {
         <div class="panel empty">
-          No template library serves this scenario type yet.
+          No document templates are available for this scenario type.
           @if (me()?.admin) {
-            <a routerLink="/admin">Make one in Admin</a>.
+            <a routerLink="/admin">Manage template libraries</a>.
           } @else {
-            Ask an admin to make one.
+            Ask an admin to publish a template for this type.
           }
         </div>
       }
@@ -78,8 +78,7 @@
     <div class="chronicle" data-testid="chronicle-card" [class.done]="published()">
       <span class="chronicle-mark" aria-hidden="true">C</span>
       <div class="chronicle-text">
-        <span class="chronicle-name">One living record of this event</span>
-        <span class="chronicle-description">Publishing starts this event’s Chronicle with its World and Intent. GraySpace, GHOSTS and the other apps add to it as they build and run the event.</span>
+        <span class="chronicle-description">Publish this scenario’s World and Intent to the event record. Apps such as GraySpace and GHOSTS can add entries as the event runs.</span>
         @if (published(); as p) {
           <p class="chronicle-result" role="status" data-testid="chronicle-result">
             <span class="ok">Published · {{ p.entries }} entries</span>
@@ -108,7 +107,7 @@
 
   <section class="block" aria-labelledby="finish-plugins">
     <h2 id="finish-plugins">Plugins</h2>
-    <p class="section-sub">Send the scenario to another app. Each sends once an admin connects it by its API's address.</p>
+    <p class="section-sub">Admins can connect an app using its API URL. Sending scenarios through these plugins is not yet available.</p>
     <ul class="plugins">
       @for (p of plugins(); track p.id) {
         <li class="plugin" [class.connected]="p.connected">
@@ -119,7 +118,7 @@
           </div>
           @if (editing() === p.id) {
             <form class="plugin-connect" (submit)="$event.preventDefault(); connect(p)">
-              <input class="sb-field" type="url" placeholder="https://… its API's address" [attr.aria-label]="p.name + ' API URL'"
+              <input class="sb-field" type="url" placeholder="https://api.example.org" [attr.aria-label]="p.name + ' API URL'"
                 [value]="draftUrl()" (input)="draftUrl.set($any($event.target).value)" />
               @if (pluginError(); as message) {
                 <p class="plugin-error" role="alert">{{ message }}</p>

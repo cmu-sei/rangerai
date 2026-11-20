@@ -10,7 +10,7 @@ export interface PageHelp {
   /** What to do here, in order. */
   steps: string[];
   /** What "done" looks like. */
-  done: string;
+  done?: string;
   notes?: string[];
   /** The page to go to next, in the same scenario. */
   next?: PageId;
@@ -44,137 +44,125 @@ export interface TourStop {
 export const PAGES: Record<PageId, PageHelp> = {
   scenarios: {
     name: 'Scenarios',
-    lead: 'Every scenario you can open, and where a new one begins.',
+    lead: 'Create a scenario or reopen one from the list.',
     steps: [
-      'Name a new scenario, pick its scenario type, and press Create.',
-      'It opens on Context, where you add what you already have.',
-      'Open an existing scenario by its name. The Stage column shows how far it has got.'
+      'For a new scenario, enter a name and choose a scenario type.',
+      'Select Create to open the Context page.',
+      'To resume a scenario, select its name. The Stage column shows your progress.'
     ],
-    done: 'Your scenario exists and you are on its Context page.',
-    notes: [
-      'A scenario keeps the scenario type it was made with. Pick the one that matches how the exercise runs: a discussion around a table, or a team working on a range.'
-    ]
+    done: 'New scenarios open on the Context page. Existing scenarios open on Questions.',
+    notes: ['You can update a scenario to a newer version of its type. You can’t switch it to a different type.']
   },
   context: {
     name: 'Context',
-    lead: 'Give the agent what you already know, so it recommends from your material instead of guessing.',
+    lead: 'Add background material for the agent to use in its recommendations.',
     steps: [
-      'Paste notes or an email, add a link, or upload documents such as a terms of reference, an agenda or a report.',
-      'Each one is listed under Sources. Remove any that don’t belong.',
-      'Press Start the questions. You can come back and add more at any time.'
+      'Paste notes, add a link or upload a document, such as an agenda or report.',
+      'Check the Sources list and remove anything you don’t want the agent to use.',
+      'Select Start the questions. You can add sources later.'
     ],
-    done: 'Your sources are listed, or you have chosen to start without any.',
-    notes: [
-      'Nothing here is required. Without sources, the agent works from your answers alone.',
-      'Only the text of each source is kept. When the agent leans on one, it names it in its reason.'
-    ],
+    done: 'You can start the questions with or without sources.',
+    notes: ['The builder keeps the text of each source. When the agent uses a source, it names it in the recommendation.'],
     next: 'questions'
   },
   questions: {
     name: 'Questions',
-    lead: 'The heart of the scenario: one decision per row, one stage at a time.',
+    lead: 'Each row records one decision about the scenario.',
     steps: [
-      'Work down the open stage. Press Answer on a row, or let the agent ask you in the panel on the right.',
-      'Not sure? Use the recommended answer, or press You decide and let the agent choose.',
-      'When every row is answered, press Open the next stage.'
+      'In the open stage, select Answer on a row or start with the agent.',
+      'Enter your answer, accept a recommendation or select You decide on a question card to let the agent answer it.',
+      'Answer every question and save any required draft. Then select Open the next stage.'
     ],
-    done: 'Every stage on the left says Closed, and the last one says Complete.',
-    notes: [
-      'Any answer can be changed later, in any stage you can see. The Decision Log keeps the history.',
-      'A stage stays locked until the one before it is answered, so each one builds on what is settled.'
-    ],
+    done: 'The last stage shows Complete.',
+    notes: ['You can change answers in the current stage or any closed stage. The Decision Log keeps the previous answers.'],
     next: 'summary'
   },
   summary: {
     name: 'Executive Summary',
-    lead: 'A short account of the whole scenario, drafted for you once enough is decided.',
+    lead: 'Prepare a short description of the scenario for the exercise sponsor.',
     steps: [
-      'Answer the stage it follows. The agent drafts the summary then.',
-      'Read it as your sponsor would. Fix anything wrong or unclear, and press Save.'
+      'Write the summary yourself or ask the agent to draft it from your answers.',
+      'Review the text, make any changes and select Save.'
     ],
-    done: 'The summary reads true and is saved. The stage it follows can then close.',
+    done: 'The summary is saved and meets the draft requirement for its stage.',
     next: 'log'
   },
   log: {
     name: 'Decision Log',
-    lead: 'Everything decided so far, by whom and why, newest first.',
+    lead: 'Review answers, drafts and proposals, newest first.',
     steps: [
-      'Scan it to see what the agent decided while you were away.',
-      'Each row shows the value before and after, and the reason given.',
-      'To undo something, change the answer on the Questions page. The log records that too.'
+      'Find the decision you want to review. Each row shows who made the change, the previous and new values, and any reason given.',
+      'To revise an answer, open it on the Questions page.'
     ],
-    done: 'Nothing to do here: it is a record, not a task.',
     next: 'topology'
   },
   topology: {
     name: 'Topology',
-    lead: 'Turn the scenario’s network answers into a real range, on the platform you use.',
+    lead: 'Use the network answers to plan a range deployment.',
     steps: [
-      'Answer the network questions first. This page builds from those answers.',
-      'Pick a platform and press Open. GraySpace and Updraft can be opened today; the others are coming.',
-      'Build and deploy from that platform’s page.'
+      'Answer the network questions for the scenario.',
+      'Open GraySpace to configure the range or Updraft to preview its lab settings.',
+      'For GraySpace, validate the enclave before you deploy it.'
     ],
-    done: 'The deployment is built on one platform.',
+    notes: ['Each scenario can have one deployment target.'],
     next: 'finish'
   },
   grayspace: {
     name: 'Deploy to GraySpace',
-    lead: 'Build this scenario’s enclave on GraySpace, and deploy it.',
+    lead: 'Configure and deploy a GraySpace enclave for this scenario.',
     steps: [
-      'An admin connects GraySpace once, by its address and token.',
-      'Press Deploy everything to take the defaults, or work down the numbered decisions one at a time.',
-      'Validate, save, plan, then create an instance and follow its job to the end.'
+      'An admin connects GraySpace using its deployment URL and API token.',
+      'Select Deploy everything to use the current settings, or review the settings individually.',
+      'For a manual deployment, validate and save the enclave, review the plan, then create an instance.'
     ],
     done: 'An instance is running and its job has finished.',
-    notes: ['Each numbered decision shows the answers it was drafted from.'],
+    notes: ['Settings based on your answers list those answers under From Your Answers.'],
     next: 'finish'
   },
   updraft: {
     name: 'Deploy to Updraft',
-    lead: 'A preview of how this scenario would be built as a lab with Updraft.',
+    lead: 'Preview the settings for an Updraft lab.',
     steps: [
-      'Read each numbered decision, and the answers it would use.',
-      'Nothing deploys from here yet: Updraft isn’t connected.'
+      'Compare the lab settings with your scenario answers. The preview is read-only.'
     ],
-    done: 'You know what Updraft would need.',
     next: 'finish'
   },
   finish: {
     name: 'Finish',
-    lead: 'Take the scenario out of the builder, at any stage.',
+    lead: 'Export your scenario or publish it to Chronicle at any stage.',
     steps: [
-      'Download the Scenario JSON for the systems that run the exercise, or the Markdown to read.',
-      'Preview and download documents made from your template libraries.',
-      'Send it to a connected app under Plugins.'
+      'Download JSON for another system or Markdown for a readable copy of the answers.',
+      'Choose a document template for your audience, then preview or download it.',
+      'Select Publish to Chronicle to add the scenario’s World and Intent to the event record.'
     ],
-    done: 'Everyone and everything that needs the scenario has it.',
-    notes: ['Open findings never block an export. Each export and document says when it is still a draft.']
+    done: 'After publishing, select Open in Chronicle to view the record.',
+    notes: ['You can export with open findings. The builder marks those files as drafts.']
   },
   admin: {
     name: 'Admin',
-    lead: 'Where admins shape what every designer works from.',
+    lead: 'Manage scenario types and document templates.',
     steps: [
-      'Scenario Types: make, edit and publish the stages and questions scenarios are built from.',
-      'Libraries: the document templates the Finish page offers.'
+      'Use Scenario Types to edit and publish stages and questions.',
+      'Use Libraries to publish document templates for selected scenario types.'
     ],
-    done: 'Your changes are published. New scenarios use them; existing ones are offered the update.'
+    done: 'New scenarios use the latest published type. Owners can review an update for an existing scenario. Published library templates appear on Finish.'
   }
 };
 
 /** The scenario's pages in the order a designer moves through them. */
 export const JOURNEY: { page: PageId; title: string; line: string }[] = [
-  { page: 'context', title: 'Context', line: 'Bring what you have.' },
-  { page: 'questions', title: 'Questions', line: 'Answer stage by stage.' },
-  { page: 'summary', title: 'Summary', line: 'Read the draft back.' },
-  { page: 'log', title: 'Decision Log', line: 'See who decided what.' },
+  { page: 'context', title: 'Context', line: 'Add notes, links or documents.' },
+  { page: 'questions', title: 'Questions', line: 'Record decisions for each stage.' },
+  { page: 'summary', title: 'Summary', line: 'Edit the executive summary.' },
+  { page: 'log', title: 'Decision Log', line: 'Review changes and their authors.' },
   { page: 'topology', title: 'Topology', line: 'Build the range.' },
-  { page: 'finish', title: 'Finish', line: 'Take it with you.' }
+  { page: 'finish', title: 'Finish', line: 'Download files or publish to Chronicle.' }
 ];
 
 /** The ledger's three marks, as the Stated, Proposed and Open concept draws them. */
 export const MARKS: { mark: 'stated' | 'proposed' | 'open'; name: string; line: string }[] = [
-  { mark: 'stated', name: 'Stated', line: 'A person gave it, by hand or through the agent.' },
-  { mark: 'proposed', name: 'Proposed', line: 'The agent decided it. Its reason shows underneath.' },
+  { mark: 'stated', name: 'Stated', line: 'You or another designer supplied the answer.' },
+  { mark: 'proposed', name: 'Proposed', line: 'The agent chose the answer. Its explanation appears below it.' },
   { mark: 'open', name: 'Open', line: 'Not answered yet.' }
 ];
 
@@ -182,24 +170,24 @@ export const CONCEPTS: Concept[] = [
   {
     id: 'provenance',
     title: 'Stated, Proposed and Open',
-    body: ['Every answer carries a mark that says where it came from, here and in everything the builder exports.']
+    body: ['Each question shows whether a person or the agent supplied its answer.']
   },
   {
     id: 'stages',
     title: 'Stages',
     body: [
-      'A scenario type splits its questions into stages, from the broad (who, why, when) to the specific (events, names).',
-      'A stage opens once the one before it is answered, so each builds on what is settled and the agent’s recommendations sharpen as you go.',
-      'When every question in a stage is answered, and any draft due after it is written, Open the next stage appears.'
+      'The scenario type groups related questions into stages.',
+      'The agent can use answers from earlier stages when making recommendations.',
+      'To open the next stage, answer every question in the current stage and save any required draft.'
     ]
   },
   {
     id: 'agent',
     title: 'Working with the Agent',
     body: [
-      'The agent in the right-hand panel asks the open stage’s questions one at a time, each with a recommended answer and why.',
-      'Take its recommendation, write your own, or answer any row on the page yourself. Your answer always stands.',
-      'If it wants to change something a person stated, it proposes the change as a card the owner applies or discards.'
+      'The agent asks one question at a time and explains its recommended answer.',
+      'Choose a recommendation, reply in your own words or answer a row on the Questions page.',
+      'If the agent proposes a change to a stated answer, the scenario owner can apply or discard it.'
     ]
   },
   {
@@ -207,124 +195,124 @@ export const CONCEPTS: Concept[] = [
     title: 'Handing Over',
     body: [
       'Press You decide on a question card and the agent answers that one question.',
-      'Type “you decide” in the panel and it makes every remaining decision itself, to the end, each marked as proposed.',
-      'Press Take back control at any time. What it decided stays, and you can change any of it.'
+      'Type “you decide” in the panel to delegate all remaining questions across all stages. The agent marks its answers as Proposed.',
+      'Select Take back control to stop delegation. You can edit the answers already recorded.'
     ]
   },
   {
     id: 'sources',
     title: 'Sources',
     body: [
-      'What you add on Context: pasted text, links and documents. Only the text is kept.',
-      'The agent searches them before it recommends an answer, and names the source in its reason.'
+      'On the Context page, add notes, links or documents. The builder stores their text.',
+      'The agent cites the sources it uses in a recommendation.'
     ]
   },
   {
     id: 'drafts',
     title: 'Drafts',
     body: [
-      'Some parts are written rather than answered, such as the executive summary. The agent drafts each once the stage it follows is answered.',
-      'Edit a draft like any document. The stage it follows closes once it is written.'
+      'Some stages require a written draft, such as an executive summary. The agent can draft it from your answers.',
+      'Review and save the draft before closing its stage.'
     ]
   },
   {
     id: 'findings',
     title: 'Findings',
     body: [
-      'A finding is something still open or worth a second look, such as an unanswered question or a missing draft.',
-      'Findings never block you. Exports and documents made with findings open say they are drafts.'
+      'A finding identifies an issue such as an unanswered question or a missing draft.',
+      'You can export with open findings. The builder marks those documents as drafts.'
     ]
   },
   {
     id: 'validation',
     title: 'Why We Validate',
-    body: ['Why we include a validator, in order of importance:'],
+    body: ['The validator checks the scenario before it runs.'],
     points: [
-      { lead: 'It makes delegation possible.', body: 'We can hand work to an agent only if we can check the result. The validator checks names, times, triggers and IDs, and the reviewer checks the judgment calls.' },
-      { lead: 'It finds mistakes while they’re cheap to fix.', body: 'A broken trigger or an unknown host turns up at authoring time, with the exact location and a fix.' },
-      { lead: 'It lets the agent fix its own mistakes.', body: 'Each finding names the place and suggests a fix, so the agent corrects the mechanical errors itself. The person sees only what needs judgment.' },
-      { lead: 'It treats every author the same.', body: 'A document from a person, an agent, another team’s builder or a partner gets the same checks. Several builders can therefore share it as their common standard.' },
-      { lead: 'It needs no AI model.', body: 'The same document always gets the same answer, on any machine, including a closed, air-gapped range like the SOF Cyber Range.' }
+      { lead: 'Review agent decisions.', body: 'The validator checks names, times, triggers and IDs. A reviewer decides whether the scenario makes sense.' },
+      { lead: 'Catch errors during design.', body: 'A finding identifies where a trigger is broken or a host is missing.' },
+      { lead: 'Correct errors.', body: 'The agent can use a finding’s location and suggested fix to correct its draft.' },
+      { lead: 'Check outside contributions.', body: 'The same rules apply to scenarios from designers, agents and other builders.' },
+      { lead: 'Validate offline.', body: 'The checks run without an AI model, including on an air-gapped range.' }
     ]
   },
   {
     id: 'visibility',
-    title: 'Who Sees What',
+    title: 'Document audiences',
     body: [
-      'Some answers are for exercise control only: the ground truth, the twist, the planned events. Their questions say “(exercise control only)”.',
-      'Each document is made for one audience (participants, facilitators or designers) and leaves out whatever that audience mustn’t see.'
+      'Questions about restricted material, such as the ground truth, are marked “(exercise control only)”.',
+      'Each document template has an audience. Participant documents omit exercise-control and designer-only material.'
     ]
   },
   {
     id: 'output',
-    title: 'What You Get',
+    title: 'Exports',
     body: [
-      'One scenario document holding every answer, in the shape the systems that run exercises read: the Scenario JSON.',
-      'Documents for people, made from templates: a plan, a read-in, a facilitator guide, whatever your libraries hold.',
-      'Systems pull the scenario from the builder, or you send it to them from Finish.'
+      'Scenario JSON contains the answers in a format other systems can read.',
+      'Template libraries provide documents such as exercise plans, participant read-ins and facilitator guides.',
+      'Apps can read the JSON through the pull API. On Finish, you can download it or publish the World and Intent to Chronicle.'
     ]
   }
 ];
 
 export const GLOSSARY: Term[] = [
   { id: 'aar', term: 'After-Action Review', definition: 'The discussion after play about what happened, why, and what to change.', where: 'Questions about endings and outputs.', match: ['after-action review', 'AAR'] },
-  { id: 'adjudication', term: 'Adjudication', definition: 'Ruling on what each action in play achieves. Someone named does it, and everyone knows who.', where: 'A question in the rules of play.', match: ['adjudication'] },
+  { id: 'adjudication', term: 'Adjudication', definition: 'The process an assigned controller uses to decide the outcome of a participant’s action.', where: 'A question in the rules of play.', match: ['adjudication'] },
   { id: 'agent', term: 'Agent', definition: 'The assistant in the right-hand panel. It asks the questions, recommends answers, and can decide for you when asked.', where: 'The panel on the right of every scenario page.' },
   { id: 'attack', term: 'ATT&CK', definition: 'MITRE’s public catalogue of real attacker techniques, each with an ID such as T1566 (phishing).', where: 'Questions about the adversary.', match: ['ATT&CK'] },
   { id: 'decision-log', term: 'Decision Log', definition: 'The history of every answer, draft and proposal: who made it, when, and why.', where: 'The Decision Log page.' },
-  { id: 'decision-point', term: 'Decision Point', definition: 'A moment in play where participants must choose. It is where an exercise does its teaching.', where: 'Questions about events and decisions.', match: ['decision points', 'decision point'] },
-  { id: 'designer', term: 'Designer', definition: 'Whoever builds the scenario: you. Designer-only material never reaches participants or facilitators.', where: 'Document audiences on Finish.' },
+  { id: 'decision-point', term: 'Decision Point', definition: 'A point in the scenario when participants must choose how to respond.', where: 'Questions about events and decisions.', match: ['decision points', 'decision point'] },
+  { id: 'designer', term: 'Designer', definition: 'The person who builds the scenario. Only designers can see material marked designer-only.', where: 'Document audiences on Finish.' },
   { id: 'document-template', term: 'Document Template', definition: 'A layout that turns the scenario into a document for one audience, such as a participant read-in.', where: 'Finish, under Document Templates.' },
-  { id: 'draft', term: 'Draft', definition: 'A part of the scenario that is written rather than answered, drafted by the agent once its stage is answered.', where: 'The Summary page; a stage marked Draft due.' },
+  { id: 'draft', term: 'Draft', definition: 'A written section of the scenario, such as the executive summary. You or the agent can write it.', where: 'The Summary page; a stage marked Draft due.' },
   { id: 'enclave', term: 'Enclave', definition: 'The part of a range built for this one scenario: its sites, network segments and hosts.', where: 'The Topology and GraySpace pages; network questions.', match: ['enclaves', 'enclave'] },
-  { id: 'escalation-ceiling', term: 'Escalation Ceiling', definition: 'The worst the scenario is allowed to get, and what never happens. It keeps play inside what the team can handle in the time.', where: 'A stage title and a question.', match: ['escalation ceiling'] },
+  { id: 'escalation-ceiling', term: 'Escalation Ceiling', definition: 'The most severe situation the exercise allows. It sets a boundary for controllers as events unfold.', where: 'A stage title and a question.', match: ['escalation ceiling'] },
   { id: 'escalation-steps', term: 'Escalation Steps', definition: 'How the situation gets worse, step by step, up to the ceiling. One step is marked as the last the team can still recover from.', where: 'A question about events.', match: ['escalation steps'] },
   { id: 'executive-summary', term: 'Executive Summary', definition: 'A short account of the whole scenario for a sponsor or senior reader.', where: 'The Summary page.', match: ['executive summary'] },
-  { id: 'excon', term: 'Exercise Control', definition: 'The people who run the exercise: they push events, rule on actions and steer play. Often called ExCon, or the controllers.', where: 'Questions marked “(exercise control only)”.', match: ['exercise control', 'ExCon', 'controllers'] },
-  { id: 'finding', term: 'Finding', definition: 'Something still open or worth a second look. Findings never block an export; they mark it as a draft.', where: 'The line above a stage’s questions; Finish.' },
-  { id: 'fog', term: 'Fog', definition: 'What participants deliberately can’t see. Deciding with a partial picture is part of what is tested.', where: 'A question in the rules of play.', match: ['fog'] },
-  { id: 'gate', term: 'Gate', definition: 'What stands between a stage and the next: its unanswered questions and any draft still due.', where: 'The line above a stage’s questions.' },
+  { id: 'excon', term: 'Exercise Control', definition: 'The people who run the exercise, introduce events and rule on participant actions. Also called ExCon or controllers.', where: 'Questions marked “(exercise control only)”.', match: ['exercise control', 'ExCon', 'controllers'] },
+  { id: 'finding', term: 'Finding', definition: 'An issue to review, such as an unanswered question. Exports with open findings are marked as drafts.', where: 'The line above a stage’s questions; Finish.' },
+  { id: 'fog', term: 'Fog', definition: 'Information withheld from participants so they practice making decisions with incomplete information.', where: 'A question in the rules of play.', match: ['fog'] },
+  { id: 'gate', term: 'Gate', definition: 'The check for unanswered questions and missing drafts before a stage can close.', where: 'The line above a stage’s questions.' },
   { id: 'ground-truth', term: 'Ground Truth', definition: 'What is really happening in the scenario, known only to exercise control. Later checks catch contradictions against it.', where: 'A stage title and a question.', match: ['ground truth', 'ground-truth'] },
   { id: 'handover', term: 'Handing Over', definition: 'Letting the agent decide: one question with You decide on its card, or everything left by typing “you decide”.', where: 'The agent panel.' },
-  { id: 'inject', term: 'Inject', definition: 'A piece of news, a message or an event that exercise control pushes into play to move it on.', where: 'Questions about key events, information and the network.', match: ['injects', 'inject'] },
+  { id: 'inject', term: 'Inject', definition: 'A message or event that exercise control introduces for participants to respond to.', where: 'Questions about key events, information and the network.', match: ['injects', 'inject'] },
   { id: 'objective', term: 'Objective', definition: 'What the exercise trains, starting with a verb: “Coordinate…”, “Decide…”. Each one needs a way to tell whether it was met.', where: 'Objectives questions.', match: ['objectives', 'objective'] },
   { id: 'participant', term: 'Participant', definition: 'Someone who plays the exercise. Participants never see exercise-control material.', where: 'Many questions; document audiences on Finish.' },
-  { id: 'plugin', term: 'Plugin', definition: 'Another app the scenario can be sent to, once an admin connects it by its address.', where: 'Finish, under Plugins.' },
-  { id: 'proposed', term: 'Proposed', definition: 'An answer the agent decided, marked in violet with its reason. A good first draft you can keep or change.', where: 'Every question row and the Decision Log.' },
-  { id: 'pull-api', term: 'Pull API', definition: 'The address other systems read the finished scenario from, as JSON.', where: 'Finish, under Export.' },
+  { id: 'plugin', term: 'Plugin', definition: 'A connection to another app. An admin sets the app’s API URL on the Finish page.', where: 'Finish, under Plugins.' },
+  { id: 'proposed', term: 'Proposed', definition: 'An answer chosen by the agent, shown with a violet dot and its reason. You can edit it.', where: 'Every question row and the Decision Log.' },
+  { id: 'pull-api', term: 'Pull API', definition: 'The API that gives other systems the current scenario in JSON format.', where: 'Finish, under Export.' },
   { id: 'range', term: 'Range', definition: 'A built network of real or virtual systems where a team trains hands-on.', where: 'Small unit scenarios; the Topology page.', match: ['live range'] },
-  { id: 'recommended-answer', term: 'Recommended Answer', definition: 'The answer the scenario type or the agent suggests. One click uses it.', where: 'Question rows and the agent’s question cards.' },
+  { id: 'recommended-answer', term: 'Recommended Answer', definition: 'An answer suggested by the scenario type or the agent.', where: 'Question rows and the agent’s question cards.' },
   { id: 'red-herring', term: 'Red Herring', definition: 'A deliberate false lead. At most one per exercise, clearly marked in the ground truth.', where: 'A question about the premise.', match: ['red herring'] },
   { id: 'rules-of-play', term: 'Rules of Play', definition: 'How the exercise runs: pacing, the scenario clock, who adjudicates, and how much participants see.', where: 'A stage title.', match: ['rules of play'] },
-  { id: 'scenario', term: 'Scenario', definition: 'One exercise as you design it: every answer and draft, from first context to the finished document.', where: 'Everywhere.' },
-  { id: 'scenario-json', term: 'Scenario JSON', definition: 'The whole scenario as one machine-readable document, exactly as the systems that run exercises read it.', where: 'Finish, under Export.' },
+  { id: 'scenario', term: 'Scenario', definition: 'The design for a training event, exercise or experiment, including its answers and drafts.', where: 'Everywhere.' },
+  { id: 'scenario-json', term: 'Scenario JSON', definition: 'A machine-readable export of the scenario.', where: 'Finish, under Export.' },
   { id: 'scenario-type', term: 'Scenario Type', definition: 'The kind of exercise, such as a tabletop or a small unit team exercise. It sets the stages and questions, and can’t be changed once a scenario is made.', where: 'The Scenarios page; Admin.' },
-  { id: 'sensitivity-review', term: 'Sensitivity Review', definition: 'A check that names, places and terms can’t offend, mislead or point at real people or organizations.', where: 'A stage title.', match: ['sensitivity review'] },
+  { id: 'sensitivity-review', term: 'Sensitivity Review', definition: 'A review of names, places and terms for unintended references, misleading details or offensive language.', where: 'A stage title.', match: ['sensitivity review'] },
   { id: 'simulated-users', term: 'Simulated Users', definition: 'Software characters (NPCs) that act like real people on the range or in the story: they send email, post and browse.', where: 'Population and network questions.', match: ['simulated users', 'NPCs'] },
   { id: 'source', term: 'Source', definition: 'Text you give the agent on Context: pasted notes, a link or a document.', where: 'The Context page.' },
   { id: 'stage', term: 'Stage', definition: 'A group of related questions. Stages open in order, each once the one before it is answered.', where: 'The rail on the left of Questions.' },
-  { id: 'stated', term: 'Stated', definition: 'An answer a person gave, by hand or through the agent, marked in cobalt.', where: 'Every question row and the Decision Log.' },
+  { id: 'stated', term: 'Stated', definition: 'An answer supplied by a person, either directly or through the agent. A blue dot marks it.', where: 'Every question row and the Decision Log.' },
   { id: 'success-criteria', term: 'Success Criteria', definition: 'How you will tell each objective was met. An objective without one can’t be assessed.', where: 'Objectives questions.', match: ['success criteria'] },
   { id: 'ttx', term: 'Tabletop Exercise (TTX)', definition: 'A discussion-based exercise: leaders talk through a developing situation and make decisions, with no live systems.', where: 'Scenario types.', match: ['tabletop exercise', 'TTX'] },
-  { id: 'tcs', term: 'Tasks, Conditions and Standards', definition: 'How team training is written: the task trained, the conditions it is done under, and the standard it must meet.', where: 'A stage title in small unit scenarios.', match: ['tasks, conditions and standards'] },
-  { id: 'teaching-points', term: 'Teaching Points', definition: 'What participants should discover for themselves. They guide facilitators and never appear as takeaways handed to participants.', where: 'A stage title and a question.', match: ['teaching points'] },
+  { id: 'tcs', term: 'Tasks, Conditions and Standards', definition: 'A training format that identifies the task, the conditions under which the team performs it, and the standard for success.', where: 'A stage title in small unit scenarios.', match: ['tasks, conditions and standards'] },
+  { id: 'teaching-points', term: 'Teaching Points', definition: 'Lessons participants should draw from the exercise. Facilitators use them to guide discussion.', where: 'A stage title and a question.', match: ['teaching points'] },
   { id: 'template-library', term: 'Template Library', definition: 'A set of document templates for a scenario type, managed in Admin.', where: 'Finish; Admin › Libraries.' },
   { id: 'topology', term: 'Topology', definition: 'The network a scenario needs and where it is built. Only scenario types with a range have a Topology page.', where: 'The Topology page.' },
   { id: 'visibility', term: 'Visibility', definition: 'Who may see an answer: participants, exercise control, or designers only.', where: 'Questions marked “(exercise control only)”; document audiences.' }
 ];
 
 export const TOUR: TourStop[] = [
-  { target: 'pages', title: 'Your Scenario, Left to Right', body: 'Context first, then Questions, then the pages that read it back and take it out. Jump to any of them at any time.' },
-  { target: 'rail', title: 'Stages', body: 'The questions come in stages, broad to specific. Each bar fills as you answer, and a stage opens once the one before it is answered.' },
-  { target: 'ledger', title: 'One Row, One Decision', body: 'Press Answer to answer a row yourself. The mark says who decided: cobalt for a person, violet for the agent, a ring for still open.' },
-  { target: 'gate', title: 'What’s Left', body: 'This line counts what is still open in the stage. When it’s all answered, Open the next stage appears here.' },
-  { target: 'agent', title: 'The Agent', body: 'It asks the questions one at a time and recommends an answer for each. Type “you decide” and it finishes the scenario for you.' },
-  { target: 'guide', title: 'Help, Any Time', body: 'Open the Guide here, or press ?, for what each page is for, how the builder works, and every term it uses.' }
+  { target: 'pages', title: 'Scenario pages', body: 'Use these links to switch between your sources, questions, summary and exports.' },
+  { target: 'rail', title: 'Stages', body: 'The bars show how many questions you’ve answered in each stage.' },
+  { target: 'ledger', title: 'Question status', body: 'Select Answer to enter a decision. A blue dot marks your answer or another designer’s. A violet dot marks an answer chosen by the agent. A ring marks an unanswered question.' },
+  { target: 'gate', title: 'Stage progress', body: 'Check here for unanswered questions and missing drafts. When the stage is complete, you can open the next one.' },
+  { target: 'agent', title: 'The Agent', body: 'Ask for a recommendation or type “you decide” to delegate all remaining questions.' },
+  { target: 'guide', title: 'Guide', body: 'Open the Guide here or press ? for page instructions and the glossary.' }
 ];
 
 export const WELCOME_STEPS: { title: string; body: string }[] = [
-  { title: 'Bring What You Have', body: 'Notes, links, documents. The agent reads them first.' },
-  { title: 'Answer Stage by Stage', body: 'Broad to specific, each with a recommended answer.' },
-  { title: 'Read It Back', body: 'A drafted summary, and a log of who decided what.' },
-  { title: 'Take It With You', body: 'As JSON, documents, or sent to another app.' }
+  { title: 'Add sources', body: 'Give the agent notes, links or documents to consult.' },
+  { title: 'Answer questions', body: 'Work through the questions in each stage.' },
+  { title: 'Review the scenario', body: 'Edit the summary and check the Decision Log.' },
+  { title: 'Export the scenario', body: 'Download files or publish to Chronicle.' }
 ];

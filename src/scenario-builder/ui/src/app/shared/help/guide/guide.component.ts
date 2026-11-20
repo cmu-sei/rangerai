@@ -98,10 +98,10 @@ export class GuideComponent {
     const state = this.state(stage.number, scenario.openStage);
     const last = stage.number === scenario.scenarioType.stages.at(-1)?.number;
     const line =
-      state === 'done' ? 'Its questions are answered. You can still change any of them.'
-      : state === 'locked' ? `It opens once stage ${scenario.openStage} is answered.`
-      : last ? 'The last stage. Once its questions are answered, the scenario is complete.'
-      : 'Answer every question here, and Open the next stage appears above them.';
+      state === 'done' ? 'You can still edit answers in this stage.'
+      : state === 'locked' ? `Complete stage ${stage.number - 1} to unlock this stage.`
+      : last ? 'Complete the final stage by answering its questions and saving any required draft.'
+      : 'Answer the questions and save any required draft to open the next stage.';
     const label = state === 'done' ? 'Closed' : state === 'open' ? 'Open now' : 'Locked';
     return { number: stage.number, title: stage.title, purpose: stage.purpose, state, label, line, count: scenario.scenarioType.stages.length };
   });

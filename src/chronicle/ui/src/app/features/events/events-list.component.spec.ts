@@ -30,7 +30,7 @@ describe('EventsListComponent', () => {
   it('explains Chronicle above the grid of events', async () => {
     const { root } = await render();
     expect(root.querySelector('.hero h1')!.textContent).toBe('Chronicle');
-    expect(root.querySelector('.hero .deck')!.textContent).toContain('One living record of an event');
+    expect(root.querySelector('.hero .deck')!.textContent).toContain('publish/subscribe service');
     expect(root.querySelectorAll('.stages li')).toHaveLength(4);
     expect(root.querySelector('#events-title')!.textContent).toBe('Events');
   });

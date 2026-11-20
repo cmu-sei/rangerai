@@ -11,7 +11,7 @@
         <div>
           <h1>{{ k.name }}</h1>
           <p class="sub">
-            {{ d.latestVersion ? 'Version ' + d.latestVersion + ' is what new scenarios get.' : 'Not published yet, so new scenarios can’t use it.' }}
+            {{ d.latestVersion ? 'Published version ' + d.latestVersion : 'Publish this type to make it available for new scenarios.' }}
             @if (d.retired) {
               <span class="retired">Retired</span>
             }
@@ -43,7 +43,7 @@
             <h2>Settings</h2>
             <label class="field">Name <input class="sb-field" [value]="k.name" (input)="setSetting({ name: value($event) })" /></label>
             <label class="field">
-              What It Is
+              Description
               <textarea class="sb-field" rows="3" [value]="k.description ?? ''" (input)="setSetting({ description: value($event) })"></textarea>
             </label>
             <label class="field">
@@ -56,7 +56,7 @@
             </label>
             <label class="check">
               <input type="checkbox" [checked]="!!k.topology" (change)="setSetting({ topology: checked($event) })" />
-              Its scenarios build a range (a Topology page)
+              Include a Topology page for range deployment
             </label>
             @if (d.basedOn) {
               <p class="meta">Started as a copy of <code>{{ d.basedOn }}</code>.</p>
@@ -97,14 +97,14 @@
               </header>
               <div class="stage-fields">
                 <label class="field">
-                  What It Settles
+                  Stage purpose
                   <input class="sb-field" [value]="s.purpose ?? ''" (input)="setStage(i, { purpose: value($event) })" />
                 </label>
               </div>
               <ol class="questions">
                 @for (q of s.questions; track $index; let j = $index) {
                   <li class="question">
-                    <textarea class="sb-field wording" rows="2" placeholder="The question, as it’s asked" aria-label="Question" [value]="q.text"
+                    <textarea class="sb-field wording" rows="2" placeholder="Question text" aria-label="Question" [value]="q.text"
                       (input)="setQuestion(i, j, { text: value($event) })"></textarea>
                     <select class="sb-field" aria-label="Answer type" (change)="setQuestion(i, j, { answer: $any(value($event)) })">
                       @for (t of answerTypes; track t.type) {
@@ -128,7 +128,7 @@
         </fieldset>
       } @else {
         <section class="card">
-          <p class="meta">The whole draft, every setting included. Saving checks it as the outline does; switching back to the outline drops unsaved JSON.</p>
+          <p class="meta">Saving validates the JSON. Switching to Outline discards unsaved JSON changes.</p>
           <textarea class="sb-field code" spellcheck="false" aria-label="The draft as JSON" [value]="json()" (input)="json.set(value($event))"></textarea>
           <div class="buttons"><button class="sb-button" type="button" (click)="saveJson()">Save JSON</button></div>
         </section>
@@ -138,7 +138,7 @@
         <h2>Versions</h2>
         @if (d.versions.length) {
           <table>
-            <thead><tr><th scope="col">Version</th><th scope="col">Published by</th><th scope="col">When</th><th scope="col">Scenarios on it</th></tr></thead>
+            <thead><tr><th scope="col">Version</th><th scope="col">Published by</th><th scope="col">When</th><th scope="col">Scenarios using this version</th></tr></thead>
             <tbody>
               @for (v of d.versions; track v.version) {
                 <tr><td>{{ v.version }}</td><td>{{ v.publishedBy }}</td><td>{{ v.published | date: 'MMM d, y, HH:mm' }}</td><td>{{ v.scenarios }}</td></tr>

@@ -13,15 +13,15 @@ import { AppsService, RangerApp } from '../core/apps.service';
     '(document:click)': 'outside($event)' },
   template: `
     @if (others().length) {
-      <button type="button" class="dots" aria-label="Ranger apps" title="Ranger apps" aria-haspopup="true"
+      <button type="button" class="dots" aria-label="Apps" title="Apps" aria-haspopup="true"
         [attr.aria-expanded]="open()" (click)="toggle()">
         <svg viewBox="0 0 12 12" aria-hidden="true">
           @for (y of grid; track y) { @for (x of grid; track x) { <circle [attr.cx]="x" [attr.cy]="y" r="1.1" /> } }
         </svg>
       </button>
       @if (open()) {
-        <nav class="menu" aria-label="Ranger apps">
-          <div class="title">Ranger apps</div>
+        <nav class="menu" aria-label="Apps">
+          <div class="title">Apps</div>
           @for (app of others(); track app.id) {
             <a class="row" [href]="app.url!" target="_blank" rel="noopener">
               <span class="badge" aria-hidden="true">{{ initial(app) }}</span>

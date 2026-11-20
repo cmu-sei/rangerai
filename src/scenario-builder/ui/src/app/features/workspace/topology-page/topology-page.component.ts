@@ -66,7 +66,7 @@ export class TopologyPageComponent {
   /** A target with a screen opens it; the rest aren't built yet. */
   protected readonly targets: { id: string; name: string; description: string; open?: string }[] = [
     { id: 'grayspace', name: 'GraySpace', description: 'Builds the range through GraySpace’s Terrain API.', open: 'grayspace' },
-    { id: 'updraft', name: 'Updraft', description: 'Builds the lab through the Updraft CLI: Gitea, Terraform and Packer on AWS.', open: 'updraft' },
+    { id: 'updraft', name: 'Updraft', description: 'Preview an AWS lab configuration for the Updraft CLI.', open: 'updraft' },
     { id: 'crucible', name: 'Crucible', description: 'Builds the range through Crucible’s APIs.' },
     { id: 'other', name: 'Other Range', description: 'Builds the range through another range’s API.' }
   ];

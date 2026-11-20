@@ -2,7 +2,7 @@
   <header class="head">
     <div>
       <h1>Context</h1>
-      <p class="sub">Give the agent what you already have: notes, a link, documents. It searches them before it recommends an answer, and names the source in its reason.</p>
+      <p class="sub">Add background material for the agent to consult. When it uses a source, it names it in the recommendation.</p>
     </div>
     <button class="sb-button primary" type="button" (click)="start()">Start the questions</button>
   </header>
@@ -16,7 +16,7 @@
   <div class="panel add">
     <form class="part" (submit)="$event.preventDefault(); addText()">
       <h2>Paste Text</h2>
-      <input class="sb-field" placeholder="Name, such as where it came from" aria-label="Text name" [value]="textName()" (input)="field(textName, $event)" />
+      <input class="sb-field" placeholder="Source name" aria-label="Text name" [value]="textName()" (input)="field(textName, $event)" />
       <textarea class="sb-field" rows="4" placeholder="Paste notes, an email, a report…" aria-label="Text" [value]="text()" (input)="field(text, $event)"></textarea>
       <div class="end">
         <button class="sb-button" type="submit" [disabled]="!textName().trim() || !text().trim()">Add text</button>
@@ -28,7 +28,7 @@
       <input class="sb-field" type="url" placeholder="https://…" aria-label="Link" [value]="url()" (input)="field(url, $event)" />
       <input class="sb-field" placeholder="Name (optional)" aria-label="Link name" [value]="urlName()" (input)="field(urlName, $event)" />
       <div class="end">
-        <span class="hint">{{ fetching() ? 'Fetching…' : 'Read once, now. Named by its title if you leave the name blank.' }}</span>
+        <span class="hint">{{ fetching() ? 'Fetching…' : 'The builder reads the page once and uses its title if you leave the name blank.' }}</span>
         <button class="sb-button" type="submit" [disabled]="!url().trim() || fetching()">Add link</button>
       </div>
     </form>
@@ -67,7 +67,7 @@
           <button class="sb-button ghost" type="button" (click)="remove(s)">Remove</button>
         </div>
       } @empty {
-        <p class="empty">Nothing yet. Without context, the agent works from your answers alone.</p>
+        <p class="empty">No sources yet. You can start the questions without adding any.</p>
       }
     </div>
   </section>

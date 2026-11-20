@@ -4,7 +4,7 @@
       <a class="back" [routerLink]="['/events', id()]" data-back>← Event</a>
       <p class="eyebrow">Chronicle · Subscribers</p>
       <h1>{{ record()?.name ?? id() }} <i>live</i></h1>
-      <p class="sub">Each subscriber reads only what its audience may see. Activity streams in as apps report it; the notable becomes part of the record.</p>
+      <p class="sub">Each subscriber reads only the items available to its audience. Activities saved to the event record show an entry number.</p>
     </div>
     <div class="side">
       <span class="live" [attr.data-state]="state()" data-live>
@@ -49,22 +49,22 @@
             <div class="model"><b>{{ modelOf(s) }}</b><br />local · Ollama</div>
           </div>
 
-          <div class="label">Subscribes</div>
+          <div class="label">Subscription</div>
           <div class="query">@for (part of query(s.query); track $index) {<span [class.k]="part.key">{{ part.text }}</span>}</div>
 
           <div class="sees">
-            <div class="stat"><div class="v" data-v="items">{{ run?.items ?? '–' }}</div><div class="l">items it may see</div></div>
-            <div class="stat withheld" [class.none]="run?.withheld === 0"><div class="v" data-v="withheld">{{ run?.withheld ?? '–' }}</div><div class="l">withheld from it</div></div>
-            <div class="stat"><div class="v" data-v="tokens">{{ run?.tokens ?? '–' }}</div><div class="l">tokens of context</div></div>
+            <div class="stat"><div class="v" data-v="items">{{ run?.items ?? '–' }}</div><div class="l">visible items</div></div>
+            <div class="stat withheld" [class.none]="run?.withheld === 0"><div class="v" data-v="withheld">{{ run?.withheld ?? '–' }}</div><div class="l">hidden items</div></div>
+            <div class="stat"><div class="v" data-v="tokens">{{ run?.tokens ?? '–' }}</div><div class="l">context tokens</div></div>
           </div>
           <div class="ctx">@for (x of run?.sample ?? []; track $index) {<span>{{ x }}</span>}</div>
 
-          <div class="label writes">Writes
+          <div class="label writes">Agent output
             <button type="button" class="run" [attr.data-run]="s.id" [disabled]="running(s)" (click)="start(s)">{{ running(s) ? 'Running…' : run ? 'Run again' : 'Run' }}</button>
           </div>
           <div class="out" [class.mono]="s.audience !== 'participant'" data-output>
             <div class="inner">
-              @if (run?.text) {<span class="text">{{ run!.text }}</span>} @else if (!run) {<span class="hint">Waiting for a run.</span>}
+              @if (run?.text) {<span class="text">{{ run!.text }}</span>} @else if (!run) {<span class="hint">Run this agent to see its output.</span>}
               @if (running(s)) {<span class="caret"></span>}
             </div>
           </div>
@@ -80,7 +80,7 @@
           </div>
         </section>
       } @empty {
-        <p class="none">No agents subscribe to this event at this audience yet. Register one with PUT /api/chronicles/{{ id() }}/subscribers/&#123;id&#125;.</p>
+        <p class="none">No agent subscriptions are visible to this audience. To register an agent, use PUT /api/chronicles/{{ id() }}/subscribers/&#123;id&#125;.</p>
       }
     </main>
 
@@ -116,7 +116,7 @@
             </div>
           </li>
         } @empty {
-          <li class="quiet">Quiet. Activity appears here the moment an app reports it.</li>
+          <li class="quiet">No activity reported for this view.</li>
         }
       </ol>
     </aside>
